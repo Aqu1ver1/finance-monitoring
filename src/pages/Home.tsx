@@ -29,7 +29,7 @@ const HomePage: React.FC<DashboardProps> = ({ onAddClick }) => {
     const expenses = 60000;
     return (
             <div className=" bg-white rounded-[40px] overflow-hidden flex flex-col relative text-black w-full max-w-md">
-                <div className="mb-8">
+                <div className="mb-8 ">
                     <p className=" mb-1">Общий баланс</p>
                     <h1 className="text-5xl mb-4">{balance.toLocaleString("ru-RU")} ₽</h1>
                     <div className="flex gap-4">
