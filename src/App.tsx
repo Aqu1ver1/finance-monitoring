@@ -1,25 +1,28 @@
 
 import Budget from './pages/Budget'
 import Dashboard from './pages/Dashboard'
-import Navigation from './components/Navigation'
+import Navigation from './components/Navigation/Navigation'
 import AddTransaction from './pages/AddTransactions'
 import Transactions from './pages/Transactions'
-import { useState } from 'react'
+import { use, useState } from 'react'
+import Settings from './pages/Settings'
+import type { Screen } from './types/index'
+// import { useTheme } from './hooks/useTheme'
 
-type Screen = "dashboard" | "budget" | "transactions" | "add";
 
 function App() {
 
-
+  // const { isDark, toggle } = useTheme();
   const [activeScreen, setActiveScreen] = useState<Screen>("dashboard");
   return (
     <div className="h-screen flex flex-col min-w-full">
       {/* Content Area */}
-        <div className="flex-1 overflow-y-auto">
-          {activeScreen === "dashboard" && <Dashboard onAddClick={() => setActiveScreen("add")} />}
+        <div className="flex-1 overflow-y-auto bg-white">
+          {activeScreen === "dashboard" && <Dashboard/>}
           {activeScreen === "budget" && <Budget />}
           {activeScreen === "transactions" && <Transactions />}
           {activeScreen === "add" && <AddTransaction onClose={() => setActiveScreen("dashboard")} />}
+          {activeScreen === "settings" && <Settings />}
         </div>
 
         {/* Bottom Navigation */}

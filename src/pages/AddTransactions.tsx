@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { X, ShoppingCart, Car, Home as HomeIcon, Coffee, Sparkles, TrendingUp } from "lucide-react";
+import { useCurrencyStore } from "../features/currencyStore";
 
 interface AddTransactionProps {
   onClose: () => void;
@@ -19,6 +20,7 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
   const [amount, setAmount] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [description, setDescription] = useState("");
+  const currency = useCurrencyStore(state => state.selectedCurrency);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +33,7 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
   );
 
   return (
-    <div className="min-h-full bg-background p-6 flex flex-col">
+    <div className="min-h-full bg-background p-6 flex flex-col text-primary">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <h2>Новая операция</h2>
@@ -82,7 +84,7 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
               className="w-full text-4xl bg-transparent border-b-2 border-border focus:border-primary outline-none pb-2"
               required
             />
-            <span className="absolute right-0 bottom-2 text-2xl text-muted-foreground">₽</span>
+            <span className="absolute right-0 bottom-2 text-2xl text-muted-foreground">{currency}</span>
           </div>
         </div>
 
@@ -100,7 +102,7 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
                   onClick={() => setSelectedCategory(category.id)}
                   className={`p-4 rounded-xl transition-all ${
                     isSelected
-                      ? "bg-primary text-primary-foreground ring-2 ring-primary ring-offset-2"
+                      ? "bg-primary text-white ring-2 ring-primary ring-offset-2"
                       : "bg-muted/30"
                   }`}
                 >
@@ -132,7 +134,7 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
           <button
             type="submit"
             disabled={!amount || !selectedCategory}
-            className="w-full py-4 bg-primary text-primary-foreground rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+            className="w-full py-4 bg-primary text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
           >
             Добавить операцию
           </button>

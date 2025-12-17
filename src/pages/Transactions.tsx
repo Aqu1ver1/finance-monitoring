@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ShoppingCart, Home as HomeIcon, Car, Coffee, Sparkles, TrendingUp, ChevronDown } from "lucide-react";
+import { useCurrencyStore } from "../features/currencyStore";
 
 interface Transaction {
   id: number;
@@ -106,6 +107,7 @@ const allTransactions: Transaction[] = [
 
 const Transactions: React.FC = () => {
   const [filter, setFilter] = useState<"all" | "income" | "expense">("all");
+  const currency = useCurrencyStore(state => state.selectedCurrency);
 
   const filteredTransactions = allTransactions.filter((t) => {
     if (filter === "income") return t.amount > 0;
@@ -130,11 +132,11 @@ const Transactions: React.FC = () => {
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="bg-green-50 rounded-xl p-4">
             <p className="text-sm text-green-700 mb-1">Доходы</p>
-            <p className="text-xl text-green-900">+{totalIncome.toLocaleString("ru-RU")} ₽</p>
+            <p className="text-xl text-green-900">+{totalIncome.toLocaleString("ru-RU")} {currency}</p>
           </div>
           <div className="bg-red-50 rounded-xl p-4">
             <p className="text-sm text-red-700 mb-1">Расходы</p>
-            <p className="text-xl text-red-900">-{totalExpense.toLocaleString("ru-RU")} ₽</p>
+            <p className="text-xl text-red-900">-{totalExpense.toLocaleString("ru-RU")} {currency}</p>
           </div>
         </div>
 
@@ -197,7 +199,7 @@ const Transactions: React.FC = () => {
                   className={transaction.amount > 0 ? "text-green-600" : "text-foreground"}
                 >
                   {transaction.amount > 0 ? "+" : ""}
-                  {transaction.amount.toLocaleString("ru-RU")} ₽
+                  {transaction.amount.toLocaleString("ru-RU")} {currency}
                 </p>
                 <p className="text-sm text-muted-foreground">{transaction.date}</p>
               </div>

@@ -37,7 +37,7 @@ const RecentTransactions = () => {
                                 <p className="text-sm text-muted-foreground">{transaction.category}</p>
                             </div>
                             <p
-                                className={transaction.amount > 0 ? "text-green-600" : "text-foreground"}
+                                className={transaction.amount > 0 ? "text-green-600" : "text-red-600"}
                             >
                                 {transaction.amount > 0 ? "+" : ""}
                                 {transaction.amount.toLocaleString("ru-RU")} ₽
