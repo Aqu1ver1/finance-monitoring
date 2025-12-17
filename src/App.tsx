@@ -1,12 +1,32 @@
 
-import HomePage from './pages/Home'
+import Budget from './pages/Budget'
+import Dashboard from './pages/Dashboard'
+import Navigation from './components/Navigation'
+import AddTransaction from './pages/AddTransactions'
+import Transactions from './pages/Transactions'
+import { useState } from 'react'
+
+type Screen = "dashboard" | "budget" | "transactions" | "add";
 
 function App() {
 
+
+  const [activeScreen, setActiveScreen] = useState<Screen>("dashboard");
   return (
-    <>
-      <HomePage onAddClick={() => {}}/>
-    </>
+    <div className="h-screen flex flex-col min-w-full">
+      {/* Content Area */}
+        <div className="flex-1 overflow-y-auto">
+          {activeScreen === "dashboard" && <Dashboard onAddClick={() => setActiveScreen("add")} />}
+          {activeScreen === "budget" && <Budget />}
+          {activeScreen === "transactions" && <Transactions />}
+          {activeScreen === "add" && <AddTransaction onClose={() => setActiveScreen("dashboard")} />}
+        </div>
+
+        {/* Bottom Navigation */}
+        {activeScreen !== "add" && (
+          <Navigation activeScreen={activeScreen} setActiveScreen={setActiveScreen} />
+        )}
+    </div>
   )
 }
 
