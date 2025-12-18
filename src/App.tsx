@@ -6,7 +6,7 @@ import AddTransaction from './pages/AddTransactions'
 import Transactions from './pages/Transactions'
 import { use, useState } from 'react'
 import Settings from './pages/Settings'
-import type { Screen } from './types/index'
+import type { Screen } from './shared/types/index'
 // import { useTheme } from './hooks/useTheme'
 
 

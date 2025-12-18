@@ -1,5 +1,6 @@
 import React from 'react'
 import CircularProgress from './CircularProgress';
+import { useCurrencyStore } from '../features/settings/currency/model/currency.store';
 
 interface BudgetCategory {
   id: number;
@@ -11,6 +12,7 @@ interface BudgetCategory {
 }
 
 const BudgerCategories = ({ budgetCategories }: { budgetCategories: BudgetCategory[] }) => {
+  const currency = useCurrencyStore(state => state.selectedCurrency);
   return (
     <div>
         <h3 className="mb-4">Категории</h3>
@@ -46,17 +48,17 @@ const BudgerCategories = ({ budgetCategories }: { budgetCategories: BudgetCatego
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-muted-foreground">Потрачено</span>
                         <span className={isOverBudget ? "text-red-600" : ""}>
-                          {category.spent.toLocaleString("ru-RU")} ₽
+                          {category.spent.toLocaleString("ru-RU")} {currency}
                         </span>
                       </div>
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-muted-foreground">Лимит</span>
-                        <span>{category.limit.toLocaleString("ru-RU")} ₽</span>
+                        <span>{category.limit.toLocaleString("ru-RU")} {currency}</span>
                       </div>
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-muted-foreground">Осталось</span>
                         <span className={isOverBudget ? "text-red-600" : "text-green-600"}>
-                          {(category.limit - category.spent).toLocaleString("ru-RU")} ₽
+                          {(category.limit - category.spent).toLocaleString("ru-RU")} {currency}
                         </span>
                       </div>
                     </div>

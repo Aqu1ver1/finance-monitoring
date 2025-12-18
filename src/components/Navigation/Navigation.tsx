@@ -1,7 +1,7 @@
 import { Home, List, Plus, Wallet, SettingsIcon} from 'lucide-react'
 import React from 'react'
-import type { Screen } from '../../types';
-import type { NavigationProps } from '../../types';
+import type { Screen } from '../../shared/types';
+import type { NavigationProps } from '../../shared/types';
 import NavButton from './NavButton';
 
 const Navigation: React.FC<NavigationProps> = ({ activeScreen, setActiveScreen }) => {

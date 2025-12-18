@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { X, ShoppingCart, Car, Home as HomeIcon, Coffee, Sparkles, TrendingUp } from "lucide-react";
-import { useCurrencyStore } from "../features/currencyStore";
+import { useCurrencyStore } from "../features/settings/currency/model/currency.store";
 
 interface AddTransactionProps {
   onClose: () => void;
@@ -17,14 +17,14 @@ const categories = [
 
 const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
   const [type, setType] = useState<"expense" | "income">("expense");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [description, setDescription] = useState("");
   const currency = useCurrencyStore(state => state.selectedCurrency);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // В реальном приложении здесь была бы логика сохранения
+    
     onClose();
   };
 
@@ -79,7 +79,7 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
             <input
               type="number"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={(e) => setAmount(parseFloat(e.target.value))}
               placeholder="0"
               className="w-full text-4xl bg-transparent border-b-2 border-border focus:border-primary outline-none pb-2"
               required
@@ -134,6 +134,7 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
           <button
             type="submit"
             disabled={!amount || !selectedCategory}
+            onClick={(handleSubmit)}
             className="w-full py-4 bg-primary text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
           >
             Добавить операцию

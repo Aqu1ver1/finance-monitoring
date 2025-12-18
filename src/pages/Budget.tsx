@@ -1,5 +1,5 @@
 import { ShoppingCart, Car, Home as HomeIcon, Coffee, Sparkles, Utensils } from "lucide-react";
-import TotalBudgetSummary from "../components/TotalBudgetSummary";
+import TotalBudgetSummary from "../features/transactions/ui/TotalBudgetSummary";
 import BudgerCategories from "../components/BudgerCategories";
 
 interface BudgetCategory {

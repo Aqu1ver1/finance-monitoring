@@ -1,8 +1,8 @@
 import Navigation from "../components/Navigation/Navigation";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { ShoppingCart, Home as HomeIcon, Car, Coffee, Sparkles, TrendingUp, TrendingDown } from "lucide-react";
-import RecentTransactions from "../components/RecentTransactions";
-import { useCurrencyStore } from "../features/currencyStore";
+import RecentTransactions from "../features/transactions/ui/RecentTransactions";
+import { useCurrencyStore } from "../features/settings/currency/model/currency.store";
 
 const expenseData = [
   { name: "Еда", value: 15000, color: "#3B82F6" },

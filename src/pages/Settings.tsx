@@ -11,7 +11,7 @@ import {
   ChevronRight,
   Currency,
 } from "lucide-react";
-import CurrencyExchange from "../features/CurrencyExchange";
+import CurrencyExchange from "../features/settings/currency/ui/CurrencyExchange";
 
 const Settings = () => {
   const [darkMode, setDarkMode] = useState(false);

@@ -1,5 +1,6 @@
 import React from 'react'
 import { ShoppingCart, Car, Home as HomeIcon, Coffee, TrendingUp } from "lucide-react";
+import { useCurrencyStore } from '../../settings/currency/model/currency.store';
 
 const recentTransactions = [
     { id: 1, name: "Продукты", category: "Еда", amount: -1250, icon: ShoppingCart, color: "#3B82F6" },
@@ -11,7 +12,7 @@ const recentTransactions = [
 
 
 const RecentTransactions = () => {
-
+    const currency = useCurrencyStore(state => state.selectedCurrency);
     return (
         <section>
             <div className="flex items-center justify-between mb-4">
@@ -40,7 +41,7 @@ const RecentTransactions = () => {
                                 className={transaction.amount > 0 ? "text-green-600" : "text-red-600"}
                             >
                                 {transaction.amount > 0 ? "+" : ""}
-                                {transaction.amount.toLocaleString("ru-RU")} ₽
+                                {transaction.amount.toLocaleString("ru-RU")} {currency}
                             </p>
                         </div>
                     );
