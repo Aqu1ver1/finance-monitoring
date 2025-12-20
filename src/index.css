@@ -1,21 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --background: #ffffff; /* Белый фон для светлой темы */
   --primary: #030213;
-  --darkPrimary: #e3e3e3;
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.95 0.0058 264.53);
+  --primary-foreground: #ffffff;
+  --secondary: #f4f4f5;
   --secondary-foreground: #030213;
   --muted: #ececf0;
   --muted-foreground: #717182;
@@ -25,11 +14,24 @@
   --destructive-foreground: #ffffff;
 }
 
+:root.dark {
+  --background: #0f0f1f; /* Глубокий синий/черный для темной */
+  --primary: #e3e3e3;
+  --primary-foreground: #030213;
+  --secondary: #1a1a2e;
+  --secondary-foreground: #e3e3e3;
+  --muted: #2d2d3d;
+  --muted-foreground: #a0a0a8;
+  --accent: #3d3d4d;
+  --accent-foreground: #e3e3e3;
+  --destructive: #ff4466;
+  --destructive-foreground: #030213;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-primary: var(--primary);
-  --color-foreground: var(--primary-foreground);
-  --color-dark-primary: var(--darkPrimary);
+  --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);

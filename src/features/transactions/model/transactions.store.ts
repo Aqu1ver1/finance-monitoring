@@ -1,8 +1,53 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
+export interface Transaction {
+  id: number;
+  amount: number;
+  type: 'income' | 'expense';
+  category: string;
+  description?: string;
+  date: string;
+}
 
+interface TransactionsStore {
+  transactions: Transaction[];
+  addTransaction: (transaction: Omit<Transaction, 'id'>) => void;
+  removeTransaction: (id: number) => void;
+  getTransactions: () => Transaction[];
+}
 
+export const useTransactionsStore = create<TransactionsStore>()(
+  persist(
+    (set, get) => ({
+      transactions: [],
+      
+      addTransaction: (transaction: Omit<Transaction, 'id'>) => {
+        set((state) => {
+          const newTransaction: Transaction = {
+            ...transaction,
+            id: state.transactions.length > 0 
+              ? Math.max(...state.transactions.map(t => t.id)) + 1 
+              : 1,
+          };
+          return {
+            transactions: [newTransaction, ...state.transactions],
+          };
+        });
+      },
+      
+      removeTransaction: (id: number) => {
+        set((state) => ({
+          transactions: state.transactions.filter(t => t.id !== id),
+        }));
+      },
+      
+      getTransactions: () => get().transactions,
 
-export const useTransactionsStore = create<TransactionsState>((set) => ({
-  
-}));
+    }),
+    {
+      name: 'transactions-storage',
+      version: 1,
+    }
+  )
+);

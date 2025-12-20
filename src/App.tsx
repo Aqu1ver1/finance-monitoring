@@ -4,20 +4,19 @@ import Dashboard from './pages/Dashboard'
 import Navigation from './components/Navigation/Navigation'
 import AddTransaction from './pages/AddTransactions'
 import Transactions from './pages/Transactions'
-import { use, useState } from 'react'
+import { useState } from 'react'
 import Settings from './pages/Settings'
 import type { Screen } from './shared/types/index'
-// import { useTheme } from './hooks/useTheme'
+import { ThemeProvider } from './shared/context/ThemeContext'
 
 
 function App() {
-
-  // const { isDark, toggle } = useTheme();
   const [activeScreen, setActiveScreen] = useState<Screen>("dashboard");
   return (
-    <div className="h-screen flex flex-col min-w-full">
-      {/* Content Area */}
-        <div className="flex-1 overflow-y-auto bg-white">
+    <ThemeProvider>
+      <div className="h-screen flex flex-col min-w-full bg-white dark:bg-background">
+        {/* Content Area */}
+        <div className="flex-1 overflow-y-auto bg-white dark:bg-background">
           {activeScreen === "dashboard" && <Dashboard/>}
           {activeScreen === "budget" && <Budget />}
           {activeScreen === "transactions" && <Transactions />}
@@ -29,7 +28,8 @@ function App() {
         {activeScreen !== "add" && (
           <Navigation activeScreen={activeScreen} setActiveScreen={setActiveScreen} />
         )}
-    </div>
+      </div>
+    </ThemeProvider>
   )
 }
 

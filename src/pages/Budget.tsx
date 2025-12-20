@@ -1,13 +1,15 @@
 import { ShoppingCart, Car, Home as HomeIcon, Coffee, Sparkles, Utensils } from "lucide-react";
 import TotalBudgetSummary from "../features/transactions/ui/TotalBudgetSummary";
-import BudgerCategories from "../components/BudgerCategories";
+import BudgerCategories from "../components/BudgerCategory";
+import { useTransactionsStore } from "../features/transactions/model/transactions.store";
+import { useState } from "react";
 
 interface BudgetCategory {
   id: number;
   name: string;
   spent: number;
   limit: number;
-  icon: any;
+  icon: React.ComponentType<any>;
   color: string;
 }
 
@@ -21,21 +23,22 @@ const budgetCategories: BudgetCategory[] = [
 
 
 const Budget = () => {
+  const totalLimit = 1;
+  const [isNull, setIsNull] = useState(totalLimit < 0);
+  const transactions = useTransactionsStore(state => state.transactions);
   const totalSpent = budgetCategories.reduce((sum, cat) => sum + cat.spent, 0);
-  const totalLimit = budgetCategories.reduce((sum, cat) => sum + cat.limit, 0);
+
   const totalPercentage = (totalSpent / totalLimit) * 100;
 
   return (
     <div className="p-6 pb-8">
       {/* Header */}
-      <TotalBudgetSummary
-        totalSpent={totalSpent}
-        totalLimit={totalLimit}
-        totalPercentage={totalPercentage}
-      />
-
-      {/* Budget Categories */}
-      <BudgerCategories budgetCategories={budgetCategories} />
+        <TotalBudgetSummary
+          totalSpent={totalSpent}
+          totalLimit={totalLimit}
+          totalPercentage={totalPercentage}
+          isNull={isNull}
+        />
     </div>
   );
 }

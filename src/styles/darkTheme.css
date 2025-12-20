@@ -1,0 +1,106 @@
+/* 
+  ГОТОВЫЕ СТИЛИ ДЛЯ ТЁМНОЙ ТЕМЫ
+  
+  Можно быстро скопировать/вставить в компоненты:
+  1. Используйте эти классы для выглядящих хорошо элементов
+  2. Все переменные уже определены в :root.dark
+*/
+
+/* ===== ФОНЫ ===== */
+.bg-dark-primary {
+  @apply bg-primary;
+}
+
+.bg-dark-secondary {
+  @apply bg-secondary;
+}
+
+.bg-dark-muted {
+  @apply bg-muted;
+}
+
+.bg-dark-accent {
+  @apply bg-accent;
+}
+
+/* ===== ТЕКСТ ===== */
+.text-dark-primary {
+  @apply text-primary;
+}
+
+.text-dark-muted {
+  @apply text-muted-foreground;
+}
+
+.text-dark-accent {
+  @apply text-accent-foreground;
+}
+
+/* ===== КАРТОЧКИ ===== */
+.card-dark {
+  @apply bg-muted/30 rounded-xl p-4 text-primary;
+}
+
+.card-dark-hover {
+  @apply bg-muted/30 rounded-xl p-4 text-primary hover:bg-muted/50 transition-colors;
+}
+
+/* ===== НАВИГАЦИЯ ===== */
+.nav-dark {
+  @apply bg-muted/30 rounded-2xl overflow-hidden;
+}
+
+/* ===== ИКОНКИ ===== */
+.icon-dark-bg {
+  @apply rounded-full flex items-center justify-center;
+}
+
+/* ===== ВЫКЛЮЧАТЕЛИ / ПЕРЕКЛЮЧАТЕЛИ ===== */
+.toggle-dark-on {
+  @apply bg-primary;
+}
+
+.toggle-dark-off {
+  @apply bg-muted;
+}
+
+.toggle-dark-knob {
+  @apply absolute top-1 w-5 h-5 bg-white rounded-full transition-transform;
+}
+
+.toggle-dark-on-knob {
+  @apply translate-x-6;
+}
+
+.toggle-dark-off-knob {
+  @apply translate-x-1;
+}
+
+/* ===== РАЗДЕЛИТЕЛИ ===== */
+.divider-dark {
+  @apply h-px bg-border mx-4;
+}
+
+/* ===== ГРАДИЕНТЫ ===== */
+.gradient-dark-card {
+  @apply bg-gradient-to-br from-secondary/50 to-secondary text-primary rounded-2xl p-6;
+}
+
+/* ===== ПРИМЕРЫ ИСПОЛЬЗОВАНИЯ ===== */
+/*
+  <div className="card-dark">
+    Содержимое карточки
+  </div>
+
+  <button className="card-dark-hover">
+    Кнопка с эффектом
+  </button>
+
+  <div className="toggle-dark-on w-12 h-7 rounded-full transition-colors relative">
+    <div className="toggle-dark-knob toggle-dark-on-knob"></div>
+  </div>
+
+  <div className="gradient-dark-card">
+    Полноценная карточка
+  </div>
+*/

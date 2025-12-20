@@ -1,6 +1,6 @@
 import React from 'react'
-import CircularProgress from './CircularProgress';
-import { useCurrencyStore } from '../features/settings/currency/model/currency.store';
+import CircularProgress from "../../transactions/ui/CircularProgress";
+import { useCurrencyStore } from '../../../features/settings/currency/model/currency.store';
 
 interface BudgetCategory {
   id: number;

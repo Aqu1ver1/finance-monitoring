@@ -1,91 +1,62 @@
-import Navigation from "../components/Navigation/Navigation";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
-import { ShoppingCart, Home as HomeIcon, Car, Coffee, Sparkles, TrendingUp, TrendingDown } from "lucide-react";
+import { TrendingUp, TrendingDown } from "lucide-react";
 import RecentTransactions from "../features/transactions/ui/RecentTransactions";
 import { useCurrencyStore } from "../features/settings/currency/model/currency.store";
-
-const expenseData = [
-  { name: "Еда", value: 15000, color: "#3B82F6" },
-  { name: "Транспорт", value: 8000, color: "#10B981" },
-  { name: "Жильё", value: 25000, color: "#F59E0B" },
-  { name: "Развлечения", value: 7000, color: "#8B5CF6" },
-  { name: "Прочее", value: 5000, color: "#EC4899" },
-];
-
+import { useTransactionsStore } from "../features/transactions/model/transactions.store";
+import ExpenseChart from "../shared/ui/ExpenseChart";
 
 const Dashboard: React.FC = () => {
-    const totalExpenses = expenseData.reduce((sum, item) => sum + item.value, 0);
-    const balance = 135000;
-    const income = 75000;
-    const expenses = 60000;
+    const transactions = useTransactionsStore((state) => state.transactions);
     const currency = useCurrencyStore(state => state.selectedCurrency);
 
+    const totalExpenses = transactions.reduce((sum, item) => item.amount < 0 ? sum + Math.abs(item.amount) : sum, 0);
+    const totalIncome = transactions.reduce((sum, item) => item.amount > 0 ? sum + item.amount : sum, 0);
+    const balance = totalIncome - totalExpenses;
+
     return (
-            <div className="overflow-hidden flex flex-col relative text-primary p-6">
-                <div className="mb-8 ">
-                    <p className=" mb-1">Общий баланс</p>
-                    <h1 className="text-5xl mb-4">{balance.toLocaleString("ru-RU")} {currency}</h1>
-                    <div className="flex gap-4">
-                        <div className="flex items-center gap-2 px-4 py-2 bg-green-50 rounded-lg">
-                            <TrendingUp className="w-4 h-4 text-green-600" />
-                            <div>
-                                <p className="text-xs text-green-700">Доход</p>
-                                <p className="text-green-900">{income.toLocaleString("ru-RU")} {currency}</p>
-                            </div>
+        // Используем bg-background и text-primary для автоматической смены цветов
+        <div className="min-h-screen bg-background text-primary p-6 transition-colors duration-300">
+            <div className="mb-8">
+                <p className="text-muted-foreground mb-1">Общий баланс</p>
+                <h1 className="text-5xl font-bold mb-6">
+                    {balance.toLocaleString("ru-RU")} {currency}
+                </h1>
+                
+                <div className="flex gap-4">
+                    {/* Карточка Дохода */}
+                    <div className="flex items-center gap-3 px-4 py-3 bg-secondary rounded-2xl border border-muted">
+                        <div className="p-2 bg-green-500/10 rounded-full">
+                            <TrendingUp className="w-5 h-5 text-green-500" />
                         </div>
-                        <div className="flex items-center gap-2 px-4 py-2 bg-red-50 rounded-lg">
-                            <TrendingDown className="w-4 h-4 text-red-600" />
-                            <div>
-                                <p className="text-xs text-red-700">Расход</p>
-                                <p className="text-red-900">{expenses.toLocaleString("ru-RU")} {currency}</p>
-                            </div>
+                        <div>
+                            <p className="text-xs text-muted-foreground">Доход</p>
+                            <p className="font-semibold text-primary">
+                                {totalIncome.toLocaleString("ru-RU")} {currency}
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Карточка Расхода */}
+                    <div className="flex items-center gap-3 px-4 py-3 bg-secondary rounded-2xl border border-muted">
+                        <div className="p-2 bg-destructive/10 rounded-full">
+                            <TrendingDown className="w-5 h-5 text-destructive" />
+                        </div>
+                        <div>
+                            <p className="text-xs text-muted-foreground">Расход</p>
+                            <p className="font-semibold text-primary">
+                                {totalExpenses.toLocaleString("ru-RU")} {currency}
+                            </p>
                         </div>
                     </div>
                 </div>
-                {/* Expense Chart */}
-                <div className="mb-8">
-                    <h3 className="mb-4">Расходы по категориям</h3>
-                    <div className="bg-muted/30 rounded-2xl p-6">
-                        <ResponsiveContainer width="100%" height={200}>
-                            <PieChart>
-                                <Pie
-                                    data={expenseData}
-                                    cx="50%"
-                                    cy="50%"
-                                    innerRadius={60}
-                                    outerRadius={80}
-                                    paddingAngle={2}
-                                    dataKey="value"
-                                >
-                                    {expenseData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={entry.color} />
-                                    ))}
-                                </Pie>
-                            </PieChart>
-                        </ResponsiveContainer>
-                        <div className="mt-4 grid grid-cols-2 gap-3">
-                            {expenseData.map((item) => (
-                                <div key={item.name} className="flex items-center gap-2">
-                                    <div
-                                        className="w-3 h-3 rounded-full"
-                                        style={{ backgroundColor: item.color }}
-                                    ></div>
-                                    <div className="flex-1">
-                                        <p className="text-sm">{item.name}</p>
-                                        <p className="text-xs text-muted-foreground">
-                                            {item.value.toLocaleString("ru-RU")} {currency}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+            </div>
+
+            <div className="grid gap-6">
+                <div className="bg-secondary/50 p-4 rounded-3xl border border-muted">
+                    <ExpenseChart />
                 </div>
-                {/* Recent Transactions */}
                 <RecentTransactions />
             </div>
+        </div>
     );
 }
-
-
 export default Dashboard;

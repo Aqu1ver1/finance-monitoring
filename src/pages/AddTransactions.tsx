@@ -1,30 +1,36 @@
 import { useState } from "react";
-import { X, ShoppingCart, Car, Home as HomeIcon, Coffee, Sparkles, TrendingUp } from "lucide-react";
+import { X } from "lucide-react";
 import { useCurrencyStore } from "../features/settings/currency/model/currency.store";
+import { useTransactionsStore } from "../features/transactions/model/transactions.store";
+import { categories } from "../features/transactions/data/categoryConfig";
+import { formatDateToText } from "../shared/utils/dateFormatter";
 
 interface AddTransactionProps {
   onClose: () => void;
 }
 
-const categories = [
-  { id: "food", name: "Еда", icon: ShoppingCart, color: "#3B82F6" },
-  { id: "transport", name: "Транспорт", icon: Car, color: "#10B981" },
-  { id: "home", name: "Жильё", icon: HomeIcon, color: "#F59E0B" },
-  { id: "entertainment", name: "Развлечения", icon: Coffee, color: "#8B5CF6" },
-  { id: "other", name: "Прочее", icon: Sparkles, color: "#EC4899" },
-  { id: "income", name: "Доход", icon: TrendingUp, color: "#10B981" },
-];
-
 const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
   const [type, setType] = useState<"expense" | "income">("expense");
-  const [amount, setAmount] = useState(0);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [amount, setAmount] = useState<number>(0);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [description, setDescription] = useState("");
+  
   const currency = useCurrencyStore(state => state.selectedCurrency);
+  const addTransaction = useTransactionsStore(state => state.addTransaction);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+    if (!amount || !selectedCategory) return;
+
+    addTransaction({
+      type,
+      amount: type === "income" ? amount : -amount,
+      category: selectedCategory,
+      description: description === "" 
+        ? categories.find(cat => cat.id === selectedCategory)?.category || "" 
+        : description,
+      date: formatDateToText(new Date()),
+    });
     onClose();
   };
 
@@ -33,28 +39,28 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
   );
 
   return (
-    <div className="min-h-full bg-background p-6 flex flex-col text-primary">
+    <div className="min-h-full bg-background p-6 flex flex-col text-primary transition-colors duration-300">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
-        <h2>Новая операция</h2>
+        <h2 className="text-xl font-bold">Новая операция</h2>
         <button
           onClick={onClose}
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-muted/30"
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-secondary text-primary hover:bg-muted transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
       </div>
 
       <form onSubmit={handleSubmit} className="flex-1 flex flex-col">
-        {/* Type Toggle */}
-        <div className="flex gap-3 mb-8">
+        {/* Type Toggle - Сегментированный переключатель */}
+        <div className="flex gap-2 p-1 bg-secondary rounded-2xl mb-8 border border-muted">
           <button
             type="button"
             onClick={() => setType("expense")}
-            className={`flex-1 py-3 rounded-xl transition-colors ${
+            className={`flex-1 py-3 rounded-xl font-medium transition-all ${
               type === "expense"
-                ? "bg-red-500 text-white"
-                : "bg-muted/30 text-muted-foreground"
+                ? "bg-destructive text-destructive-foreground shadow-sm"
+                : "text-muted-foreground hover:text-primary"
             }`}
           >
             Расход
@@ -62,10 +68,10 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
           <button
             type="button"
             onClick={() => setType("income")}
-            className={`flex-1 py-3 rounded-xl transition-colors ${
+            className={`flex-1 py-3 rounded-xl font-medium transition-all ${
               type === "income"
-                ? "bg-green-500 text-white"
-                : "bg-muted/30 text-muted-foreground"
+                ? "bg-green-500 text-white shadow-sm"
+                : "text-muted-foreground hover:text-primary"
             }`}
           >
             Доход
@@ -74,23 +80,26 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
 
         {/* Amount Input */}
         <div className="mb-8">
-          <label className="block text-muted-foreground mb-2">Сумма</label>
-          <div className="relative">
+          <label className="block text-sm text-muted-foreground mb-2">Сумма</label>
+          <div className="relative border-b-2 border-muted focus-within:border-primary transition-colors">
             <input
               type="number"
-              value={amount}
-              onChange={(e) => setAmount(parseFloat(e.target.value))}
+              value={amount === 0 ? "" : amount}
+              onChange={(e) => setAmount(parseFloat(e.target.value) || 0)}
               placeholder="0"
-              className="w-full text-4xl bg-transparent border-b-2 border-border focus:border-primary outline-none pb-2"
+              className="w-full text-5xl font-bold bg-transparent outline-none pb-4 pr-12 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               required
+              autoFocus
             />
-            <span className="absolute right-0 bottom-2 text-2xl text-muted-foreground">{currency}</span>
+            <span className="absolute right-0 bottom-6 text-2xl font-medium text-muted-foreground">
+              {currency}
+            </span>
           </div>
         </div>
 
         {/* Category Selection */}
         <div className="mb-8">
-          <label className="block mb-3">Категория</label>
+          <label className="block text-sm text-muted-foreground mb-4">Категория</label>
           <div className="grid grid-cols-3 gap-3">
             {filteredCategories.map((category) => {
               const Icon = category.icon;
@@ -100,17 +109,27 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
                   key={category.id}
                   type="button"
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`p-4 rounded-xl transition-all ${
+                  className={`p-4 rounded-2xl transition-all duration-200 border-2 ${
                     isSelected
-                      ? "bg-primary text-white ring-2 ring-primary ring-offset-2"
-                      : "bg-muted/30"
+                      ? "bg-primary/5 border-primary shadow-[0_0_0_1px_var(--color-primary)]"
+                      : "bg-secondary/50 border-transparent hover:border-muted"
                   }`}
                 >
-                  <Icon
-                    className="w-6 h-6 mx-auto mb-2"
-                    style={{ color: isSelected ? "currentColor" : category.color }}
-                  />
-                  <p className="text-xs text-center">{category.name}</p>
+                  <div 
+                    className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 transition-colors ${
+                       isSelected ? "bg-primary text-primary-foreground" : "bg-background"
+                    }`}
+                  >
+                    <Icon
+                      className="w-6 h-6"
+                      style={{ color: isSelected ? "inherit" : category.color }}
+                    />
+                  </div>
+                  <p className={`text-[10px] font-medium text-center uppercase tracking-wider ${
+                    isSelected ? "text-primary" : "text-muted-foreground"
+                  }`}>
+                    {category.category}
+                  </p>
                 </button>
               );
             })}
@@ -119,29 +138,29 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
 
         {/* Description */}
         <div className="mb-8">
-          <label className="block mb-2">Описание</label>
+          <label className="block text-sm text-muted-foreground mb-2">Описание</label>
           <input
             type="text"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Например: Продукты в магазине"
-            className="w-full px-4 py-3 bg-muted/30 rounded-xl outline-none focus:ring-2 focus:ring-primary"
+            placeholder="На что потратили?"
+            className="w-full px-5 py-4 bg-secondary rounded-2xl outline-none border border-transparent focus:border-primary transition-all placeholder:text-muted-foreground/50"
           />
         </div>
 
         {/* Submit Button */}
-        <div className="mt-auto">
+        <div className="mt-auto pt-4">
           <button
             type="submit"
             disabled={!amount || !selectedCategory}
-            onClick={(handleSubmit)}
-            className="w-full py-4 bg-primary text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+            className="w-full py-5 bg-primary text-primary-foreground rounded-2xl font-bold text-lg shadow-lg active:scale-[0.98] disabled:opacity-30 disabled:grayscale disabled:scale-100 transition-all"
           >
-            Добавить операцию
+            Подтвердить
           </button>
         </div>
       </form>
     </div>
   );
-}
+};
+
 export default AddTransaction;

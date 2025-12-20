@@ -2,172 +2,131 @@ import { useState } from "react";
 import {
   User,
   Bell,
-  Globe,
   Moon,
   Lock,
   CreditCard,
   HelpCircle,
   LogOut,
   ChevronRight,
-  Currency,
 } from "lucide-react";
 import CurrencyExchange from "../features/settings/currency/ui/CurrencyExchange";
+import { useThemeContext } from "../shared/context/ThemeContext";
 
 const Settings = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { isDark, toggle } = useThemeContext();
   const [notifications, setNotifications] = useState(true);
 
   return (
-    <div className="p-6 pb-8 text-primary">
+    <div className="min-h-screen bg-background p-6 pb-12 text-primary transition-colors duration-300">
       {/* Header */}
       <div className="mb-8">
-        <h2 className="mb-6">Настройки</h2>
+        <h2 className="text-2xl font-bold mb-6">Настройки</h2>
 
-        {/* Profile Card */}
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-2xl p-6 mb-6">
+        {/* Profile Card - Используем градиент, который хорошо смотрится в обеих темах */}
+        <div className="bg-linear-to-br from-indigo-600 to-blue-700 text-white rounded-4xl p-6 shadow-lg shadow-blue-500/20">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-              <User className="w-8 h-8" />
+            <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30">
+              <User className="w-8 h-8 text-white" />
             </div>
             <div>
-              <p className="text-xl">Иван Петров</p>
-              <p className="">ivan.petrov@email.com</p>
+              <p className="text-xl font-semibold">Иван Петров</p>
+              <p className="text-blue-100 text-sm opacity-80 font-light">ivan.petrov@email.com</p>
             </div>
           </div>
-          <button className="mt-4 px-4 py-2 bg-white/20 rounded-lg text-sm backdrop-blur-sm">
+          <button className="mt-5 w-full py-2.5 bg-white/10 hover:bg-white/20 rounded-xl text-sm font-medium backdrop-blur-sm border border-white/10 transition-all active:scale-95">
             Редактировать профиль
           </button>
         </div>
       </div>
 
       {/* Settings Sections */}
-      <div className="space-y-6">
+      <div className="space-y-8">
         {/* General Settings */}
-        <div>
-          <h4 className="mb-3 text-muted-foreground">Общие</h4>
-          <div className="bg-muted/30 rounded-2xl overflow-hidden">
+        <section>
+          <h4 className="px-2 mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">Общие</h4>
+          <div className="bg-secondary rounded-3xl border border-muted overflow-hidden">
             {/* Dark Mode Toggle */}
             <button
-              onClick={() => setDarkMode(!darkMode)}
-              className="w-full flex items-center gap-3 p-4 hover:bg-muted/50 transition-colors"
+              onClick={toggle}
+              className="w-full flex items-center gap-4 p-4 hover:bg-muted/50 transition-colors"
             >
-              <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
                 <Moon className="w-5 h-5 text-primary" />
               </div>
               <div className="flex-1 text-left">
-                <p>Темная тема</p>
-                <p className="text-sm text-muted-foreground">
-                  {darkMode ? "Включена" : "Выключена"}
+                <p className="font-medium">Темная тема</p>
+                <p className="text-xs text-muted-foreground italic">
+                  {isDark ? "Экономит заряд батареи" : "Классический вид"}
                 </p>
               </div>
-              <div
-                className={`w-12 h-7 rounded-full transition-colors relative ${
-                  darkMode ? "bg-primary" : "bg-muted"
-                }`}
-              >
-                <div
-                  className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-transform ${
-                    darkMode ? "translate-x-6" : "translate-x-1"
-                  }`}
-                ></div>
+              {/* Custom Toggle Switch */}
+              <div className={`w-12 h-6 rounded-full transition-all duration-300 relative ${isDark ? "bg-primary" : "bg-muted"}`}>
+                <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300 ${isDark ? "translate-x-6" : "translate-x-0"}`} />
               </div>
             </button>
 
-            <div className="h-px bg-border mx-4"></div>
-
-            {/* Currency */}
+            <div className="h-px bg-border/50 mx-4"></div>
+            
             <CurrencyExchange />
 
-            <div className="h-px bg-border mx-4"></div>
+            <div className="h-px bg-border/50 mx-4"></div>
 
-            {/* Notifications */}
+            {/* Notifications Toggle */}
             <button
               onClick={() => setNotifications(!notifications)}
-              className="w-full flex items-center gap-3 p-4 hover:bg-muted/50 transition-colors"
+              className="w-full flex items-center gap-4 p-4 hover:bg-muted/50 transition-colors"
             >
-              <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
-                <Bell className="w-5 h-5 text-yellow-600" />
+              <div className="w-10 h-10 bg-orange-500/10 rounded-xl flex items-center justify-center">
+                <Bell className="w-5 h-5 text-orange-500" />
               </div>
               <div className="flex-1 text-left">
-                <p>Уведомления</p>
-                <p className="text-sm text-muted-foreground">
-                  {notifications ? "Включены" : "Выключены"}
-                </p>
+                <p className="font-medium">Уведомления</p>
+                <p className="text-xs text-muted-foreground">{notifications ? "Активны" : "Приглушены"}</p>
               </div>
-              <div
-                className={`w-12 h-7 rounded-full transition-colors relative ${
-                  notifications ? "bg-primary" : "bg-muted"
-                }`}
-              >
-                <div
-                  className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-transform ${
-                    notifications ? "translate-x-6" : "translate-x-1"
-                  }`}
-                ></div>
+              <div className={`w-12 h-6 rounded-full transition-all duration-300 relative ${notifications ? "bg-primary" : "bg-muted"}`}>
+                <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300 ${notifications ? "translate-x-6" : "translate-x-0"}`} />
               </div>
             </button>
           </div>
-        </div>
+        </section>
 
-        {/* Security */}
-        <div>
-          <h4 className="mb-3 text-muted-foreground">Безопасность</h4>
-          <div className="bg-muted/30 rounded-2xl overflow-hidden">
-            <button className="w-full flex items-center gap-3 p-4 hover:bg-muted/50 transition-colors">
-              <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                <Lock className="w-5 h-5 text-purple-600" />
-              </div>
-              <div className="flex-1 text-left">
-                <p>Изменить пароль</p>
-                <p className="text-sm text-muted-foreground">Последнее изменение 30 дн. назад</p>
-              </div>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
-            </button>
-
-            <div className="h-px bg-border mx-4"></div>
-
-            <button className="w-full flex items-center gap-3 p-4 hover:bg-muted/50 transition-colors">
-              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                <CreditCard className="w-5 h-5 text-blue-600" />
-              </div>
-              <div className="flex-1 text-left">
-                <p>Связанные счета</p>
-                <p className="text-sm text-muted-foreground">2 счета</p>
-              </div>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
-            </button>
+        {/* Security & Support */}
+        <section>
+          <h4 className="px-2 mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">Система</h4>
+          <div className="bg-secondary rounded-3xl border border-muted overflow-hidden">
+            <MenuButton icon={<Lock className="w-5 h-5 text-purple-500" />} title="Безопасность" sub="Пароль и FaceID" color="bg-purple-500/10" />
+            <div className="h-px bg-border/50 mx-4"></div>
+            <MenuButton icon={<CreditCard className="w-5 h-5 text-blue-500" />} title="Счета" sub="2 карты привязаны" color="bg-blue-500/10" />
+            <div className="h-px bg-border/50 mx-4"></div>
+            <MenuButton icon={<HelpCircle className="w-5 h-5 text-emerald-500" />} title="Поддержка" sub="Чат 24/7" color="bg-emerald-500/10" />
           </div>
-        </div>
-
-        {/* Support */}
-        <div>
-          <h4 className="mb-3 text-muted-foreground">Поддержка</h4>
-          <div className="bg-muted/30 rounded-2xl overflow-hidden">
-            <button className="w-full flex items-center gap-3 p-4 hover:bg-muted/50 transition-colors">
-              <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                <HelpCircle className="w-5 h-5 text-orange-600" />
-              </div>
-              <div className="flex-1 text-left">
-                <p>Помощь и FAQ</p>
-                <p className="text-sm text-muted-foreground">Часто задаваемые вопросы</p>
-              </div>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
-            </button>
-          </div>
-        </div>
+        </section>
 
         {/* Logout */}
-        <button className="w-full flex items-center justify-center gap-2 p-4 bg-red-50 text-red-600 rounded-2xl hover:bg-red-100 transition-colors">
+        <button className="w-full flex items-center justify-center gap-2 p-5 bg-destructive/10 text-destructive rounded-3xl font-bold hover:bg-destructive/20 transition-all active:scale-[0.98]">
           <LogOut className="w-5 h-5" />
           <span>Выйти из аккаунта</span>
         </button>
 
-        {/* App Version */}
-        <div className="text-center text-sm text-muted-foreground pt-4">
-          <p>Версия приложения 1.0.0</p>
+        <div className="text-center text-xs text-muted-foreground opacity-50 pb-4">
+          <p>Finance App • v1.0.0</p>
         </div>
       </div>
     </div>
   );
-}
+};
+
+// Вспомогательный компонент для строк меню
+const MenuButton = ({ icon, title, sub, color }: any) => (
+  <button className="w-full flex items-center gap-4 p-4 hover:bg-muted/50 transition-colors">
+    <div className={`w-10 h-10 ${color} rounded-xl flex items-center justify-center`}>
+      {icon}
+    </div>
+    <div className="flex-1 text-left">
+      <p className="font-medium">{title}</p>
+      <p className="text-xs text-muted-foreground">{sub}</p>
+    </div>
+    <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
+  </button>
+);
 export default Settings;

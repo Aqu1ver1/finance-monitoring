@@ -1,48 +1,38 @@
-import React, { useState } from 'react'
-import { ShoppingCart, Car, Home as HomeIcon, Coffee, Sparkles, TrendingUp } from "lucide-react";
+import React from 'react'
+import { getCategoryIcon, getCategoryColor } from "../../features/transactions/data/categoryConfig";
+import { useCurrencyStore } from "../../features/settings/currency/model/currency.store";
+import type { Transaction } from "../../features/transactions/model/transactions.store";
 
-const categories = [
-    { id: "food", name: "Еда", icon: ShoppingCart, color: "#3B82F6" },
-    { id: "transport", name: "Транспорт", icon: Car, color: "#10B981" },
-    { id: "home", name: "Жильё", icon: HomeIcon, color: "#F59E0B" },
-    { id: "entertainment", name: "Развлечения", icon: Coffee, color: "#8B5CF6" },
-    { id: "other", name: "Прочее", icon: Sparkles, color: "#EC4899" },
-    { id: "income", name: "Доход", icon: TrendingUp, color: "#10B981" },
-];
+interface Props {
+  transaction: Transaction;
+}
 
-const CategoryTransactions = ({ type }: { type: "expense" | "income" }) => {
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+const CategoryTransactions: React.FC<Props> = ({ transaction }) => {
+  const currency = useCurrencyStore(state => state.selectedCurrency);
+  const Icon = getCategoryIcon(transaction.category);
+  const color = getCategoryColor(transaction.category);
 
-    const filteredCategories = categories.filter((cat) =>
-        type === "income" ? cat.id === "income" : cat.id !== "income"
-    );
-
-    return (
-        <div className="grid grid-cols-3 gap-3">
-            {filteredCategories.map((category) => {
-              const Icon = category.icon;
-              const isSelected = selectedCategory === category.id;
-              return (
-                <button
-                  key={category.id}
-                  type="button"
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`p-4 rounded-xl transition-all ${
-                    isSelected
-                      ? "bg-primary text-white ring-2 ring-primary ring-offset-2"
-                      : "bg-muted/30"
-                  }`}
-                >
-                  <Icon
-                    className="w-6 h-6 mx-auto mb-2"
-                    style={{ color: isSelected ? "currentColor" : category.color }}
-                  />
-                  <p className="text-xs text-center">{category.name}</p>
-                </button>
-              );
-            })}
-          </div>
-    )
+  return (
+    <div className="flex items-center gap-3 p-4 bg-muted/30 rounded-xl">
+      <div
+        className="w-12 h-12 rounded-full flex items-center justify-center shrink-0"
+        style={{ backgroundColor: `${color}15` }}
+      >
+        <Icon className="w-6 h-6" style={{ color: color }} />
+      </div>
+      <div className="flex-1 min-w-0 text-primary">
+        <p className="truncate">{transaction.description}</p>
+        <p className="text-sm ">{transaction.category}</p>
+      </div>
+      <div className="text-right shrink-0">
+        <p className={transaction.amount > 0 ? "text-green-600" : "text-red-600"}>
+          {transaction.amount > 0 ? "+" : ""}
+          {transaction.amount.toLocaleString("ru-RU")} {currency}
+        </p>
+        <p className="text-sm text-primary">{transaction.date}</p>
+      </div>
+    </div>
+  );
 }
 
 export default CategoryTransactions
