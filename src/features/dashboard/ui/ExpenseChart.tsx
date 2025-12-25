@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
-import { useCurrencyStore } from "../../features/settings/currency/model/currency.store";
-import { useTransactionsStore } from '../../features/transactions/model/transactions.store';
-import { getCategoryColor, getIdByCategory } from "../../features/transactions/data/categoryConfig";
+import { useCurrencyStore } from "../../settings/currency/model/currency.store";
+import { useTransactionsStore } from '../../transactions/model/transactions.store';
+import { getCategoryColor, getIdByCategory } from "../../transactions/data/categoryConfig";
 
 type ExpenseItem = {
     category: string;

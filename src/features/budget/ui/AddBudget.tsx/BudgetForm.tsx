@@ -6,25 +6,53 @@ interface BudgetFormProps {
   onSubmit: (data: { budget: number; category: string; startDate: string; endDate: string }) => void;
 }
 
+const formatDate = (date: Date) => date.toISOString().split('T')[0];
+
+const addMonths = (date: Date, months: number) => {
+  const result = new Date(date);
+  result.setMonth(result.getMonth() + months);
+  return result;
+};
+
 const BudgetForm: React.FC<BudgetFormProps> = ({ onSubmit }) => {
+  const [errors, setErrors] = useState<{ budget?: string; category?: string; date?: string }>({});
   const [budget, setBudget] = useState('');
   const [category, setCategory] = useState('');
   const currency = useCurrency();
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState(() => formatDate(new Date()));
+  const [endDate, setEndDate] = useState(() => formatDate(addMonths(new Date(), 1)));
+
+  const validate = () => {
+    const newErrors: typeof errors = {};
+
+    if (!budget || Number(budget) <= 0) {
+      newErrors.budget = 'Введите корректную сумму бюджета';
+    }
+
+    if (!startDate || !endDate) {
+      newErrors.date = 'Укажите период бюджета';
+    } else if (new Date(startDate) > new Date(endDate)) {
+      newErrors.date = 'Дата начала не может быть позже даты окончания';
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!budget || !category) return; // базовая проверка
+    if (!validate()) return;
     onSubmit({ budget: Number(budget), category, startDate, endDate });
   };
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
+    <form className="space-y-3" onSubmit={handleSubmit}>
       {/* Ввод бюджета */}
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
           Введите сумму бюджета({currency})
         </label>
+        {errors.budget && <p className="text-red-500 text-sm mt-1">{errors.budget}</p>}
         <input
           type="number"
           value={budget}
@@ -34,6 +62,7 @@ const BudgetForm: React.FC<BudgetFormProps> = ({ onSubmit }) => {
         />
       </div>
       {/* Выбор периода бюджета */}
+      {errors.date && <p className="text-red-500 text-sm mt-1">{errors.date}</p>}
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">

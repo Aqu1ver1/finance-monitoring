@@ -1,5 +1,5 @@
 import { useTransactionsStore } from '../model/transactions.store';
-import CategoryTransactions from '../../../shared/ui/CategoryTransactions';
+import CategoryTransactions from './CategoryTransactions';
 
 
 

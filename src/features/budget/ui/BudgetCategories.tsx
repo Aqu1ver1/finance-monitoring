@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import type { LucideIcon } from 'lucide-react';
 import CircularProgress from "../../transactions/ui/CircularProgress";
 import { useCurrencyStore } from '../../../features/settings/currency/model/currency.store';
@@ -13,10 +13,9 @@ type ExpenseItem = {
   icon: LucideIcon;
 };
 
-const BudgerCategories = () => {
+const BudgetCategories = () => {
   const { budget } = useBudgetStore();
   const transactions = useTransactionsStore(state => state.transactions);
-  const totalSpent = transactions.reduce((sum, item) => item.amount < 0 ? sum + Math.abs(item.amount) : sum, 0);
   const currency = useCurrencyStore(state => state.selectedCurrency);
   const dateRange = useBudgetStore(state => state.dateRange);
 
@@ -49,16 +48,16 @@ const BudgerCategories = () => {
     }
 
     const aggregated = Array.from(map.values());
-    if (aggregated.length === 0) {
-      return [{ category: 'Нет расходов', amount: 1, color: '#E0E0E0', icon: getCategoryIcon('other') }];
+    if (aggregated.length === 0 || budget === 0) {
+      return [{ category: 'Нет расходов', amount: 0, color: '#E0E0E0', icon: getCategoryIcon('other') }];
     }
 
     return aggregated;
-  }, [transactions]);
+  }, [transactions, budget, dateRange]);
   return (
     <>
       {expenseData.map((category) => {
-        const percentage = (totalSpent / budget) * 100;
+        const percentage = (category.amount / budget == 0 ? 1 : budget) * 100;
         const isOverBudget = percentage > 100;
 
         return (
@@ -87,7 +86,7 @@ const BudgerCategories = () => {
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Потрачено</span>
                     <span className={isOverBudget ? "text-red-600" : ""}>
-                      {totalSpent.toLocaleString("ru-RU")} {currency}
+                      {category.amount.toLocaleString("ru-RU")} {currency}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
@@ -97,7 +96,7 @@ const BudgerCategories = () => {
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Осталось</span>
                     <span className={isOverBudget ? "text-red-600" : "text-green-600"}>
-                      {(budget - totalSpent).toLocaleString("ru-RU")} {currency}
+                      {(budget - category.amount).toLocaleString("ru-RU")} {currency}
                     </span>
                   </div>
                 </div>
@@ -110,4 +109,4 @@ const BudgerCategories = () => {
   )
 }
 
-export default BudgerCategories
+export default BudgetCategories

@@ -2,7 +2,7 @@ import { TrendingUp, TrendingDown } from "lucide-react";
 import RecentTransactions from "../features/transactions/ui/RecentTransactions";
 import { useCurrencyStore } from "../features/settings/currency/model/currency.store";
 import { useTransactionsStore } from "../features/transactions/model/transactions.store";
-import ExpenseChart from "../shared/ui/ExpenseChart";
+import ExpenseChart from "../features/dashboard/ui/ExpenseChart";
 
 const Dashboard: React.FC = () => {
     const transactions = useTransactionsStore((state) => state.transactions);
