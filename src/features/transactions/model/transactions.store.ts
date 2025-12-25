@@ -7,7 +7,7 @@ export interface Transaction {
   type: 'income' | 'expense';
   category: string;
   description?: string;
-  date: string;
+  date: Date;
 }
 
 interface TransactionsStore {
@@ -15,6 +15,7 @@ interface TransactionsStore {
   addTransaction: (transaction: Omit<Transaction, 'id'>) => void;
   removeTransaction: (id: number) => void;
   getTransactions: () => Transaction[];
+  removeAllTransactions: () => void;
 }
 
 export const useTransactionsStore = create<TransactionsStore>()(
@@ -39,6 +40,11 @@ export const useTransactionsStore = create<TransactionsStore>()(
       removeTransaction: (id: number) => {
         set((state) => ({
           transactions: state.transactions.filter(t => t.id !== id),
+        }));
+      },
+      removeAllTransactions: () => {
+        set(() => ({
+          transactions: [],
         }));
       },
       

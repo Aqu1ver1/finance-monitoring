@@ -1,32 +1,34 @@
-import React from 'react'
-import { useCurrencyStore } from '../../settings/currency/model/currency.store';
+import useCurrency from '../../../../shared/hooks/useCurrency';
+import BudgetIsNull from './BudgetIsNull';
+import Modal from '../AddBudget.tsx/AddBudget';
+import { useState } from 'react';
+import { formatDateToText } from '../../../../shared/utils/dateFormatter';
 
 interface TotalBudgetSummaryProps {
   totalSpent: number;
   totalLimit: number;
   totalPercentage: number;
   isNull: boolean;
+  date: string;
 }
-
-const TotalBudgetSummary = ({ totalSpent, totalLimit, totalPercentage, isNull }: TotalBudgetSummaryProps) => {
-  function handleSetBudget() {
-    
-  }
-  
-  const currency = useCurrencyStore(state => state.selectedCurrency);
+const TotalBudgetSummary = ({ totalSpent, totalLimit, totalPercentage, isNull, date }: TotalBudgetSummaryProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const currency = useCurrency();
+  const formattedDate = date ? date.split(' - ').map(d => formatDateToText(d)).join(' - ') : '';
   return (
-    <div className="text-primary bg-background  mb-8">
-      <h2 className="mb-6">Бюджет на месяц</h2>
+    <div className="text-white bg-background flex flex-col gap-2">
+      <h1 className="text-2xl">Бюджет на месяц</h1>
       {isNull ?
-        <div>
-          <p className="mb-2">Общий бюджет</p>
-          <button className="w-full py-3 bg-blue-500/10 hover:bg-blue-500/20 rounded-2xl text-blue-600 font-medium transition-all active:scale-95"
-          onClick={handleSetBudget}>
-            Установить бюджет
-          </button>
-        </div> :
+      <>
+      <BudgetIsNull handleSetBudget={() => setIsModalOpen(true)} />
+      <Modal 
+      isOpen={isModalOpen} 
+      onClose={() => setIsModalOpen(false)} 
+      title="Установить бюджет" />
+      </>
+        :
         <div className="bg-linear-to-br from-blue-500 to-blue-600 rounded-2xl p-6 mb-6">
-          <p className="mb-2">Общий бюджет</p>
+          <p className="mb-2">Общий бюджет на {formattedDate}</p>
           <p className="text-3xl mb-4">{totalLimit.toLocaleString("ru-RU")} {currency}</p>
           <div className="flex items-center justify-between">
             <div>

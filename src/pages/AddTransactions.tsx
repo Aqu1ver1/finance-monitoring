@@ -29,7 +29,7 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
       description: description === "" 
         ? categories.find(cat => cat.id === selectedCategory)?.category || "" 
         : description,
-      date: formatDateToText(new Date()),
+      date: new Date(),
     });
     onClose();
   };

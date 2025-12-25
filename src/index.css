@@ -41,3 +41,7 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
 }
+
+body {
+  font-family: 'Inter', sans-serif;
+}

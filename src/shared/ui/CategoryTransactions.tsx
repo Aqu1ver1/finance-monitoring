@@ -2,6 +2,7 @@ import React from 'react'
 import { getCategoryIcon, getCategoryColor } from "../../features/transactions/data/categoryConfig";
 import { useCurrencyStore } from "../../features/settings/currency/model/currency.store";
 import type { Transaction } from "../../features/transactions/model/transactions.store";
+import { formatDateToText } from '../utils/dateFormatter';
 
 interface Props {
   transaction: Transaction;
@@ -11,7 +12,7 @@ const CategoryTransactions: React.FC<Props> = ({ transaction }) => {
   const currency = useCurrencyStore(state => state.selectedCurrency);
   const Icon = getCategoryIcon(transaction.category);
   const color = getCategoryColor(transaction.category);
-
+ const formattedDate = transaction.date ? transaction.date.toString().split(' - ').map(d => formatDateToText(d)).join(' - ') : '';
   return (
     <div className="flex items-center gap-3 p-4 bg-muted/30 rounded-xl">
       <div
@@ -29,7 +30,7 @@ const CategoryTransactions: React.FC<Props> = ({ transaction }) => {
           {transaction.amount > 0 ? "+" : ""}
           {transaction.amount.toLocaleString("ru-RU")} {currency}
         </p>
-        <p className="text-sm text-primary">{transaction.date}</p>
+        <p className="text-sm text-primary">{formattedDate}</p>
       </div>
     </div>
   );

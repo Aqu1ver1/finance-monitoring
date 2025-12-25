@@ -11,11 +11,19 @@ import {
 } from "lucide-react";
 import CurrencyExchange from "../features/settings/currency/ui/CurrencyExchange";
 import { useThemeContext } from "../shared/context/ThemeContext";
+import { useBudgetStore } from "../features/budget/model/budget.store";
+import { useTransactionsStore } from "../features/transactions/model/transactions.store";
+
+const removeAllTransactions = () => {
+  useTransactionsStore.getState().removeAllTransactions();
+};
 
 const Settings = () => {
   const { isDark, toggle } = useThemeContext();
   const [notifications, setNotifications] = useState(true);
-
+  const resetBudgetData = () => {
+    useBudgetStore.getState().resetBudgetData();
+  }
   return (
     <div className="min-h-screen bg-background p-6 pb-12 text-primary transition-colors duration-300">
       {/* Header */}
@@ -66,10 +74,28 @@ const Settings = () => {
             </button>
 
             <div className="h-px bg-border/50 mx-4"></div>
-            
+
             <CurrencyExchange />
 
             <div className="h-px bg-border/50 mx-4"></div>
+
+            <button
+              className="w-full flex items-center justify-center gap-2 p-5 bg-destructive/10 text-destructive rounded-3xl font-bold hover:bg-destructive/20 transition-all active:scale-[0.98]"
+              onClick={resetBudgetData}
+            >
+              <LogOut className="w-5 h-5" />
+              <span>Сбросить бюджет</span>
+            </button>
+
+            <div className="h-px bg-border/50 mx-4"></div>
+
+            <button
+              className="w-full flex items-center justify-center gap-2 p-5 bg-destructive/10 text-destructive rounded-3xl font-bold hover:bg-destructive/20 transition-all active:scale-[0.98]"
+              onClick={removeAllTransactions}
+            >
+              <LogOut className="w-5 h-5" />
+              <span>Сбросить транзакции</span>
+            </button>
 
             {/* Notifications Toggle */}
             <button
