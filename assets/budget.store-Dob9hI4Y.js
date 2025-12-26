@@ -1,0 +1,1 @@
+import{c as u,p as r}from"./currency.store-XqdZRO87.js";const s=u()(r(e=>({budget:0,category:"",dateRange:null,setBudgetData:(t,a,g)=>e({budget:t,category:a,dateRange:g||null}),resetBudgetData:()=>e({budget:0,category:"",dateRange:null})}),{name:"budget-storage"}));export{s as u};
