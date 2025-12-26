@@ -1,0 +1,1 @@
+import{c as s,S as a}from"./defaultCategories-mnThbPsM.js";const e=t=>s.find(o=>o.id===t),i=t=>e(t)?.icon||a,y=t=>e(t)?.color||"#EC4899",c=["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"],f=t=>{const o=typeof t=="string"?new Date(t):t,n=o.getDate(),r=c[o.getMonth()];return`${n} ${r}`};export{y as a,i as b,f,e as g};
