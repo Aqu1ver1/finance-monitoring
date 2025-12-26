@@ -1,13 +1,12 @@
-
-import Budget from './pages/Budget'
-import Dashboard from './pages/Dashboard'
 import Navigation from './components/Navigation/Navigation'
-import AddTransaction from './pages/AddTransactions'
-import Transactions from './pages/Transactions'
-import { useState } from 'react'
-import Settings from './pages/Settings'
+import { lazy, Suspense,useState } from 'react'
 import type { Screen } from './shared/types/types'
 import { ThemeProvider } from './shared/context/ThemeContext'
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+const Budget = lazy(() => import('./pages/Budget'))
+const Transactions = lazy(() => import('./pages/Transactions'))
+const AddTransaction = lazy(() => import('./pages/AddTransactions'))
+const Settings = lazy(() => import('./pages/Settings'))
 
 
 function App() {
@@ -16,13 +15,13 @@ function App() {
     <ThemeProvider>
       <div className="h-screen flex flex-col min-w-full bg-white dark:bg-background">
         {/* Content Area */}
-        <div className="flex-1 overflow-y-auto bg-white dark:bg-background">
+        <Suspense fallback={null}>
           {activeScreen === "dashboard" && <Dashboard/>}
           {activeScreen === "budget" && <Budget />}
           {activeScreen === "transactions" && <Transactions />}
           {activeScreen === "add" && <AddTransaction onClose={() => setActiveScreen("dashboard")} />}
           {activeScreen === "settings" && <Settings />}
-        </div>
+        </Suspense>
 
         {/* Bottom Navigation */}
         {activeScreen !== "add" && (
