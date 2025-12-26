@@ -7,3 +7,11 @@ export interface NavigationProps {
     text?: string;
     category?: string;
 }
+
+import type { LucideIcon } from "lucide-react";
+export interface Category {
+  id: string;
+  category: string;
+  icon: LucideIcon;
+  color: string;
+}

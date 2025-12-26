@@ -2,8 +2,9 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import { useCurrencyStore } from "../features/settings/currency/model/currency.store";
 import { useTransactionsStore } from "../features/transactions/model/transactions.store";
-import { categories } from "../features/transactions/data/categoryConfig";
-import { formatDateToText } from "../shared/utils/dateFormatter";
+import { categories} from "../features/addCategories/model/defaultCategories";
+import AddCategoryCard from "../features/addCategories/ui/addCategoryCard";
+import { useCategoriesStore } from "../features/addCategories/model/customCategories.store";
 
 interface AddTransactionProps {
   onClose: () => void;
@@ -14,10 +15,11 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
   const [amount, setAmount] = useState<number>(0);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [description, setDescription] = useState("");
-  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const currency = useCurrencyStore(state => state.selectedCurrency);
   const addTransaction = useTransactionsStore(state => state.addTransaction);
-
+  const customCategory = useCategoriesStore(state => state.getCategory());
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!amount || !selectedCategory) return;
@@ -26,15 +28,15 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
       type,
       amount: type === "income" ? amount : -amount,
       category: selectedCategory,
-      description: description === "" 
-        ? categories.find(cat => cat.id === selectedCategory)?.category || "" 
+      description: description === ""
+        ? categories.find(cat => cat.id === selectedCategory)?.category || ""
         : description,
       date: new Date(),
     });
     onClose();
   };
-
-  const filteredCategories = categories.filter((cat) =>
+  const Allcategories = [categories, ...customCategory];
+  const filteredCategories = Allcategories.flat().filter((cat) =>
     type === "income" ? cat.id === "income" : cat.id !== "income"
   );
 
@@ -57,22 +59,20 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
           <button
             type="button"
             onClick={() => setType("expense")}
-            className={`flex-1 py-3 rounded-xl font-medium transition-all ${
-              type === "expense"
+            className={`flex-1 py-3 rounded-xl font-medium transition-all ${type === "expense"
                 ? "bg-destructive text-destructive-foreground shadow-sm"
                 : "text-muted-foreground hover:text-primary"
-            }`}
+              }`}
           >
             Расход
           </button>
           <button
             type="button"
             onClick={() => setType("income")}
-            className={`flex-1 py-3 rounded-xl font-medium transition-all ${
-              type === "income"
+            className={`flex-1 py-3 rounded-xl font-medium transition-all ${type === "income"
                 ? "bg-green-500 text-white shadow-sm"
                 : "text-muted-foreground hover:text-primary"
-            }`}
+              }`}
           >
             Доход
           </button>
@@ -99,7 +99,11 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
 
         {/* Category Selection */}
         <div className="mb-8">
-          <label className="block text-sm text-muted-foreground mb-4">Категория</label>
+          <div className="flex items-center justify-between mb-4">
+            <label className="text-sm text-muted-foreground mb-4">Категория</label>
+            <label className="text-sm text-blue-600 hover:text-blue-800 font-medium transition-all active:scale-95 mb-4 hover:cursor-pointer" onClick={() => setIsModalOpen(true)}>+ Новая</label>
+            <AddCategoryCard isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+          </div>
           <div className="grid grid-cols-3 gap-3">
             {filteredCategories.map((category) => {
               const Icon = category.icon;
@@ -109,25 +113,22 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
                   key={category.id}
                   type="button"
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`p-4 rounded-2xl transition-all duration-200 border-2 ${
-                    isSelected
+                  className={`p-4 rounded-2xl transition-all duration-200 border-2 ${isSelected
                       ? "bg-primary/5 border-primary shadow-[0_0_0_1px_var(--color-primary)]"
                       : "bg-secondary/50 border-transparent hover:border-muted"
-                  }`}
-                >
-                  <div 
-                    className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 transition-colors ${
-                       isSelected ? "bg-primary text-primary-foreground" : "bg-background"
                     }`}
+                >
+                  <div
+                    className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 transition-colors ${isSelected ? "bg-primary text-primary-foreground" : "bg-background"
+                      }`}
                   >
                     <Icon
                       className="w-6 h-6"
                       style={{ color: isSelected ? "inherit" : category.color }}
                     />
                   </div>
-                  <p className={`text-[10px] font-medium text-center uppercase tracking-wider ${
-                    isSelected ? "text-primary" : "text-muted-foreground"
-                  }`}>
+                  <p className={`text-[10px] font-medium text-center uppercase tracking-wider ${isSelected ? "text-primary" : "text-muted-foreground"
+                    }`}>
                     {category.category}
                   </p>
                 </button>
