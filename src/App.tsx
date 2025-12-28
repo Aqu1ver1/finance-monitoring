@@ -5,7 +5,7 @@ import { ThemeProvider } from './shared/context/ThemeContext'
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const Budget = lazy(() => import('./pages/Budget'))
 const Transactions = lazy(() => import('./pages/Transactions'))
-const AddTransaction = lazy(() => import('./pages/AddTransactions'))
+const AddTransaction = lazy(() => import('./pages/AddTransaction'))
 const Settings = lazy(() => import('./pages/Settings'))
 
 

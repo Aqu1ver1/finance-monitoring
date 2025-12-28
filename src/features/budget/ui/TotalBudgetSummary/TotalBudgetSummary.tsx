@@ -1,7 +1,7 @@
 import useCurrency from '../../../../shared/hooks/useCurrency';
 import BudgetIsNull from './BudgetIsNull';
-import Modal from '../AddBudget.tsx/AddBudget';
-import { useState } from 'react';
+import AddBudget from '../AddBudget.tsx/AddBudget';
+import { useEffect, useState } from 'react';
 import { formatDateToText } from '../../../../shared/utils/dateFormatter';
 
 interface TotalBudgetSummaryProps {
@@ -11,8 +11,11 @@ interface TotalBudgetSummaryProps {
   isNull: boolean;
   date: string;
 }
+
+
 const TotalBudgetSummary = ({ totalSpent, totalLimit, totalPercentage, isNull, date }: TotalBudgetSummaryProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  isNull = totalLimit === 0;
   const currency = useCurrency();
   const formattedDate = date ? date.split(' - ').map(d => formatDateToText(d)).join(' - ') : '';
   return (
@@ -20,13 +23,13 @@ const TotalBudgetSummary = ({ totalSpent, totalLimit, totalPercentage, isNull, d
       <h1 className="text-2xl">Бюджет на месяц</h1>
       {isNull ?
       <>
-      <BudgetIsNull handleSetBudget={() => setIsModalOpen(true)} />
-      <Modal 
+      <BudgetIsNull  handleSetBudget={() => setIsModalOpen(true)}  />
+      <AddBudget 
       isOpen={isModalOpen} 
       onClose={() => setIsModalOpen(false)} 
       title="Установить бюджет" />
-      </>
-        :
+      </> : null}
+      {!isNull && 
         <div className="bg-linear-to-br from-blue-500 to-blue-600 rounded-2xl p-6 mb-6">
           <p className="mb-2">Общий бюджет на {formattedDate}</p>
           <p className="text-3xl mb-4">{totalLimit.toLocaleString("ru-RU")} {currency}</p>

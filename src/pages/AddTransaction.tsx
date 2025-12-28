@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { X } from "lucide-react";
+import { Sparkles, X } from "lucide-react";
 import { useCurrencyStore } from "../features/settings/currency/model/currency.store";
 import { useTransactionsStore } from "../features/transactions/model/transactions.store";
-import { categories} from "../features/addCategories/model/defaultCategories";
-import AddCategoryCard from "../features/addCategories/ui/addCategoryCard";
+import { availableIcons, categories } from "../features/addCategories/model/defaultCategories";
+import AddCategoryCard from "../features/addCategories/ui/AddCategoryCard";
 import { useCategoriesStore } from "../features/addCategories/model/customCategories.store";
+
+
 
 interface AddTransactionProps {
   onClose: () => void;
@@ -29,16 +31,15 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
       amount: type === "income" ? amount : -amount,
       category: selectedCategory,
       description: description === ""
-        ? categories.find(cat => cat.id === selectedCategory)?.category || ""
+        ? Allcategories.find(cat => cat.id === selectedCategory)?.category || ""
         : description,
       date: new Date(),
     });
     onClose();
   };
-  const Allcategories = [categories, ...customCategory];
-  const filteredCategories = Allcategories.flat().filter((cat) =>
-    type === "income" ? cat.id === "income" : cat.id !== "income"
-  );
+
+  const Allcategories = [...categories, ...customCategory];
+  const filteredCategories = Allcategories.filter((cat) => cat.type === type);
 
   return (
     <div className="min-h-full bg-background p-6 flex flex-col text-primary transition-colors duration-300">
@@ -60,8 +61,8 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
             type="button"
             onClick={() => setType("expense")}
             className={`flex-1 py-3 rounded-xl font-medium transition-all ${type === "expense"
-                ? "bg-destructive text-destructive-foreground shadow-sm"
-                : "text-muted-foreground hover:text-primary"
+              ? "bg-destructive text-destructive-foreground shadow-sm"
+              : "text-muted-foreground hover:text-primary"
               }`}
           >
             Расход
@@ -70,8 +71,8 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
             type="button"
             onClick={() => setType("income")}
             className={`flex-1 py-3 rounded-xl font-medium transition-all ${type === "income"
-                ? "bg-green-500 text-white shadow-sm"
-                : "text-muted-foreground hover:text-primary"
+              ? "bg-green-500 text-white shadow-sm"
+              : "text-muted-foreground hover:text-primary"
               }`}
           >
             Доход
@@ -106,7 +107,7 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
           </div>
           <div className="grid grid-cols-3 gap-3">
             {filteredCategories.map((category) => {
-              const Icon = category.icon;
+              const IconComponent = availableIcons.find((icon) => icon.name === (category as any).iconName)?.icon || Sparkles;
               const isSelected = selectedCategory === category.id;
               return (
                 <button
@@ -114,18 +115,21 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
                   type="button"
                   onClick={() => setSelectedCategory(category.id)}
                   className={`p-4 rounded-2xl transition-all duration-200 border-2 ${isSelected
-                      ? "bg-primary/5 border-primary shadow-[0_0_0_1px_var(--color-primary)]"
-                      : "bg-secondary/50 border-transparent hover:border-muted"
+                    ? "bg-primary/5 border-primary shadow-[0_0_0_1px_var(--color-primary)]"
+                    : "bg-secondary/50 border-transparent hover:border-muted"
                     }`}
                 >
                   <div
                     className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 transition-colors ${isSelected ? "bg-primary text-primary-foreground" : "bg-background"
                       }`}
                   >
-                    <Icon
-                      className="w-6 h-6"
-                      style={{ color: isSelected ? "inherit" : category.color }}
-                    />
+                    {IconComponent && (
+                      <IconComponent
+                        className="w-6 h-6"
+                        style={{ color: isSelected ? "inherit" : category.color }}
+                      />
+                    )}
+
                   </div>
                   <p className={`text-[10px] font-medium text-center uppercase tracking-wider ${isSelected ? "text-primary" : "text-muted-foreground"
                     }`}>

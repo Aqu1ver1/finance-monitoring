@@ -8,10 +8,11 @@ export interface NavigationProps {
     category?: string;
 }
 
-import type { LucideIcon } from "lucide-react";
+
 export interface Category {
   id: string;
+  type: "income" | "expense";
   category: string;
-  icon: LucideIcon;
+  iconName: string;
   color: string;
 }

@@ -18,12 +18,12 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
         colorIndex: 0,
     });
     const addCategory = useCategoriesStore(state => state.addCategory);
-      const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         addCategory({
             category: newCategory.name,
             type: newCategory.type,
-            icon: availableIcons[newCategory.iconIndex].icon,
+        iconName: availableIcons[newCategory.iconIndex].name,
             color: availableColors[newCategory.colorIndex].value,
         });
         onClose();
@@ -149,5 +149,4 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
         </Transition>
     );
 }
-
-export default AddCategoryCard
+export default AddCategoryCard;

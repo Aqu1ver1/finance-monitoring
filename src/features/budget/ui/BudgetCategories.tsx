@@ -1,16 +1,15 @@
-import { useMemo } from 'react'
-import type { LucideIcon } from 'lucide-react';
+import React,{ useMemo } from 'react'
 import CircularProgress from "../../transactions/ui/CircularProgress";
 import { useCurrencyStore } from '../../../features/settings/currency/model/currency.store';
 import { useTransactionsStore } from '../../transactions/model/transactions.store';
-import { getIdByCategory, getCategoryColor, getCategoryIcon } from '../../transactions/data/categoryConfig';
+import { getIdByCategory, getCategoryColor, getCategoryIconComponent } from '../../transactions/data/categoryConfig';
 import { useBudgetStore } from '../model/budget.store';
 
 type ExpenseItem = {
   category: string;
   amount: number;
   color: string;
-  icon: LucideIcon;
+  Icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
 };
 
 const BudgetCategories = () => {
@@ -32,7 +31,7 @@ const BudgetCategories = () => {
       }
       const categoryLabel = getIdByCategory(item.category)?.category || item.category;
       const color = getCategoryColor(item.category);
-      const icon = getCategoryIcon(item.category);
+      const icon = getCategoryIconComponent(item.category);
       const prev = map.get(categoryLabel);
 
       if (prev) {
@@ -42,14 +41,14 @@ const BudgetCategories = () => {
           category: categoryLabel,
           amount: Math.abs(item.amount),
           color,
-          icon,
+          Icon: icon,
         });
       }
     }
 
     const aggregated = Array.from(map.values());
     if (aggregated.length === 0 || budget === 0) {
-      return [{ category: 'Нет расходов', amount: 0, color: '#E0E0E0', icon: getCategoryIcon('other') }];
+      return [{ category: 'Нет расходов', amount: 0, color: '#E0E0E0', Icon: getCategoryIconComponent('other') }];
     }
 
     return aggregated;
@@ -57,7 +56,11 @@ const BudgetCategories = () => {
   return (
     <>
       {expenseData.map((category) => {
-        const percentage = (category.amount / budget == 0 ? 1 : budget) * 100;
+        let budgetSave = budget;
+        if (budget === 0) {
+          budgetSave = 1;
+        }
+        const percentage = (category.amount / budgetSave) * 100;
         const isOverBudget = percentage > 100;
 
         return (
@@ -77,7 +80,9 @@ const BudgetCategories = () => {
                       className="w-8 h-8 rounded-lg flex items-center justify-center"
                       style={{ backgroundColor: `${category.color}15` }}
                     >
-                      <category.icon className="w-4 h-4" style={{ color: category.color }} />
+                      {category.Icon && (
+                        <category.Icon className="w-4 h-4" style={{ color: category.color }} />
+                      )}
                     </div>
                     <p>{category.category}</p>
                   </div>

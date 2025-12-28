@@ -10,7 +10,7 @@ interface ModalProps {
 }
 
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
+const AddBudget: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
   const setBudgetData = useBudgetStore((state) => state.setBudgetData);
 
   const handleSubmit = (data: { budget: number; category: string; startDate: string; endDate: string }) => {
@@ -48,4 +48,4 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
     </Transition>
   );
 };
-export default Modal;
+export default AddBudget;

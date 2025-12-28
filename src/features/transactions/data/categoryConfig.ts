@@ -1,14 +1,17 @@
-import type { LucideIcon } from "lucide-react";
-import { Sparkles } from "lucide-react";
 import type { Category } from "../../../shared/types/types";
 import { categories } from "../../addCategories/model/defaultCategories";
+import type { LucideIcon } from "lucide-react";
+import { Sparkles } from "lucide-react";
+import { availableIcons } from "../../addCategories/model/defaultCategories";
 
 export const getIdByCategory = (categoryName: string): Category | undefined => {
   return categories.find((cat) => cat.id === categoryName);
 };
 
-export const getCategoryIcon = (categoryIcon: string): LucideIcon => {
-  return getIdByCategory(categoryIcon)?.icon || Sparkles;
+export const getCategoryIconComponent = (categoryId: string): LucideIcon => {
+  const cat = getIdByCategory(categoryId);
+  if (!cat) return Sparkles;
+  return availableIcons.find((i) => i.name === cat.iconName)?.icon || Sparkles;
 };
 
 export const getCategoryColor = (categoryName: string): string => {

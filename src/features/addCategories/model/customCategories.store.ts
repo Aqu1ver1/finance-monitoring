@@ -1,14 +1,6 @@
-import type { LucideIcon } from 'lucide-react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-export interface Category {
-    id: string;
-    type: 'income' | 'expense';
-    category: string;
-    icon: LucideIcon;
-    color: string;
-}
+import type { Category } from '../../../shared/types/types';
 
 interface CategoriesStore {
     categories: Category[];
@@ -20,22 +12,15 @@ export const useCategoriesStore = create<CategoriesStore>()(
     persist(
         (set, get) => ({
             categories: [],
-            addCategory: (category: Omit<Category, 'id'>) => {
-                set((state) => {
-                    const newCategory: Category = {
-                        ...category,
-                        id: state.categories.length > 0
-                            ? (Math.max(...state.categories.map(t => parseInt(t.id))) + 1).toString()
-                            : "1",
-                    };
-                    return {
-                        categories: [newCategory, ...state.categories],
-                    };
-                });
-            },
-            getCategory:() => get().categories,
+            addCategory: (category) =>
+                set((state) => ({
+                    categories: [
+                        { ...category, id: crypto.randomUUID() },
+                        ...state.categories,
+                    ],
+                })),
+            getCategory: () => get().categories,
         }),
-
         {
             name: 'categories-storage',
             version: 1,

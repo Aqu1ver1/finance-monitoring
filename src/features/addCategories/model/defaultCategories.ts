@@ -2,12 +2,12 @@ import type { Category } from "../../../shared/types/types";
 import { Coffee, Car, HomeIcon, ShoppingCart, Sparkles, TrendingUp, Utensils } from "lucide-react";
 
 export const categories: Category[] = [
-  { id: "food", category: "Еда", icon: ShoppingCart, color: "#3B82F6" },
-  { id: "transport", category: "Транспорт", icon: Car, color: "#10B981" },
-  { id: "home", category: "Жильё", icon: HomeIcon, color: "#F59E0B" },
-  { id: "entertainment", category: "Развлечения", icon: Coffee, color: "#8B5CF6" },
-  { id: "other", category: "Прочее", icon: Sparkles, color: "#EC4899" },
-  { id: "income", category: "Доход", icon: TrendingUp, color: "#10B981" },
+  { id: "food", category: "Еда", iconName: "ShoppingCart", type: "expense", color: "#3B82F6" },
+  { id: "transport", category: "Транспорт", iconName: "Car", type: "expense", color: "#10B981" },
+  { id: "home", category: "Жильё", iconName: "HomeIcon", type: "expense", color: "#F59E0B" },
+  { id: "entertainment", category: "Развлечения", iconName: "Coffee", type: "expense", color: "#8B5CF6" },
+  { id: "other", category: "Прочее", iconName: "Sparkles", type: "expense", color: "#EC4899" },
+  { id: "income", category: "Доход", iconName: "TrendingUp", type: "income", color: "#10B981" },
 ];
 
 export const availableIcons = [
