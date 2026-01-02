@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Sparkles, X } from "lucide-react";
-import { useCurrencyStore } from "../features/settings/currency/model/currency.store";
-import { useTransactionsStore } from "../features/transactions/model/transactions.store";
-import { availableIcons, categories } from "../features/addCategories/model/defaultCategories";
+import { useCurrencyStore } from "../entites/currency/currency.store";
+import { useTransactionsStore } from "../entites/transactions/transactions.store";
+import { availableIcons, categories } from "../entites/categories/defaultCategories";
 import AddCategoryCard from "../features/addCategories/ui/AddCategoryCard";
-import { useCategoriesStore } from "../features/addCategories/model/customCategories.store";
+import { useCategoriesStore } from "../features/addCategories/customCategories.store";
 
 
 

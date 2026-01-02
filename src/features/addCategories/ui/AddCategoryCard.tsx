@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react'
 import { Transition } from '@headlessui/react';
-import { availableIcons, availableColors } from '../model/defaultCategories';
-import { useCategoriesStore } from '../model/customCategories.store';
+import { availableIcons, availableColors } from '../../../entites/categories/defaultCategories';
+import { useCategoriesStore } from '../customCategories.store';
 
 interface ModalProps {
     isOpen: boolean;

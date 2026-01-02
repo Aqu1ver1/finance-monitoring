@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
-import { useCurrencyStore } from "../features/settings/currency/model/currency.store";
-import { useTransactionsStore } from "../features/transactions/model/transactions.store";
-import CategoryTransactions from "../features/transactions/ui/CategoryTransactions";
+import { useCurrencyStore } from "../entites/currency/currency.store";
+import { useTransactionsStore } from "../entites/transactions/transactions.store";
+import CategoryTransactions from "../entites/transactions/ui/TransactionCard";
 
 const Transactions: React.FC = () => {
   const [filter, setFilter] = useState<"all" | "income" | "expense">("all");

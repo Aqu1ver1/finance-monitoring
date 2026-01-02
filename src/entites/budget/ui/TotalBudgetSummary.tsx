@@ -1,8 +1,9 @@
-import useCurrency from '../../../../shared/hooks/useCurrency';
+
 import BudgetIsNull from './BudgetIsNull';
-import AddBudget from '../AddBudget.tsx/AddBudget';
+import AddBudget from '../../../features/addBudget/ui/AddBudget';
 import { useEffect, useState } from 'react';
-import { formatDateToText } from '../../../../shared/utils/dateFormatter';
+import { formatDateToText } from '../../../shared/lib/dateFormatter';
+import { useCurrencyStore } from '../../currency/currency.store';
 
 interface TotalBudgetSummaryProps {
   totalSpent: number;
@@ -16,7 +17,7 @@ interface TotalBudgetSummaryProps {
 const TotalBudgetSummary = ({ totalSpent, totalLimit, totalPercentage, isNull, date }: TotalBudgetSummaryProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   isNull = totalLimit === 0;
-  const currency = useCurrency();
+  const currency = useCurrencyStore(state => state.selectedCurrency);
   const formattedDate = date ? date.split(' - ').map(d => formatDateToText(d)).join(' - ') : '';
   return (
     <div className="text-white bg-background flex flex-col gap-2">
@@ -28,8 +29,7 @@ const TotalBudgetSummary = ({ totalSpent, totalLimit, totalPercentage, isNull, d
       isOpen={isModalOpen} 
       onClose={() => setIsModalOpen(false)} 
       title="Установить бюджет" />
-      </> : null}
-      {!isNull && 
+      </> : 
         <div className="bg-linear-to-br from-blue-500 to-blue-600 rounded-2xl p-6 mb-6">
           <p className="mb-2">Общий бюджет на {formattedDate}</p>
           <p className="text-3xl mb-4">{totalLimit.toLocaleString("ru-RU")} {currency}</p>

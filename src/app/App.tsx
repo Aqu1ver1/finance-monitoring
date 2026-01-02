@@ -1,12 +1,12 @@
-import Navigation from './components/Navigation/Navigation'
+import Navigation from '../pages/Navigation/Navigation'
 import { lazy, Suspense,useState } from 'react'
-import type { Screen } from './shared/types/types'
-import { ThemeProvider } from './shared/context/ThemeContext'
-const Dashboard = lazy(() => import('./pages/Dashboard'))
-const Budget = lazy(() => import('./pages/Budget'))
-const Transactions = lazy(() => import('./pages/Transactions'))
-const AddTransaction = lazy(() => import('./pages/AddTransaction'))
-const Settings = lazy(() => import('./pages/Settings'))
+import type { Screen } from '../shared/types/types'
+import { ThemeProvider } from './provides/ThemeProvides'
+const Dashboard = lazy(() => import('../pages/Dashboard'))
+const Budget = lazy(() => import('../pages/Budget'))
+const Transactions = lazy(() => import('../pages/Transactions'))
+const AddTransaction = lazy(() => import('../pages/AddTransaction'))
+const Settings = lazy(() => import('../pages/Settings'))
 
 
 function App() {

@@ -1,4 +1,4 @@
-import type { Category } from "../../../shared/types/types";
+import type { Category } from "../../shared/types/types";
 import { Coffee, Car, HomeIcon, ShoppingCart, Sparkles, TrendingUp, Utensils } from "lucide-react";
 
 export const categories: Category[] = [

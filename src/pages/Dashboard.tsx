@@ -1,8 +1,8 @@
 import { TrendingUp, TrendingDown } from "lucide-react";
-import RecentTransactions from "../features/transactions/ui/RecentTransactions";
-import { useCurrencyStore } from "../features/settings/currency/model/currency.store";
-import { useTransactionsStore } from "../features/transactions/model/transactions.store";
-import ExpenseChart from "../features/dashboard/ui/ExpenseChart";
+import { useCurrencyStore } from "../entites/currency/currency.store";
+import { useTransactionsStore } from "../entites/transactions/transactions.store";
+import TransactionCard from "../entites/transactions/ui/TransactionCard";
+import ExpenseChart from "../entites/transactions/ui/ExpenseChart";
 
 const Dashboard: React.FC = () => {
     const transactions = useTransactionsStore((state) => state.transactions);
@@ -20,7 +20,7 @@ const Dashboard: React.FC = () => {
                 <h1 className="text-5xl font-bold mb-6">
                     {balance.toLocaleString("ru-RU")} {currency}
                 </h1>
-                
+
                 <div className="flex gap-4">
                     {/* Карточка Дохода */}
                     <div className="flex items-center gap-3 px-4 py-3 bg-secondary rounded-2xl border border-muted">
@@ -54,7 +54,11 @@ const Dashboard: React.FC = () => {
                 <div className="bg-secondary/50 p-4 rounded-3xl border border-muted">
                     <ExpenseChart />
                 </div>
-                <RecentTransactions />
+                <div className="space-y-3">
+                    {transactions.slice(0, 5).map((transaction) => (
+                        <TransactionCard key={transaction.id} transaction={transaction} />
+                    ))}
+                </div>
             </div>
         </div>
     );

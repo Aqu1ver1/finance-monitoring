@@ -1,9 +1,8 @@
-import { ShoppingCart, Car, Home as HomeIcon, Coffee, Sparkles, Utensils } from "lucide-react";
-import TotalBudgetSummary from "../features/budget/ui/TotalBudgetSummary/TotalBudgetSummary";
-import { useTransactionsStore } from "../features/transactions/model/transactions.store";
+import TotalBudgetSummary from "../entites/budget/ui/TotalBudgetSummary";
+import { useTransactionsStore } from "../entites/transactions/transactions.store";
 import { useState } from "react";
-import { useBudgetStore } from "../features/budget/model/budget.store";
-import BudgerCategories from "../features/budget/ui/BudgetCategories";
+import { useBudgetStore } from "../entites/budget/budget.store";
+import BudgerCategories from "../entites/budget/ui/BudgetCategories";
 
 
 const Budget = () => {

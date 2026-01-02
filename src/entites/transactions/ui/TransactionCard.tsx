@@ -1,19 +1,19 @@
 import React, { useState } from 'react'
-import { getCategoryIcon, getCategoryColor } from "../data/categoryConfig";
-import { useCurrencyStore } from "../../settings/currency/model/currency.store";
-import type { Transaction } from "../model/transactions.store";
-import { formatDateToText } from '../../../shared/utils/dateFormatter';
-import { useTransactionsStore } from '../model/transactions.store';
+import { getCategoryIconComponent, getCategoryColor } from "../../categories/categoryConfig";
+import { useCurrencyStore } from "../../currency/currency.store";
+import type { Transaction } from "../transactions.store";
+import { formatDateToText } from '../../../shared/lib/dateFormatter';
+import { useTransactionsStore } from '../transactions.store';
 import { Trash } from 'lucide-react';
 
 interface Props {
   transaction: Transaction;
 }
 
-const CategoryTransactions: React.FC<Props> = ({ transaction }) => {
+const TransactionCard: React.FC<Props> = ({ transaction }) => {
   const removeTransaction = useTransactionsStore(state => state.removeTransaction);
   const currency = useCurrencyStore(state => state.selectedCurrency);
-  const Icon = getCategoryIcon(transaction.category);
+  const Icon = getCategoryIconComponent(transaction.category);
   const color = getCategoryColor(transaction.category);
   const formattedDate = transaction.date ? transaction.date.toString().split(' - ').map(d => formatDateToText(d)).join(' - ') : '';
   const [isHovered, setIsHovered] = useState(false);
@@ -51,4 +51,4 @@ const CategoryTransactions: React.FC<Props> = ({ transaction }) => {
   );
 }
 
-export default CategoryTransactions
+export default TransactionCard;

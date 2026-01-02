@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Category } from '../../../shared/types/types';
+import type { Category } from '../../shared/types/types';
 
 interface CategoriesStore {
     categories: Category[];

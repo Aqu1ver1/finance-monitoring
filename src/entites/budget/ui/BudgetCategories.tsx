@@ -1,9 +1,9 @@
 import React,{ useMemo } from 'react'
-import CircularProgress from "../../transactions/ui/CircularProgress";
-import { useCurrencyStore } from '../../../features/settings/currency/model/currency.store';
-import { useTransactionsStore } from '../../transactions/model/transactions.store';
-import { getIdByCategory, getCategoryColor, getCategoryIconComponent } from '../../transactions/data/categoryConfig';
-import { useBudgetStore } from '../model/budget.store';
+import CircularProgress from "./CircularProgress";
+import { useCurrencyStore } from '../../currency/currency.store';
+import { useTransactionsStore } from '../../transactions/transactions.store';
+import { getIdByCategory, getCategoryColor, getCategoryIconComponent } from '../../categories/categoryConfig';
+import { useBudgetStore } from '../budget.store';
 
 type ExpenseItem = {
   category: string;

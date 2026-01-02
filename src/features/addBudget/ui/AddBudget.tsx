@@ -1,7 +1,7 @@
 import { Fragment, useState } from 'react';
 import { Transition } from '@headlessui/react';
-import BudgetForm from './BudgetForm';
-import { useBudgetStore } from '../../model/budget.store';
+import BudgetForm from '../../../entites/budget/ui/BudgetForm';
+import { useBudgetStore } from '../../../entites/budget/budget.store';
 
 interface ModalProps {
   isOpen: boolean;

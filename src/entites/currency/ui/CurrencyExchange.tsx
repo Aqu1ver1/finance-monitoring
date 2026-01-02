@@ -1,6 +1,6 @@
 import { ChevronRight, Globe } from "lucide-react";
 import { useState } from "react";
-import { useCurrencyStore } from "../model/currency.store";
+import { useCurrencyStore } from "../currency.store";
 
 interface CurrencyDictionary {
   [key: string]: string;

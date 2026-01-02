@@ -1,6 +1,5 @@
-import { Currency, Save } from 'lucide-react';
 import React, { useState } from 'react'
-import useCurrency from '../../../../shared/hooks/useCurrency';
+import { useCurrencyStore } from '../../currency/currency.store';
 
 interface BudgetFormProps {
   onSubmit: (data: { budget: number; category: string; startDate: string; endDate: string }) => void;
@@ -18,7 +17,7 @@ const BudgetForm: React.FC<BudgetFormProps> = ({ onSubmit }) => {
   const [errors, setErrors] = useState<{ budget?: string; category?: string; date?: string }>({});
   const [budget, setBudget] = useState('');
   const [category, setCategory] = useState('');
-  const currency = useCurrency();
+  const currency = useCurrencyStore(state => state.selectedCurrency);
   const [startDate, setStartDate] = useState(() => formatDate(new Date()));
   const [endDate, setEndDate] = useState(() => formatDate(addMonths(new Date(), 1)));
 
