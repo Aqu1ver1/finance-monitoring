@@ -2,12 +2,13 @@ import { useMemo } from 'react'
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { useCurrencyStore } from "../../currency/currency.store";
 import { useTransactionsStore } from '../transactions.store';
-import { getCategoryColor, getIdByCategory } from "../../categories/categoryConfig";
+import { categories } from '../../categories/defaultCategories';
 
 type ExpenseItem = {
-    category: string;
+    id_category: number;
     amount: number;
     color: string;
+    category: string;
 };
 
 const ExpenseChart = () => {
@@ -15,29 +16,37 @@ const ExpenseChart = () => {
     const currency = useCurrencyStore(state => state.selectedCurrency);
 
     const expenseData: ExpenseItem[] = useMemo(() => {
-        const map = new Map<string, ExpenseItem>();
+        const map = new Map<number, ExpenseItem>();
 
         for (const item of transactions) {
-            if (item.type !== 'expense') continue;
+            if (item.type !== -1) continue;
 
-            const categoryLabel = getIdByCategory(item.category)?.category || item.category;
-            const color = getCategoryColor(item.category);
-            const prev = map.get(categoryLabel);
+            const category = transactions.find(cat => cat.id_category === item.id_category)
+                ? categories.find(cat => cat.id === item.id_category && cat.type === "expense")
+                : null;
+            const color = category?.color || '#CCCCCC';
+            const prev = map.get(item.id_category);
 
             if (prev) {
                 prev.amount += Math.abs(item.amount);
             } else {
-                map.set(categoryLabel, {
-                    category: categoryLabel,
+                map.set(item.id_category, {
+                    id_category: item.id_category,
                     amount: Math.abs(item.amount),
-                    color,
+                    color: color,
+                    category: category ? category.category : 'Без категории',
                 });
             }
         }
 
         const aggregated = Array.from(map.values());
         if (aggregated.length === 0) {
-            return [{ category: 'Нет расходов', amount: 1, color: '#E0E0E0' }];
+            return [{
+                id_category: -1,
+                category: 'Нет расходов',
+                amount: 1,
+                color: '#E0E0E0',
+            }];
         }
 
         return aggregated;
@@ -66,7 +75,7 @@ const ExpenseChart = () => {
                 <div className="flex flex-col gap-3 mt-4">
                     {expenseData.map((item) => {
                         return (
-                            <div key={item.category} className="flex items-center gap-2">
+                            <div key={item.id_category} className="flex items-center gap-2">
                                 <div
                                     className="w-3 h-3 rounded-full"
                                     style={{ backgroundColor: item.color }}

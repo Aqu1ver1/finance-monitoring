@@ -2,14 +2,14 @@ import React,{ useMemo } from 'react'
 import CircularProgress from "./CircularProgress";
 import { useCurrencyStore } from '../../currency/currency.store';
 import { useTransactionsStore } from '../../transactions/transactions.store';
-import { getIdByCategory, getCategoryColor, getCategoryIconComponent } from '../../categories/categoryConfig';
 import { useBudgetStore } from '../budget.store';
+import { categories } from '../../categories/defaultCategories';
 
 type ExpenseItem = {
-  category: string;
+  id_category: number;
   amount: number;
   color: string;
-  Icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  iconUrl?: string;
 };
 
 const BudgetCategories = () => {
@@ -19,7 +19,7 @@ const BudgetCategories = () => {
   const dateRange = useBudgetStore(state => state.dateRange);
 
   const expenseData: ExpenseItem[] = useMemo(() => {
-    const map = new Map<string, ExpenseItem>();
+    const map = new Map<number, ExpenseItem>();
     for (const item of transactions) {
       if (item.type !== 'expense') continue;
       if (dateRange) {
@@ -29,26 +29,27 @@ const BudgetCategories = () => {
 
         if (itemDate < start || itemDate > end) continue; // пропускаем, если не в периоде
       }
-      const categoryLabel = getIdByCategory(item.category)?.category || item.category;
-      const color = getCategoryColor(item.category);
-      const icon = getCategoryIconComponent(item.category);
-      const prev = map.get(categoryLabel);
+      const category = transactions.find(cat => cat.id_category === item.id_category)
+          ? categories.find(cat => cat.id === item.id_category && cat.type === 'expense')
+          : null;
+      const color = category?.color || '#CCCCCC';
+      const prev = map.get(category?.id || 0);
 
       if (prev) {
         prev.amount += Math.abs(item.amount);
       } else {
-        map.set(categoryLabel, {
-          category: categoryLabel,
+        map.set(category?.id || 0, {
+          id_category: category?.id || 0,
           amount: Math.abs(item.amount),
           color,
-          Icon: icon,
+          iconUrl: category?.iconUrl,
         });
       }
     }
 
     const aggregated = Array.from(map.values());
     if (aggregated.length === 0 || budget === 0) {
-      return [{ category: 'Нет расходов', amount: 0, color: '#E0E0E0', Icon: getCategoryIconComponent('other') }];
+      return [{ id_category: 0, amount: 0, color: '#E0E0E0', iconUrl: undefined }];
     }
 
     return aggregated;
@@ -65,7 +66,7 @@ const BudgetCategories = () => {
 
         return (
           <div
-            key={category.category}
+            key={category.id_category}
             className="bg-muted/30 rounded-2xl p-5"
           >
             <div className="flex items-start gap-4">
@@ -80,11 +81,11 @@ const BudgetCategories = () => {
                       className="w-8 h-8 rounded-lg flex items-center justify-center"
                       style={{ backgroundColor: `${category.color}15` }}
                     >
-                      {category.Icon && (
-                        <category.Icon className="w-4 h-4" style={{ color: category.color }} />
+                      {category.iconUrl && (
+                        <img src={category.iconUrl} alt="icon" className="w-4 h-4" style={{ color: category.color }} />
                       )}
                     </div>
-                    <p>{category.category}</p>
+                    <p>{category.id_category}</p>
                   </div>
                 </div>
                 <div className="space-y-1">

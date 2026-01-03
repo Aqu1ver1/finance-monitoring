@@ -1,11 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import type { TransactionType } from '../../shared/lib/transactionType';
 
 export interface Transaction {
   id: number;
   amount: number;
-  type: 'income' | 'expense';
-  category: string;
+  type: TransactionType["id"];
+  id_category: number;
   description?: string;
   date: Date;
 }

@@ -9,10 +9,10 @@ import {
   LogOut,
   ChevronRight,
 } from "lucide-react";
-import CurrencyExchange from "../entites/currency/ui/CurrencyExchange";
+import CurrencyExchange from "../entities/currency/ui/CurrencyExchange";
 import { useThemeContext } from "../app/provides/ThemeProvides";
-import { useBudgetStore } from "../entites/budget/budget.store";
-import { useTransactionsStore } from "../entites/transactions/transactions.store";
+import { useBudgetStore } from "../entities/budget/budget.store";
+import { useTransactionsStore } from "../entities/transactions/transactions.store";
 
 const removeAllTransactions = () => {
   useTransactionsStore.getState().removeAllTransactions();

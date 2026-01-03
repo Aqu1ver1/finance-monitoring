@@ -1,16 +1,18 @@
 import { TrendingUp, TrendingDown } from "lucide-react";
-import { useCurrencyStore } from "../entites/currency/currency.store";
-import { useTransactionsStore } from "../entites/transactions/transactions.store";
-import TransactionCard from "../entites/transactions/ui/TransactionCard";
-import ExpenseChart from "../entites/transactions/ui/ExpenseChart";
+import { useCurrencyStore } from "../entities/currency/currency.store";
+import { useTransactionsStore } from "../entities/transactions/transactions.store";
+import TransactionCard from "../entities/transactions/ui/TransactionCard";
+import ExpenseChart from "../entities/transactions/ui/ExpenseChart";
+import StatCard from "../widgets/StatCard/ui/StatCard";
+import  { calculateTotalIncome, calculateTotalExpenses, calculateBalance } from "../entities/transactions/calculations";
 
 const Dashboard: React.FC = () => {
     const transactions = useTransactionsStore((state) => state.transactions);
     const currency = useCurrencyStore(state => state.selectedCurrency);
 
-    const totalExpenses = transactions.reduce((sum, item) => item.amount < 0 ? sum + Math.abs(item.amount) : sum, 0);
-    const totalIncome = transactions.reduce((sum, item) => item.amount > 0 ? sum + item.amount : sum, 0);
-    const balance = totalIncome - totalExpenses;
+    const totalExpenses = calculateTotalExpenses(transactions);
+    const totalIncome = calculateTotalIncome(transactions);
+    const balance = calculateBalance(transactions);
 
     return (
         // Используем bg-background и text-primary для автоматической смены цветов
@@ -23,30 +25,21 @@ const Dashboard: React.FC = () => {
 
                 <div className="flex gap-4">
                     {/* Карточка Дохода */}
-                    <div className="flex items-center gap-3 px-4 py-3 bg-secondary rounded-2xl border border-muted">
-                        <div className="p-2 bg-green-500/10 rounded-full">
-                            <TrendingUp className="w-5 h-5 text-green-500" />
-                        </div>
-                        <div>
-                            <p className="text-xs text-muted-foreground">Доход</p>
-                            <p className="font-semibold text-primary">
-                                {totalIncome.toLocaleString("ru-RU")} {currency}
-                            </p>
-                        </div>
-                    </div>
-
+                    <StatCard
+                        icon={TrendingUp}
+                        label="Доход"
+                        amount={totalIncome}
+                        currency={currency}
+                        type="income"
+                    />
                     {/* Карточка Расхода */}
-                    <div className="flex items-center gap-3 px-4 py-3 bg-secondary rounded-2xl border border-muted">
-                        <div className="p-2 bg-destructive/10 rounded-full">
-                            <TrendingDown className="w-5 h-5 text-destructive" />
-                        </div>
-                        <div>
-                            <p className="text-xs text-muted-foreground">Расход</p>
-                            <p className="font-semibold text-primary">
-                                {totalExpenses.toLocaleString("ru-RU")} {currency}
-                            </p>
-                        </div>
-                    </div>
+                    <StatCard
+                        icon={TrendingDown}
+                        label="Расход"
+                        amount={totalExpenses}
+                        currency={currency}
+                        type="expense"
+                    />
                 </div>
             </div>
 

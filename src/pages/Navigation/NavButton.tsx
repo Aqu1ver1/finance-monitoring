@@ -1,6 +1,14 @@
 import React from 'react'
-import type { NavigationProps } from '../../shared/types/types';
-import type { Screen } from '../../shared/types/types';
+
+interface NavigationProps {
+    activeScreen: Screen;  
+    setActiveScreen: React.Dispatch<React.SetStateAction<Screen>>;
+    children?: React.ReactNode;
+    text?: string;
+    category?: string;
+}
+
+type Screen = "dashboard" | "budget" | "transactions" | "add" | "settings";
 
 const NavButton: React.FC<NavigationProps> = ({ activeScreen, setActiveScreen, children, text, category }) => {
     const isActive = activeScreen === category;

@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Sparkles, X } from "lucide-react";
-import { useCurrencyStore } from "../entites/currency/currency.store";
-import { useTransactionsStore } from "../entites/transactions/transactions.store";
-import { availableIcons, categories } from "../entites/categories/defaultCategories";
-import AddCategoryCard from "../features/addCategories/ui/AddCategoryCard";
-import { useCategoriesStore } from "../features/addCategories/customCategories.store";
+import { X } from "lucide-react";
+import { useCurrencyStore } from "../entities/currency/currency.store";
+import { useTransactionsStore } from "../entities/transactions/transactions.store";
+import { categories } from "../entities/categories/defaultCategories";
+import type { TransactionType } from "../shared/lib/transactionType";
+// import AddCategoryCard from "../features/addCategories/ui/AddCategoryCard";
+// import { useCategoriesStore } from "../features/addCategories/customCategories.store";
 
 
 
@@ -13,159 +14,154 @@ interface AddTransactionProps {
 }
 
 const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
-  const [type, setType] = useState<"expense" | "income">("expense");
+  const [type, setType] = useState<TransactionType["id"]>(-1);
   const [amount, setAmount] = useState<number>(0);
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [description, setDescription] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
 
   const currency = useCurrencyStore(state => state.selectedCurrency);
   const addTransaction = useTransactionsStore(state => state.addTransaction);
-  const customCategory = useCategoriesStore(state => state.getCategory());
+  const allCategories = categories;
+  // const customCategory = useCategoriesStore(state => state.getCategory());
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!amount || !selectedCategory) return;
 
+    const categoryName =
+      allCategories.find(cat => cat.id === selectedCategory)?.category || "";
+
     addTransaction({
       type,
-      amount: type === "income" ? amount : -amount,
-      category: selectedCategory,
-      description: description === ""
-        ? Allcategories.find(cat => cat.id === selectedCategory)?.category || ""
-        : description,
+      amount,
+      id_category: selectedCategory,
+      description: description || categoryName,
       date: new Date(),
     });
     onClose();
-  };
+  }
 
-  const Allcategories = [...categories, ...customCategory];
-  const filteredCategories = Allcategories.filter((cat) => cat.type === type);
+    const filteredCategories = allCategories.filter((cat) => cat.type === (type === 1 ? "income" : "expense"));
 
-  return (
-    <div className="min-h-full bg-background p-6 flex flex-col text-primary transition-colors duration-300">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <h2 className="text-xl font-bold">Новая операция</h2>
-        <button
-          onClick={onClose}
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-secondary text-primary hover:bg-muted transition-colors"
-        >
-          <X className="w-5 h-5" />
-        </button>
-      </div>
-
-      <form onSubmit={handleSubmit} className="flex-1 flex flex-col">
-        {/* Type Toggle - Сегментированный переключатель */}
-        <div className="flex gap-2 p-1 bg-secondary rounded-2xl mb-8 border border-muted">
+    return (
+      <div className="min-h-full bg-background p-6 flex flex-col text-primary transition-colors duration-300">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-xl font-bold">Новая операция</h2>
           <button
-            type="button"
-            onClick={() => setType("expense")}
-            className={`flex-1 py-3 rounded-xl font-medium transition-all ${type === "expense"
-              ? "bg-destructive text-destructive-foreground shadow-sm"
-              : "text-muted-foreground hover:text-primary"
-              }`}
+            onClick={onClose}
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-secondary text-primary hover:bg-muted transition-colors"
           >
-            Расход
-          </button>
-          <button
-            type="button"
-            onClick={() => setType("income")}
-            className={`flex-1 py-3 rounded-xl font-medium transition-all ${type === "income"
-              ? "bg-green-500 text-white shadow-sm"
-              : "text-muted-foreground hover:text-primary"
-              }`}
-          >
-            Доход
+            <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Amount Input */}
-        <div className="mb-8">
-          <label className="block text-sm text-muted-foreground mb-2">Сумма</label>
-          <div className="relative border-b-2 border-muted focus-within:border-primary transition-colors">
-            <input
-              type="number"
-              value={amount === 0 ? "" : amount}
-              onChange={(e) => setAmount(parseFloat(e.target.value) || 0)}
-              placeholder="0"
-              className="w-full text-5xl font-bold bg-transparent outline-none pb-4 pr-12 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-              required
-              autoFocus
-            />
-            <span className="absolute right-0 bottom-6 text-2xl font-medium text-muted-foreground">
-              {currency}
-            </span>
+        <form onSubmit={handleSubmit} className="flex-1 flex flex-col">
+          {/* Type Toggle - Сегментированный переключатель */}
+          <div className="flex gap-2 p-1 bg-secondary rounded-2xl mb-8 border border-muted">
+            <button
+              type="button"
+              onClick={() => setType(-1)}
+              className={`flex-1 py-3 rounded-xl font-medium transition-all ${type === -1
+                ? "bg-destructive text-destructive-foreground shadow-sm"
+                : "text-muted-foreground hover:text-primary"
+                }`}
+            >
+              Расход
+            </button>
+            <button
+              type="button"
+              onClick={() => setType(1)}
+              className={`flex-1 py-3 rounded-xl font-medium transition-all ${type === 1
+                ? "bg-green-500 text-white shadow-sm"
+                : "text-muted-foreground hover:text-primary"
+                }`}
+            >
+              Доход
+            </button>
           </div>
-        </div>
 
-        {/* Category Selection */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <label className="text-sm text-muted-foreground mb-4">Категория</label>
-            <label className="text-sm text-blue-600 hover:text-blue-800 font-medium transition-all active:scale-95 mb-4 hover:cursor-pointer" onClick={() => setIsModalOpen(true)}>+ Новая</label>
-            <AddCategoryCard isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+          {/* Amount Input */}
+          <div className="mb-8">
+            <label className="block text-sm text-muted-foreground mb-2">Сумма</label>
+            <div className="relative border-b-2 border-muted focus-within:border-primary transition-colors">
+              <input
+                type="number"
+                value={amount === 0 ? "" : amount}
+                onChange={(e) => setAmount(parseFloat(e.target.value) || 0)}
+                placeholder="0"
+                className="w-full text-5xl font-bold bg-transparent outline-none pb-4 pr-12 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                required
+                autoFocus
+              />
+              <span className="absolute right-0 bottom-6 text-2xl font-medium text-muted-foreground">
+                {currency}
+              </span>
+            </div>
           </div>
-          <div className="grid grid-cols-3 gap-3">
-            {filteredCategories.map((category) => {
-              const IconComponent = availableIcons.find((icon) => icon.name === (category as any).iconName)?.icon || Sparkles;
-              const isSelected = selectedCategory === category.id;
-              return (
-                <button
-                  key={category.id}
-                  type="button"
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`p-4 rounded-2xl transition-all duration-200 border-2 ${isSelected
-                    ? "bg-primary/5 border-primary shadow-[0_0_0_1px_var(--color-primary)]"
-                    : "bg-secondary/50 border-transparent hover:border-muted"
-                    }`}
-                >
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 transition-colors ${isSelected ? "bg-primary text-primary-foreground" : "bg-background"
+
+          {/* Category Selection */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <label className="text-sm text-muted-foreground mb-4">Категория</label>
+              {/* <label className="text-sm text-blue-600 hover:text-blue-800 font-medium transition-all active:scale-95 mb-4 hover:cursor-pointer" onClick={() => setIsModalOpen(true)}>+ Новая</label> */}
+              {/* <AddCategoryCard isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} /> */}
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              {filteredCategories.map((category) => {
+                const isSelected = selectedCategory === category.id;
+                return (
+                  <button
+                    key={category.id}
+                    type="button"
+                    onClick={() => setSelectedCategory(category.id)}
+                    className={`p-4 rounded-2xl transition-all duration-200 border-2 ${isSelected
+                      ? "bg-primary/5 border-primary shadow-[0_0_0_1px_var(--color-primary)]"
+                      : "bg-secondary/50 border-transparent hover:border-muted"
                       }`}
                   >
-                    {IconComponent && (
-                      <IconComponent
-                        className="w-6 h-6"
-                        style={{ color: isSelected ? "inherit" : category.color }}
-                      />
-                    )}
-
-                  </div>
-                  <p className={`text-[10px] font-medium text-center uppercase tracking-wider ${isSelected ? "text-primary" : "text-muted-foreground"
-                    }`}>
-                    {category.category}
-                  </p>
-                </button>
-              );
-            })}
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 transition-colors ${isSelected ? "bg-primary text-primary-foreground" : "bg-background"
+                        }`}
+                    >
+                      <img src={category.iconUrl} alt={category.category} className="w-6 h-6" />
+                    </div>
+                    <p className={`text-[10px] font-medium text-center uppercase tracking-wider ${isSelected ? "text-primary" : "text-muted-foreground"
+                      }`}>
+                      {category.category}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
 
-        {/* Description */}
-        <div className="mb-8">
-          <label className="block text-sm text-muted-foreground mb-2">Описание</label>
-          <input
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="На что потратили?"
-            className="w-full px-5 py-4 bg-secondary rounded-2xl outline-none border border-transparent focus:border-primary transition-all placeholder:text-muted-foreground/50"
-          />
-        </div>
+          {/* Description */}
+          <div className="mb-8">
+            <label className="block text-sm text-muted-foreground mb-2">Описание</label>
+            <input
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="На что потратили?"
+              className="w-full px-5 py-4 bg-secondary rounded-2xl outline-none border border-transparent focus:border-primary transition-all placeholder:text-muted-foreground/50"
+            />
+          </div>
 
-        {/* Submit Button */}
-        <div className="mt-auto pt-4">
-          <button
-            type="submit"
-            disabled={!amount || !selectedCategory}
-            className="w-full py-5 bg-primary text-primary-foreground rounded-2xl font-bold text-lg shadow-lg active:scale-[0.98] disabled:opacity-30 disabled:grayscale disabled:scale-100 transition-all"
-          >
-            Подтвердить
-          </button>
-        </div>
-      </form>
-    </div>
-  );
-};
+          {/* Submit Button */}
+          <div className="mt-auto pt-4">
+            <button
+              type="submit"
+              disabled={!amount || !selectedCategory}
+              className="w-full py-5 bg-primary text-primary-foreground rounded-2xl font-bold text-lg shadow-lg active:scale-[0.98] disabled:opacity-30 disabled:grayscale disabled:scale-100 transition-all"
+            >
+              Подтвердить
+            </button>
+          </div>
+        </form>
+      </div>
+    );
+  };
 
-export default AddTransaction;
+  export default AddTransaction;

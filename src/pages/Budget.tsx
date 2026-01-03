@@ -1,8 +1,8 @@
-import TotalBudgetSummary from "../entites/budget/ui/TotalBudgetSummary";
-import { useTransactionsStore } from "../entites/transactions/transactions.store";
+import TotalBudgetSummary from "../entities/budget/ui/TotalBudgetSummary";
+import { useTransactionsStore } from "../entities/transactions/transactions.store";
 import { useState } from "react";
-import { useBudgetStore } from "../entites/budget/budget.store";
-import BudgerCategories from "../entites/budget/ui/BudgetCategories";
+import { useBudgetStore } from "../entities/budget/budget.store";
+import BudgerCategories from "../entities/budget/ui/BudgetCategories";
 
 
 const Budget = () => {

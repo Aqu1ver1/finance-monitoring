@@ -1,7 +1,9 @@
 import { useState, useMemo } from "react";
-import { useCurrencyStore } from "../entites/currency/currency.store";
-import { useTransactionsStore } from "../entites/transactions/transactions.store";
-import CategoryTransactions from "../entites/transactions/ui/TransactionCard";
+import { useCurrencyStore } from "../entities/currency/currency.store";
+import { useTransactionsStore } from "../entities/transactions/transactions.store";
+import TransactionCard from "../entities/transactions/ui/TransactionCard";
+import StatCard from "../widgets/StatCard/ui/StatCard";
+import { TrendingUp } from "lucide-react";
 
 const Transactions: React.FC = () => {
   const [filter, setFilter] = useState<"all" | "income" | "expense">("all");
@@ -11,16 +13,15 @@ const Transactions: React.FC = () => {
   // Обернем расчеты в useMemo, чтобы не пересчитывать их при каждом рендере
   const { filteredTransactions, totalIncome, totalExpense } = useMemo(() => {
     const income = transactions
-      .filter((t) => t.amount > 0)
-      .reduce((sum, t) => sum + t.amount, 0);
+      .filter((t) => t.type > 0)
+      .reduce((sum, t) => sum + t.amount*t.type, 0);
       
     const expense = transactions
-      .filter((t) => t.amount < 0)
-      .reduce((sum, t) => sum + Math.abs(t.amount), 0);
-
+      .filter((t) => t.type < 0)
+      .reduce((sum, t) => sum + Math.abs(t.amount*t.type), 0);
     const filtered = transactions.filter((t) => {
-      if (filter === "income") return t.amount > 0;
-      if (filter === "expense") return t.amount < 0;
+      if (filter === "income") return t.type > 0;
+      if (filter === "expense") return t.type < 0;
       return true;
     });
 
@@ -39,23 +40,9 @@ const Transactions: React.FC = () => {
 
         {/* Summary Cards */}
         <div className="grid grid-cols-2 gap-4 mb-8">
-          {/* Доходы - используем secondary фон и зеленый акцент через прозрачность */}
-          <div className="bg-secondary border border-muted rounded-2xl p-4">
-            <p className="text-sm text-muted-foreground mb-1">Доходы</p>
-            <p className="text-xl font-bold text-green-500">
-              +{totalIncome.toLocaleString("ru-RU")} {currency}
-            </p>
-          </div>
-          
-          {/* Расходы - используем деструктивный цвет из темы */}
-          <div className="bg-secondary border border-muted rounded-2xl p-4">
-            <p className="text-sm text-muted-foreground mb-1">Расходы</p>
-            <p className="text-xl font-bold text-destructive">
-              -{totalExpense.toLocaleString("ru-RU")} {currency}
-            </p>
-          </div>
+          <StatCard label="Доходы" amount={totalIncome} currency={currency} type="income" icon={TrendingUp} />
+          <StatCard label="Расходы" amount={totalExpense} currency={currency} type="expense" icon={TrendingUp} />
         </div>
-
         {/* Filter Buttons */}
         <div className="flex gap-2 p-1 bg-secondary/50 rounded-xl w-fit border border-muted">
           {(["all", "income", "expense"] as const).map((type) => (
@@ -78,7 +65,7 @@ const Transactions: React.FC = () => {
       <div className="space-y-4">
         {filteredTransactions.length > 0 ? (
           filteredTransactions.map((transaction) => (
-            <CategoryTransactions key={transaction.id} transaction={transaction} />
+            <TransactionCard key={transaction.id} transaction={transaction} />
           ))
         ) : (
           <div className="text-center py-12 text-muted-foreground">
