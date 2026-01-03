@@ -18,7 +18,6 @@ const TransactionCard: React.FC<Props> = ({ transaction }) => {
   const iconUrl = category ? category.iconUrl : '';
   const removeTransaction = useTransactionsStore(state => state.removeTransaction);
   const currency = useCurrencyStore(state => state.selectedCurrency);
-  const formattedDate = transaction.date ? transaction.date.toString().split(' - ').map(d => formatDateToText(d)).join(' - ') : '';
   const [isHovered, setIsHovered] = useState(false);
   return (
     <div className="flex items-center gap-3 p-4 bg-muted/30 rounded-xl"
@@ -31,15 +30,18 @@ const TransactionCard: React.FC<Props> = ({ transaction }) => {
         <img src={iconUrl} alt={iconUrl} className="w-6 h-6" />
       </div>
       <div className="flex-1 min-w-0 text-primary">
-        <p className="truncate">{category ? category.category : ''}</p>
-        <p className="text-sm">{transaction.description}</p>
+        <p className="truncate">{category ? category.category : 'Без Категории'}</p>
+        {transaction.description && (
+          <p className="text-sm text-muted-foreground truncate">
+            {transaction.description}
+          </p>)}
       </div>
       <div className="text-right shrink-0">
         <p className={transaction.type > 0 ? "text-green-600" : "text-red-600"}>
           {transaction.type > 0 ? "+" : ""}
           {(transaction.amount * transaction.type).toLocaleString("ru-RU")} {currency}
         </p>
-        <p className="text-sm text-primary">{formattedDate}</p>
+        <p className="text-sm text-primary">{formatDateToText(new Date(transaction.date))}</p>
       </div>
       {isHovered ? (
         <button

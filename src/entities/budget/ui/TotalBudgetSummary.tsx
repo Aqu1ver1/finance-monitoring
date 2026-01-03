@@ -13,15 +13,12 @@ interface TotalBudgetSummaryProps {
   date: string;
 }
 
-
 const TotalBudgetSummary = ({ totalSpent, totalLimit, totalPercentage, isNull, date }: TotalBudgetSummaryProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   isNull = totalLimit === 0;
   const currency = useCurrencyStore(state => state.selectedCurrency);
-  const formattedDate = date ? date.split(' - ').map(d => formatDateToText(d)).join(' - ') : '';
   return (
     <div className="text-white bg-background flex flex-col gap-2">
-      <h1 className="text-2xl">Бюджет на месяц</h1>
       {isNull ?
       <>
       <BudgetIsNull  handleSetBudget={() => setIsModalOpen(true)}  />
@@ -31,7 +28,7 @@ const TotalBudgetSummary = ({ totalSpent, totalLimit, totalPercentage, isNull, d
       title="Установить бюджет" />
       </> : 
         <div className="bg-linear-to-br from-blue-500 to-blue-600 rounded-2xl p-6 mb-6">
-          <p className="mb-2">Общий бюджет на {formattedDate}</p>
+          <p className="mb-2">Общий бюджет на {date}</p>
           <p className="text-3xl mb-4">{totalLimit.toLocaleString("ru-RU")} {currency}</p>
           <div className="flex items-center justify-between">
             <div>

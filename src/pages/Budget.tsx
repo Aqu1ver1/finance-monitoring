@@ -1,29 +1,42 @@
 import TotalBudgetSummary from "../entities/budget/ui/TotalBudgetSummary";
 import { useTransactionsStore } from "../entities/transactions/transactions.store";
-import { useState } from "react";
 import { useBudgetStore } from "../entities/budget/budget.store";
-import BudgerCategories from "../entities/budget/ui/BudgetCategories";
-
+import BudgetCategories from "../entities/budget/ui/BudgetCategories";
+import { formatDateToText } from "../shared/lib/dateFormatter";
+import {getMonthEndDate, getMonthStartDate} from "../shared/lib/date";
 
 const Budget = () => {
   const transactions = useTransactionsStore(state => state.transactions);
-  const { budget, dateRange } = useBudgetStore();
+  const { budget, create_date, scheme } = useBudgetStore();
+  const start = getMonthStartDate(create_date);
+  const end = getMonthEndDate(create_date);
+  const budgetDate = new Date(create_date);
+  const dateRange = `${formatDateToText(start)} - ${formatDateToText(end)}`;
+  const isNull = budget <= 0;
 
-  const [isNull, setIsNull] = useState(budget <= 0);
-  const totalExpenses = transactions.reduce((sum, item) => item.amount < 0 ? sum + Math.abs(item.amount) : sum, 0);
-  const totalPercentage = (totalExpenses / budget) * 100;
+  const totalExpenses = transactions.reduce((sum, item) => {
+    if (item.type !== -1) return sum;
+    const txDate = new Date(item.date);
+    const sameMonth = txDate.getMonth() === budgetDate.getMonth() && txDate.getFullYear() === budgetDate.getFullYear();
+    if (!sameMonth) return sum;
+    return sum + Math.abs(item.amount);
+  }, 0);
+
+  const totalPercentage = budget > 0 ? (totalExpenses / budget) * 100 : 0;
 
   return (
-    <div className="p-6 pb-8">
+    <div className="p-3 ">
       {/* Header */}
         <TotalBudgetSummary
           totalSpent={totalExpenses}
           totalLimit={budget}
           totalPercentage={totalPercentage}
           isNull={isNull}
-          date={dateRange ? `${dateRange.startDate} - ${dateRange.endDate}` : ''}
+          date={dateRange}
         />
-        <BudgerCategories/>
+        <div className="px-4 gap-5 flex flex-col ">
+          <BudgetCategories scheme={scheme} />
+        </div>
     </div>
   );
 }

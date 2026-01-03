@@ -9,14 +9,14 @@ interface ModalProps {
   title?: string;
 }
 
-
 const AddBudget: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
   const setBudgetData = useBudgetStore((state) => state.setBudgetData);
 
-  const handleSubmit = (data: { budget: number; category: string; startDate: string; endDate: string }) => {
-    setBudgetData(data.budget, data.category, { startDate: data.startDate, endDate: data.endDate });
+  const handleSubmit = (data: { amount: number; schemeId: string; dateCreate: Date }) => {
+    setBudgetData(data.amount, data.schemeId, data.dateCreate);
     onClose();
   }
+  
   return (
     <Transition
       show={isOpen}

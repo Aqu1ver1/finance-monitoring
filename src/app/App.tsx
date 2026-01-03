@@ -12,8 +12,9 @@ function App() {
   const [activeScreen, setActiveScreen] = useState<Screen>("dashboard");
   return (
     <ThemeProvider>
-      <div className="h-screen flex flex-col min-w-full bg-white dark:bg-background">
+      <div className="flex flex-col min-w-full bg-white dark:bg-background">
         {/* Content Area */}
+        <div className='mb-16'>
         <Suspense fallback={null}>
           {activeScreen === "dashboard" && <Dashboard/>}
           {activeScreen === "budget" && <Budget />}
@@ -21,7 +22,7 @@ function App() {
           {activeScreen === "add" && <AddTransaction onClose={() => setActiveScreen("dashboard")} />}
           {activeScreen === "settings" && <Settings />}
         </Suspense>
-
+        </div>
         {/* Bottom Navigation */}
         {activeScreen !== "add" && (
           <Navigation activeScreen={activeScreen} setActiveScreen={setActiveScreen} />

@@ -16,7 +16,7 @@ const Dashboard: React.FC = () => {
 
     return (
         // Используем bg-background и text-primary для автоматической смены цветов
-        <div className="min-h-screen bg-background text-primary p-6 transition-colors duration-300">
+        <div className="bg-background text-primary p-6 transition-colors duration-300 ">
             <div className="mb-8">
                 <p className="text-muted-foreground mb-1">Общий баланс</p>
                 <h1 className="text-5xl font-bold mb-6">
@@ -48,9 +48,12 @@ const Dashboard: React.FC = () => {
                     <ExpenseChart />
                 </div>
                 <div className="space-y-3">
-                    {transactions.slice(0, 5).map((transaction) => (
-                        <TransactionCard key={transaction.id} transaction={transaction} />
-                    ))}
+                    {transactions.slice(0, 5).map((transaction) => {
+                        console.log('Rendering transaction:', transaction.id);
+                        return (
+                                <TransactionCard key={transaction.id} transaction={transaction} />
+                            );
+                    })}
                 </div>
             </div>
         </div>

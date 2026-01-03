@@ -1,117 +1,103 @@
-import React, { useState } from 'react'
-import { useCurrencyStore } from '../../currency/currency.store';
+// features/budget/ui/BudgetForm.tsx
 
-interface BudgetFormProps {
-  onSubmit: (data: { budget: number; category: string; startDate: string; endDate: string }) => void;
+import React, { useState } from 'react';
+import { useCurrencyStore } from '../../currency/currency.store';
+import { BUDGET_SCHEMES, type BudgetSchemeId } from '../budgetConfig';
+
+interface BudgetFormData {
+  amount: number;
+  schemeId: BudgetSchemeId;
+  dateCreate: Date;
 }
 
-const formatDate = (date: Date) => date.toISOString().split('T')[0];
-
-const addMonths = (date: Date, months: number) => {
-  const result = new Date(date);
-  result.setMonth(result.getMonth() + months);
-  return result;
-};
+interface BudgetFormProps {
+  onSubmit: (data: BudgetFormData) => void;
+}
 
 const BudgetForm: React.FC<BudgetFormProps> = ({ onSubmit }) => {
-  const [errors, setErrors] = useState<{ budget?: string; category?: string; date?: string }>({});
-  const [budget, setBudget] = useState('');
-  const [category, setCategory] = useState('');
+  const [errors, setErrors] = useState<{ amount?: string; scheme?: string }>({});
+  const [amount, setAmount] = useState<string>('');
+  const [schemeId, setSchemeId] = useState<BudgetSchemeId | ''>('');
   const currency = useCurrencyStore(state => state.selectedCurrency);
-  const [startDate, setStartDate] = useState(() => formatDate(new Date()));
-  const [endDate, setEndDate] = useState(() => formatDate(addMonths(new Date(), 1)));
 
-  const validate = () => {
+  const validate = (): boolean => {
     const newErrors: typeof errors = {};
 
-    if (!budget || Number(budget) <= 0) {
-      newErrors.budget = 'Введите корректную сумму бюджета';
+    const numAmount = Number(amount);
+    if (!amount || isNaN(numAmount) || numAmount <= 0) {
+      newErrors.amount = 'Введите корректную сумму бюджета';
     }
 
-    if (!startDate || !endDate) {
-      newErrors.date = 'Укажите период бюджета';
-    } else if (new Date(startDate) > new Date(endDate)) {
-      newErrors.date = 'Дата начала не может быть позже даты окончания';
+    if (!schemeId) {
+      newErrors.scheme = 'Выберите схему разделения';
     }
 
     setErrors(newErrors);
-
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
-    onSubmit({ budget: Number(budget), category, startDate, endDate });
-  };
-  return (
-    <form className="space-y-3" onSubmit={handleSubmit}>
-      {/* Ввод бюджета */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-          Введите сумму бюджета({currency})
-        </label>
-        {errors.budget && <p className="text-red-500 text-sm mt-1">{errors.budget}</p>}
-        <input
-          type="number"
-          value={budget}
-          onChange={(e) => setBudget(e.target.value)}
-          placeholder="1000"
-          className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-        />
-      </div>
-      {/* Выбор периода бюджета */}
-      {errors.date && <p className="text-red-500 text-sm mt-1">{errors.date}</p>}
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-            От даты
-          </label>
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-            По дату
-          </label>
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-          />
-        </div>
-      </div>
-      {/* Dropdown для категории */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-          Выберите схему разделения бюджета
-        </label>
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-        >
-          <option value="">Схема разделения</option>
-          <option value="standart">50 / 30 / 20</option>
-          <option value="gentle">60 / 30 / 10</option>
-          <option value="accumulative">40 / 30 / 30</option>
-          <option value="zero-based">Zero-based budgeting</option>
-        </select>
-      </div>
+    if (!validate() || !schemeId) return;
 
-      <button
-        type="submit"
-        className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
-        disabled={!budget || category === ""}
-      >
-        Сохранить
-      </button>
-    </form>
-  );
+    onSubmit({
+      amount: Number(amount),
+      schemeId,
+      dateCreate: new Date()
+    });
+  };
+
+  return (
+        <form className="space-y-4" onSubmit={handleSubmit}>
+            {/* Ввод бюджета */}
+            <div>
+                <label className="block text-sm font-medium mb-2">
+                    Введите сумму бюджета ({currency})
+                </label>
+                <input
+                    type="number"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    placeholder="1000"
+                    className="w-full p-2 border rounded-lg"
+                />
+                {errors.amount && (
+                    <p className="text-red-500 text-sm mt-1">{errors.amount}</p>
+                )}
+            </div>
+
+            {/* Выбор схемы */}
+            <div>
+                <label className="block text-sm font-medium mb-2">
+                    Выберите схему разделения бюджета
+                </label>
+                <select
+                    value={schemeId}
+                    onChange={(e) => setSchemeId(e.target.value as BudgetSchemeId)}
+                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                >
+                    <option value="" disabled hidden>
+                        Выберите схему
+                    </option>
+                    {Object.values(BUDGET_SCHEMES).map((scheme) => (
+                        <option key={scheme.id} value={scheme.id}>
+                            {scheme.name} (Потребности: {scheme.needs}%, Желания: {scheme.wants}%, Накопления: {scheme.savings}%)
+                        </option>
+                    ))}
+                </select>
+                {errors.scheme && (
+                    <p className="text-red-500 text-sm mt-1">{errors.scheme}</p>
+                )}
+            </div>
+
+            <button
+                type="submit"
+                className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                disabled={!amount || !schemeId}
+            >
+                Сохранить
+            </button>
+        </form >
+    );
 };
 export default BudgetForm;

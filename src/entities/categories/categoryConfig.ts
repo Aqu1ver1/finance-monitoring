@@ -8,6 +8,7 @@ export interface Category {
   category: string;
   iconUrl: string;
   color: string;
+  budget_type: 'needs' | 'wants' | 'savings';
 }
 
 // Константы для работы с типами

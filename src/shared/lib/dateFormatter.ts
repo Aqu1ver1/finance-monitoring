@@ -13,7 +13,8 @@ const monthsRu = [
   "дек",
 ];
 
-export const formatDateToText = (date: Date | string): string => {
+export const formatDateToText = (date: Date | null): string => {
+  if (!date) return '';
   const dateObj = typeof date === "string" ? new Date(date) : date;
   const day = dateObj.getDate();
   const month = monthsRu[dateObj.getMonth()];

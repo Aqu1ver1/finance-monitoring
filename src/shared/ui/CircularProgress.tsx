@@ -1,6 +1,7 @@
 function CircularProgress({ percentage, color }: { percentage: number; color: string }) {
   const radius = 32;
   const circumference = 2 * Math.PI * radius;
+  if (percentage > 100) percentage = 100;
   const offset = circumference - (percentage / 100) * circumference;
 
   return (
