@@ -7,8 +7,7 @@ export interface Category {
   type: TransactionType["type"];
   category: string;
   iconUrl: string;
-  color: string;
-  budget_type: 'needs' | 'wants' | 'savings';
+  budgetType: 'needs' | 'wants' | 'savings';
 }
 
 // Константы для работы с типами

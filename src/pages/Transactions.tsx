@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useCurrencyStore } from "../entities/currency/currency.store";
+import { useCurrencyStore } from "../features/currency/currency.store";
 import { useTransactionsStore } from "../entities/transactions/transactions.store";
 import TransactionCard from "../entities/transactions/ui/TransactionCard";
 import StatCard from "../widgets/StatCard/ui/StatCard";

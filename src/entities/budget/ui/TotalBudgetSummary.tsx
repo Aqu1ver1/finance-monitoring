@@ -3,7 +3,7 @@ import BudgetIsNull from './BudgetIsNull';
 import AddBudget from '../../../features/addBudget/ui/AddBudget';
 import { useEffect, useState } from 'react';
 import { formatDateToText } from '../../../shared/lib/dateFormatter';
-import { useCurrencyStore } from '../../currency/currency.store';
+import { useCurrencyStore } from '../../../features/currency/currency.store';
 
 interface TotalBudgetSummaryProps {
   totalSpent: number;

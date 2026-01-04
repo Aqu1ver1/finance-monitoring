@@ -1,18 +1,19 @@
 import { TrendingUp, TrendingDown } from "lucide-react";
-import { useCurrencyStore } from "../entities/currency/currency.store";
+import { useCurrencyStore } from "../features/currency/currency.store";
 import { useTransactionsStore } from "../entities/transactions/transactions.store";
 import TransactionCard from "../entities/transactions/ui/TransactionCard";
 import ExpenseChart from "../entities/transactions/ui/ExpenseChart";
 import StatCard from "../widgets/StatCard/ui/StatCard";
-import  { calculateTotalIncome, calculateTotalExpenses, calculateBalance } from "../entities/transactions/calculations";
+import  { calculateTransactionSummary } from "../entities/transactions/calculations";
 
 const Dashboard: React.FC = () => {
     const transactions = useTransactionsStore((state) => state.transactions);
     const currency = useCurrencyStore(state => state.selectedCurrency);
 
-    const totalExpenses = calculateTotalExpenses(transactions);
-    const totalIncome = calculateTotalIncome(transactions);
-    const balance = calculateBalance(transactions);
+    const summary = calculateTransactionSummary(transactions);
+    const totalIncome = summary.income;
+    const totalExpenses = summary.expenses;
+    const balance = summary.balance;
 
     return (
         // Используем bg-background и text-primary для автоматической смены цветов

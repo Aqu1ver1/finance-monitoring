@@ -9,7 +9,7 @@ import {
   LogOut,
   ChevronRight,
 } from "lucide-react";
-import CurrencyExchange from "../entities/currency/ui/CurrencyExchange";
+import CurrencyExchange from "../features/currency/ui/CurrencyExchange";
 import { useThemeContext } from "../app/provides/ThemeProvides";
 import { useBudgetStore } from "../entities/budget/budget.store";
 import { useTransactionsStore } from "../entities/transactions/transactions.store";
@@ -78,6 +78,8 @@ const Settings = () => {
             <CurrencyExchange />
 
             <div className="h-px bg-border/50 mx-4"></div>
+
+
 
             <button
               className="w-full flex items-center justify-center gap-2 p-5 bg-destructive/10 text-destructive rounded-3xl font-bold hover:bg-destructive/20 transition-all active:scale-[0.98]"

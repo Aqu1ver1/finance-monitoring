@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { useCurrencyStore } from "../../currency/currency.store";
+import { useCurrencyStore } from "../../../features/currency/currency.store";
 import type { Transaction } from "../transactions.store";
 import { formatDateToText } from '../../../shared/lib/dateFormatter';
 import { useTransactionsStore } from '../transactions.store';
 import { Trash } from 'lucide-react';
-import { categories } from "../../categories/defaultCategories";
+import { categories } from "../../../shared/config/defaultCategories";
 
 
 interface Props {

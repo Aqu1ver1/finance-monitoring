@@ -1,7 +1,7 @@
 // features/budget/ui/BudgetForm.tsx
 
 import React, { useState } from 'react';
-import { useCurrencyStore } from '../../currency/currency.store';
+import { useCurrencyStore } from '../../../features/currency/currency.store';
 import { BUDGET_SCHEMES, type BudgetSchemeId } from '../budgetConfig';
 
 interface BudgetFormData {

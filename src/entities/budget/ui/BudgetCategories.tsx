@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import CircularProgress from "../../../shared/ui/CircularProgress";
-import { useCurrencyStore } from '../../currency/currency.store';
+import { useCurrencyStore } from '../../../features/currency/currency.store';
 import { useTransactionsStore } from '../../transactions/transactions.store';
 import { useBudgetStore } from '../budget.store';
-import { categories } from '../../categories/defaultCategories';
+import { categories } from '../../../shared/config/defaultCategories';
 import { BUDGET_SCHEMES } from '../budgetConfig';
 
 import needsIcon from '../../../assets/icons/budget_types/requirement.png';

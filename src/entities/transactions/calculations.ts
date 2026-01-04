@@ -3,25 +3,6 @@ export interface Transaction {
     amount: number;
 }
 
-export const calculateTotalExpenses = (transactions: Transaction[]): number => {
-    return transactions.reduce(
-        (sum, item) => item.type < 0 ? sum + Math.abs(item.amount) : sum, 
-        0
-    );
-};
-
-export const calculateTotalIncome = (transactions: Transaction[]): number => {
-    return transactions.reduce(
-        (sum, item) => item.type > 0 ? sum + item.amount : sum, 
-        0
-    );
-};
-
-// Бонус: общая функция для баланса
-export const calculateBalance = (transactions: Transaction[]): number => {
-    return calculateTotalIncome(transactions) - calculateTotalExpenses(transactions);
-};
-
 // Или все сразу одной функцией (эффективнее - один проход)
 export const calculateTransactionSummary = (transactions: Transaction[]) => {
     const summary = transactions.reduce(

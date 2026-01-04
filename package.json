@@ -14,10 +14,12 @@
   "dependencies": {
     "@headlessui/react": "^2.2.9",
     "@tailwindcss/postcss": "^4.1.18",
+    "clsx": "^2.1.1",
     "lucide-react": "^0.561.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "recharts": "^3.6.0",
+    "tailwind-merge": "^3.4.0",
     "zustand": "^5.0.9"
   },
   "devDependencies": {
