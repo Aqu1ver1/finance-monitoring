@@ -5,7 +5,12 @@ import restaurant from "@/assets/icons/expenses/restaurant.png";
 import sparkles from "@/assets/icons/expenses/sparkles.png";
 import trendingup from "@/assets/icons/incomes/trendingup.png";
 
-export const defaultIcons = [
+interface DefaultIcon {
+    name: string;
+    iconUrl: string;
+}
+
+export const defaultIcons: DefaultIcon[] = [
     { name: "home", iconUrl: home },
     { name: "restaurant", iconUrl: restaurant },
     { name: "car", iconUrl: car },

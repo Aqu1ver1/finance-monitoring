@@ -3,7 +3,7 @@ import CircularProgress from "../../../shared/ui/CircularProgress";
 import { useCurrencyStore } from '../../../features/currency/currency.store';
 import { useTransactionsStore } from '../../transactions/transactions.store';
 import { useBudgetStore } from '../budget.store';
-import { categories } from '../../../shared/config/defaultCategories';
+import { defaultCategories } from '../../../shared/config/defaultCategories';
 import { BUDGET_SCHEMES } from '../budgetConfig';
 
 import needsIcon from '../../../assets/icons/budget_types/requirement.png';
@@ -61,9 +61,9 @@ const BudgetCategories = ({ scheme }: { scheme: string }) => {
             }
 
             // Находим категорию и её budget_type
-            const category = categories.find(cat => cat.id === transaction.id_category);
-            if (category && category.type === 'expense') {
-                expensesByType[category.budget_type] += Math.abs(transaction.amount);
+            const category = defaultCategories.find(cat => cat.id === transaction.id_category);
+            if (category && category.type === 'expense' && category.budgetType) {
+                expensesByType[category.budgetType] += Math.abs(transaction.amount);
             }
         }
 
@@ -76,7 +76,7 @@ const BudgetCategories = ({ scheme }: { scheme: string }) => {
             color: BUDGET_TYPE_CONFIG[type].color,
             iconUrl: BUDGET_TYPE_CONFIG[type].iconUrl
         }));
-    }, [transactions, categories, create_date, budget, selectedScheme]);
+    }, [transactions, defaultCategories, create_date, budget, selectedScheme]);
 
     return (
         <>

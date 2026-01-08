@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Category } from '../../entities/categories/categoryConfig';
+import type { Category } from '../../shared/config/defaultCategories';
 import { defaultCategories } from '../../shared/config/defaultCategories';
 
 interface CategoriesStore {
@@ -10,7 +10,7 @@ interface CategoriesStore {
     editCategory: (id: number, updates: Partial<Omit<Category, 'id'>>) => void;
 }
 
-export const useCategoriesStore = create<CategoriesStore>()(
+export const useCustomCategoriesStore = create<CategoriesStore>()(
     persist(
         (set) => ({
             categories: [],

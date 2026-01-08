@@ -2,7 +2,8 @@ import { useMemo } from 'react'
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { useCurrencyStore } from "../../../features/currency/currency.store";
 import { useTransactionsStore } from '../transactions.store';
-import { categories } from '../../../shared/config/defaultCategories';
+import { defaultCategories } from '../../../shared/config/defaultCategories';
+import { useCustomCategoriesStore } from '../../../features/customCategories/customCategories.store';
 import { defaultColors } from '../../../shared/config/defaultColors';
 
 type ExpenseItem = {
@@ -15,6 +16,8 @@ type ExpenseItem = {
 const ExpenseChart = () => {
     const transactions = useTransactionsStore((state) => state.transactions);
     const currency = useCurrencyStore(state => state.selectedCurrency);
+    const customCategories = useCustomCategoriesStore(state => state.categories);
+    const allCategories = [...defaultCategories, ...customCategories];
 
     const expenseData: ExpenseItem[] = useMemo(() => {
         const map = new Map<number, ExpenseItem>();
@@ -23,7 +26,7 @@ const ExpenseChart = () => {
             if (item.type !== -1) continue;
 
             const category = transactions.find(cat => cat.id_category === item.id_category)
-                ? categories.find(cat => cat.id === item.id_category && cat.type === "expense")
+                ? allCategories.find(cat => cat.id === item.id_category && cat.type === "expense")
                 : null;
             const color = defaultColors[item.id_category % defaultColors.length].value;
             const prev = map.get(item.id_category);

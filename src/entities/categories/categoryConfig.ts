@@ -1,15 +1,6 @@
 // Типы транзакций
 import type { TransactionType } from "../../shared/lib/transactionType";
 
-// Категория
-export interface Category {
-  id: number;
-  type: TransactionType["type"];
-  category: string;
-  iconUrl: string;
-  budgetType: 'needs' | 'wants' | 'savings';
-}
-
 // Константы для работы с типами
 export const TRANSACTION_TYPES: Record<TransactionType["type"], TransactionType> = {
   income: { id: 1, type: "income" },

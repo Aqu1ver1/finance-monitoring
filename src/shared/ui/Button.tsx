@@ -82,9 +82,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             />
           </svg>
         )}
-        {!loading && leftIcon && <span className="flex-shrink-0">{leftIcon}</span>}
+        {!loading && leftIcon && <span className="shrink-0">{leftIcon}</span>}
         {children}
-        {!loading && rightIcon && <span className="flex-shrink-0">{rightIcon}</span>}
+        {!loading && rightIcon && <span className="shrink-0">{rightIcon}</span>}
       </button>
     );
   }

@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Edit, Pencil, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useCurrencyStore } from "../features/currency/currency.store";
 import { useTransactionsStore } from "../entities/transactions/transactions.store";
 import { defaultCategories } from "../shared/config/defaultCategories";
 import type { TransactionType } from "../shared/lib/transactionType";
 import AddCategoryCard from "../features/customCategories/ui/AddCategoryCard";
-import { useCategoriesStore } from "../features/customCategories/customCategories.store";
+import { useCustomCategoriesStore } from "../features/customCategories/customCategories.store";
 import EditCategoryCard from "../features/customCategories/ui/editCategoryCard";
 
 
@@ -25,7 +25,7 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
 
   const currency = useCurrencyStore(state => state.selectedCurrency);
   const addTransaction = useTransactionsStore(state => state.addTransaction);
-  const customCategory = useCategoriesStore(state => state.categories);
+  const customCategory = useCustomCategoriesStore(state => state.categories);
   const allCategories = [...defaultCategories, ...customCategory];
   
   console.log(defaultCategories.length);

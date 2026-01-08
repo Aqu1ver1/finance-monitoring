@@ -1,13 +1,13 @@
-import { useState } from "react";
+// import { useState } from "react";
 import {
-  User,
-  Bell,
+  // User,
+  // Bell,
+  // Lock,
+  // CreditCard,
+  // HelpCircle,
   Moon,
-  Lock,
-  CreditCard,
-  HelpCircle,
   LogOut,
-  ChevronRight,
+  // ChevronRight,
 } from "lucide-react";
 import CurrencyExchange from "../features/currency/ui/CurrencyExchange";
 import { useThemeContext } from "../app/provides/ThemeProvides";
@@ -18,9 +18,22 @@ const removeAllTransactions = () => {
   useTransactionsStore.getState().removeAllTransactions();
 };
 
+// Вспомогательный компонент для строк меню
+// const MenuButton = ({ icon, title, sub, color }: any) => (
+//   <button className="w-full flex items-center gap-4 p-4 hover:bg-muted/50 transition-colors">
+//     <div className={`w-10 h-10 ${color} rounded-xl flex items-center justify-center`}>
+//       {icon}
+//     </div>
+//     <div className="flex-1 text-left">
+//       <p className="font-medium">{title}</p>
+//       <p className="text-xs text-muted-foreground">{sub}</p>
+//     </div>
+//     <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
+//   </button>
+// );
 const Settings = () => {
   const { isDark, toggle } = useThemeContext();
-  const [notifications, setNotifications] = useState(true);
+  // const [notifications, setNotifications] = useState(true);
   const resetBudgetData = () => {
     useBudgetStore.getState().resetBudgetData();
   }
@@ -31,7 +44,7 @@ const Settings = () => {
         <h2 className="text-2xl font-bold mb-6">Настройки</h2>
 
         {/* Profile Card - Используем градиент, который хорошо смотрится в обеих темах */}
-        <div className="bg-linear-to-br from-indigo-600 to-blue-700 text-white rounded-4xl p-6 shadow-lg shadow-blue-500/20">
+        {/* <div className="bg-linear-to-br from-indigo-600 to-blue-700 text-white rounded-4xl p-6 shadow-lg shadow-blue-500/20">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30">
               <User className="w-8 h-8 text-white" />
@@ -44,7 +57,7 @@ const Settings = () => {
           <button className="mt-5 w-full py-2.5 bg-white/10 hover:bg-white/20 rounded-xl text-sm font-medium backdrop-blur-sm border border-white/10 transition-all active:scale-95">
             Редактировать профиль
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* Settings Sections */}
@@ -82,7 +95,7 @@ const Settings = () => {
 
 
             <button
-              className="w-full flex items-center justify-center gap-2 p-5 bg-destructive/10 text-destructive rounded-3xl font-bold hover:bg-destructive/20 transition-all active:scale-[0.98]"
+              className="w-full flex items-center gap-2 p-5  text-destructive rounded-3xl font-bold hover:bg-destructive/20 transition-all active:scale-[0.98]"
               onClick={resetBudgetData}
             >
               <LogOut className="w-5 h-5" />
@@ -92,7 +105,7 @@ const Settings = () => {
             <div className="h-px bg-border/50 mx-4"></div>
 
             <button
-              className="w-full flex items-center justify-center gap-2 p-5 bg-destructive/10 text-destructive rounded-3xl font-bold hover:bg-destructive/20 transition-all active:scale-[0.98]"
+              className="w-full flex items-center gap-2 p-5  text-destructive rounded-3xl font-bold hover:bg-destructive/20 transition-all active:scale-[0.98]"
               onClick={removeAllTransactions}
             >
               <LogOut className="w-5 h-5" />
@@ -100,7 +113,7 @@ const Settings = () => {
             </button>
 
             {/* Notifications Toggle */}
-            <button
+            {/* <button
               onClick={() => setNotifications(!notifications)}
               className="w-full flex items-center gap-4 p-4 hover:bg-muted/50 transition-colors"
             >
@@ -114,12 +127,12 @@ const Settings = () => {
               <div className={`w-12 h-6 rounded-full transition-all duration-300 relative ${notifications ? "bg-primary" : "bg-muted"}`}>
                 <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300 ${notifications ? "translate-x-6" : "translate-x-0"}`} />
               </div>
-            </button>
+            </button> */}
           </div>
         </section>
 
         {/* Security & Support */}
-        <section>
+        {/* <section>
           <h4 className="px-2 mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">Система</h4>
           <div className="bg-secondary rounded-3xl border border-muted overflow-hidden">
             <MenuButton icon={<Lock className="w-5 h-5 text-purple-500" />} title="Безопасность" sub="Пароль и FaceID" color="bg-purple-500/10" />
@@ -128,7 +141,7 @@ const Settings = () => {
             <div className="h-px bg-border/50 mx-4"></div>
             <MenuButton icon={<HelpCircle className="w-5 h-5 text-emerald-500" />} title="Поддержка" sub="Чат 24/7" color="bg-emerald-500/10" />
           </div>
-        </section>
+        </section> */}
 
         {/* Logout */}
         <button className="w-full flex items-center justify-center gap-2 p-5 bg-destructive/10 text-destructive rounded-3xl font-bold hover:bg-destructive/20 transition-all active:scale-[0.98]">
@@ -144,17 +157,5 @@ const Settings = () => {
   );
 };
 
-// Вспомогательный компонент для строк меню
-const MenuButton = ({ icon, title, sub, color }: any) => (
-  <button className="w-full flex items-center gap-4 p-4 hover:bg-muted/50 transition-colors">
-    <div className={`w-10 h-10 ${color} rounded-xl flex items-center justify-center`}>
-      {icon}
-    </div>
-    <div className="flex-1 text-left">
-      <p className="font-medium">{title}</p>
-      <p className="text-xs text-muted-foreground">{sub}</p>
-    </div>
-    <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
-  </button>
-);
+
 export default Settings;

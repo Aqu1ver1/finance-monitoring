@@ -25,7 +25,7 @@ const Budget = () => {
   const totalPercentage = budget > 0 ? (totalExpenses / budget) * 100 : 0;
 
   return (
-    <div className="p-3 ">
+    <div className="min-h-screen bg-background text-primary p-6 pb-8 transition-colors duration-300">
       {/* Header */}
         <TotalBudgetSummary
           totalSpent={totalExpenses}
@@ -34,7 +34,7 @@ const Budget = () => {
           isNull={isNull}
           date={dateRange}
         />
-        <div className="px-4 gap-5 flex flex-col ">
+        <div className="px-4 gap-5 flex flex-col">
           <BudgetCategories scheme={scheme} />
         </div>
     </div>

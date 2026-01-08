@@ -4,7 +4,8 @@ import type { Transaction } from "../transactions.store";
 import { formatDateToText } from '../../../shared/lib/dateFormatter';
 import { useTransactionsStore } from '../transactions.store';
 import { Trash } from 'lucide-react';
-import { categories } from "../../../shared/config/defaultCategories";
+import { defaultCategories } from "../../../shared/config/defaultCategories";
+import { useCustomCategoriesStore} from '../../../features/customCategories/customCategories.store'; 
 
 
 interface Props {
@@ -12,10 +13,13 @@ interface Props {
 }
 
 const TransactionCard: React.FC<Props> = ({ transaction }) => {
-  const category = categories.find(
+  const customCategories = useCustomCategoriesStore(state => state.categories);
+  const allCategories = [...defaultCategories, ...customCategories];
+  const category = allCategories.find(
     cat => cat.id === transaction.id_category
   );
   const iconUrl = category ? category.iconUrl : '';
+  console.log(iconUrl);
   const removeTransaction = useTransactionsStore(state => state.removeTransaction);
   const currency = useCurrencyStore(state => state.selectedCurrency);
   const [isHovered, setIsHovered] = useState(false);

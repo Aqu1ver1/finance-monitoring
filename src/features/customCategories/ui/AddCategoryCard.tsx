@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react'
 import { Transition } from '@headlessui/react';
-import { useCategoriesStore } from '../customCategories.store';
+import { useCustomCategoriesStore } from '../customCategories.store';
 import { defaultIcons } from '../../../shared/config/defaultIcons';
 import { Button } from '../../../shared/ui/Button';
 
@@ -18,7 +18,7 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
         iconUrl: "",
         budgetType: 'needs' as 'needs' | 'wants' | 'savings'
     });
-    const addCategory = useCategoriesStore(state => state.addCategory);
+    const addCategory = useCustomCategoriesStore(state => state.addCategory);
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         addCategory({
@@ -42,21 +42,21 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
             leaveTo="opacity-0 scale-95"
         >
             <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-                <div className="relative w-full max-w-md bg-gray-200 rounded-2xl shadow-lg p-6">
+                <div className="relative w-full max-w-md bg-secondary/50 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-muted transition-colors duration-300">
                     {/* Крестик закрытия */}
                     <button
-                        className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-lg font-bold"
+                        className="absolute top-3 right-3 text-muted-foreground hover:text-primary text-lg font-bold transition-colors"
                         onClick={onClose}
                     >
                         ✕
                     </button>
 
                     {/* Заголовок */}
-                    {title && <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">{title}</h2>}
+                    {title && <h2 className="text-xl font-semibold mb-4 text-primary">{title}</h2>}
 
                     {/* Контент */}
                     <div className='flex flex-col gap-2'>
-                        <label >Название</label>
+                        <label className="text-primary">Название</label>
                         <input
                             type="text"
                             placeholder="Например: Здоровье"
@@ -64,9 +64,9 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
                             onChange={(e) =>
                                 setNewCategory({ ...newCategory, category: e.target.value })
                             }
-                            className="w-full  p-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
+                            className="w-full p-2 bg-background text-primary border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
                         />
-                        <label>Тип</label>
+                        <label className="text-primary">Тип</label>
                         <div className="flex gap-2">
                             <Button
                                 type="button"
@@ -86,7 +86,10 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
                             </Button>
                         </div>
                         <div>
-                            <label>Бюджетный тип</label>
+                            <label className="text-primary">Бюджетный тип</label>
+                            {newCategory.type === "income" ? (
+                                <p className="text-sm text-muted-foreground">Бюджетный тип доступен только для расходов</p>
+                            ) : 
                             <div className="flex gap-2">
                                 <Button
                                     type="button"
@@ -112,10 +115,10 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
                                 >
                                     Сбережения
                                 </Button>
-                            </div>
+                            </div>}
                         </div>
                         <div>
-                            <label>Иконка</label>
+                            <label className="text-primary">Иконка</label>
                             <div className="grid grid-cols-7 gap-2 mt-2">
                                 {defaultIcons.map((iconItem) => {
                                     return (

@@ -1,9 +1,9 @@
 import React, { Fragment, useState, useEffect } from 'react'
 import { Transition } from '@headlessui/react';
-import { useCategoriesStore } from '../customCategories.store';
+import { useCustomCategoriesStore } from '../customCategories.store';
 import { defaultIcons } from '../../../shared/config/defaultIcons';
 import { Button } from '../../../shared/ui/Button';
-import type { Category } from '../../../entities/categories/categoryConfig';
+import type { Category } from '../../../shared/config/defaultCategories';
 
 interface EditCategoryCardProps {
   isOpen: boolean;
@@ -16,12 +16,12 @@ const EditCategoryCard: React.FC<EditCategoryCardProps> = ({
   onClose,
   category
 }) => {
-    const { editCategory, deleteCategory } = useCategoriesStore();
+    const { editCategory, deleteCategory } = useCustomCategoriesStore();
     const [formData, setFormData] = useState({
     category: '',
     type: 'expense' as 'expense' | 'income',
     iconUrl: '',
-    budgetType: 'needs' as 'needs' | 'wants' | 'savings'
+    budgetType: 'needs' as 'needs' | 'wants' | 'savings'| ''
   });
 
     useEffect(() => {
@@ -30,7 +30,7 @@ const EditCategoryCard: React.FC<EditCategoryCardProps> = ({
         category: category.category,
         type: category.type,
         iconUrl: category.iconUrl,
-        budgetType: category.budgetType
+        budgetType: category.budgetType || ''
       });
     }
   }, [category]);
@@ -70,21 +70,21 @@ const EditCategoryCard: React.FC<EditCategoryCardProps> = ({
             leaveTo="opacity-0 scale-95"
         >
             <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-                <div className="relative w-full max-w-md bg-gray-200 rounded-2xl shadow-lg p-6">
+                <div className="relative w-full max-w-md bg-secondary/50 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-muted transition-colors duration-300">
                     {/* Крестик закрытия */}
                     <button
-                        className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-lg font-bold"
+                        className="absolute top-3 right-3 text-muted-foreground hover:text-primary text-lg font-bold transition-colors"
                         onClick={onClose}
                     >
                         ✕
                     </button>
 
                     {/* Заголовок */}
-                    <h2 className="text-xl font-semibold mb-4 text-gray-900">Редактирование категории</h2>
+                    <h2 className="text-xl font-semibold mb-4 text-primary">Редактирование категории</h2>
 
                     {/* Контент */}
                     <div className='flex flex-col gap-2'>
-                        <label >Название</label>
+                        <label className="text-primary">Название</label>
                         <input
                             type="text"
                             placeholder="Например: Здоровье"
@@ -92,9 +92,9 @@ const EditCategoryCard: React.FC<EditCategoryCardProps> = ({
                             onChange={(e) =>
                                 setFormData({ ...formData, category: e.target.value })
                             }
-                            className="w-full  p-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
+                            className="w-full p-2 bg-background text-primary border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
                         />
-                        <label>Тип</label>
+                        <label className="text-primary">Тип</label>
                         <div className="flex gap-2">
                             <Button
                                 type="button"
@@ -114,7 +114,7 @@ const EditCategoryCard: React.FC<EditCategoryCardProps> = ({
                             </Button>
                         </div>
                         <div>
-                            <label>Бюджетный тип</label>
+                            <label className="text-primary">Бюджетный тип</label>
                             <div className="flex gap-2">
                                 <Button
                                     type="button"
@@ -143,7 +143,7 @@ const EditCategoryCard: React.FC<EditCategoryCardProps> = ({
                             </div>
                         </div>
                         <div>
-                            <label>Иконка</label>
+                            <label className="text-primary">Иконка</label>
                             <div className="grid grid-cols-7 gap-2 mt-2">
                                 {defaultIcons.map((iconItem) => {
                                     return (
