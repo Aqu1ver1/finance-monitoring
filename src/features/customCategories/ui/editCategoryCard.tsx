@@ -4,6 +4,7 @@ import { useCustomCategoriesStore } from '../customCategories.store';
 import { defaultIcons } from '../../../shared/config/defaultIcons';
 import { Button } from '../../../shared/ui/Button';
 import type { Category } from '../../../shared/config/defaultCategories';
+import { useTransactionsStore } from '../../../entities/transactions/transactions.store';
 
 interface EditCategoryCardProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ const EditCategoryCard: React.FC<EditCategoryCardProps> = ({
   category
 }) => {
     const { editCategory, deleteCategory } = useCustomCategoriesStore();
+    const transactionWithCategory = useTransactionsStore(state => state.transactions.find(tr => tr.id_category === category?.id));
     const [formData, setFormData] = useState({
     category: '',
     type: 'expense' as 'expense' | 'income',
@@ -51,7 +53,10 @@ const EditCategoryCard: React.FC<EditCategoryCardProps> = ({
     const handleDelete = (e: React.FormEvent) => {
     e.preventDefault();
     if (!category) return;
-
+    if(transactionWithCategory != null) {
+        alert("Невозможно удалить категорию, так как существуют транзакции с этой категорией.");
+        return;
+    };
     deleteCategory(category.id);
     
     onClose();

@@ -125,11 +125,11 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
                 <button
                   key={category.id}
                   type="button"
-                  onClick={() => isEdit ? (setSelectedCategory(category.id), setIsEditModalOpen(true)) : setSelectedCategory(category.id)}
+                  onClick={() => isEdit ? (setSelectedCategory(category.id > defaultCategories.length ? category.id : null), setIsEditModalOpen(true)) : setSelectedCategory(category.id)}
                   className={`relative p-4 rounded-2xl transition-all duration-200 border-2 ${isSelected
                       ? "bg-primary/5 border-primary shadow-[0_0_0_1px_var(--color-primary)]"
                       : "bg-secondary/50 border-transparent hover:border-muted"
-                    } ${isEdit
+                    } ${isEdit && category.id > defaultCategories.length
                       ? "ring-2 ring-gray-400 -translate-y-1 shadow-lg"
                       : ""
                     }`}
