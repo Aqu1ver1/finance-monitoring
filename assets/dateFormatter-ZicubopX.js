@@ -1,1 +1,0 @@
-const s=["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"],r=t=>{if(!t)return"";const n=typeof t=="string"?new Date(t):t,o=n.getDate(),e=s[n.getMonth()];return`${o} ${e}`};export{r as f};
