@@ -6,6 +6,7 @@ import { useTransactionsStore } from '../transactions.store';
 import { Trash } from 'lucide-react';
 import { defaultCategories } from "../../../shared/config/defaultCategories";
 import { useCustomCategoriesStore} from '../../../features/customCategories/customCategories.store'; 
+import { useTranslate } from "../../../features/swapLanguages/useTranslate";
 
 
 interface Props {
@@ -23,6 +24,7 @@ const TransactionCard: React.FC<Props> = ({ transaction }) => {
   const removeTransaction = useTransactionsStore(state => state.removeTransaction);
   const currency = useCurrencyStore(state => state.selectedCurrency);
   const [isHovered, setIsHovered] = useState(false);
+  const t = useTranslate();
   return (
     <div className="flex items-center gap-3 p-4 bg-muted/30 rounded-xl"
       onMouseEnter={() => setIsHovered(true)}
@@ -34,7 +36,15 @@ const TransactionCard: React.FC<Props> = ({ transaction }) => {
         <img src={iconUrl} alt={iconUrl} className="w-6 h-6" />
       </div>
       <div className="flex-1 min-w-0 text-primary">
-        <p className="truncate">{category ? category.category : 'Без Категории'}</p>
+        <p className="truncate">
+          {category
+            ? (() => {
+                const key = `categories.${category.category}`;
+                const translated = t(key);
+                return translated === key ? category.category : translated;
+              })()
+            : t("transactionCard.noCategory")}
+        </p>
         {transaction.description && (
           <p className="text-sm text-muted-foreground truncate">
             {transaction.description}

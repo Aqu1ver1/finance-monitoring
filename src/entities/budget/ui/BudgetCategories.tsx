@@ -5,6 +5,8 @@ import { useTransactionsStore } from '../../transactions/transactions.store';
 import { useBudgetStore } from '../budget.store';
 import { defaultCategories } from '../../../shared/config/defaultCategories';
 import { BUDGET_SCHEMES } from '../budgetConfig';
+import {useCustomCategoriesStore} from "../../../features/customCategories/customCategories.store";
+import { useTranslate } from "../../../features/swapLanguages/useTranslate";
 
 import needsIcon from '../../../assets/icons/budget_types/requirement.png';
 import wantsIcon from '../../../assets/icons/budget_types/beach-vacation.png';
@@ -22,9 +24,9 @@ type BudgetCategoryData = {
 };
 
 const BUDGET_TYPE_CONFIG: Record<BudgetType, { name: string; iconUrl: string; color: string }> = {
-    needs: { name: 'Необходимое', iconUrl: needsIcon, color: '#3B82F6' },
-    wants: { name: 'Желаемое', iconUrl: wantsIcon, color: '#8B5CF6' },
-    savings: { name: 'Накопления', iconUrl: savingsIcon, color: '#10B981' }
+    needs: { name: 'Needs', iconUrl: needsIcon, color: '#3B82F6' },
+    wants: { name: 'Wants', iconUrl: wantsIcon, color: '#8B5CF6' },
+    savings: { name: 'Savings', iconUrl: savingsIcon, color: '#10B981' }
 };
 
 const BudgetCategories = ({ scheme }: { scheme: string }) => {
@@ -33,11 +35,12 @@ const BudgetCategories = ({ scheme }: { scheme: string }) => {
     const currency = useCurrencyStore(state => state.selectedCurrency);
     const { create_date } = useBudgetStore();
     const selectedScheme = scheme ? BUDGET_SCHEMES[scheme] : undefined;
+    const t = useTranslate();
 
     const budgetData: BudgetCategoryData[] = useMemo(() => {
         if (!selectedScheme) return [];
 
-        // Группируем транзакции по типам бюджета
+        // Group transactions by budget types
         const expensesByType: Record<BudgetType, number> = {
             needs: 0,
             wants: 0,
@@ -61,7 +64,8 @@ const BudgetCategories = ({ scheme }: { scheme: string }) => {
             }
 
             // Находим категорию и её budget_type
-            const category = defaultCategories.find(cat => cat.id === transaction.id_category);
+            const customCategory = useCustomCategoriesStore.getState().categories;
+            const category = [...defaultCategories, ...customCategory].find(cat => cat.id === transaction.id_category);
             if (category && category.type === 'expense' && category.budgetType) {
                 expensesByType[category.budgetType] += Math.abs(transaction.amount);
             }
@@ -70,13 +74,13 @@ const BudgetCategories = ({ scheme }: { scheme: string }) => {
         // Формируем данные для каждого типа бюджета
         return (['needs', 'wants', 'savings'] as BudgetType[]).map(type => ({
             type,
-            name: BUDGET_TYPE_CONFIG[type].name,
+            name: t(`budgetCategories.types.${type}`),
             amount: expensesByType[type],
             limit: (budget * selectedScheme[type]) / 100,
             color: BUDGET_TYPE_CONFIG[type].color,
             iconUrl: BUDGET_TYPE_CONFIG[type].iconUrl
         }));
-    }, [transactions, defaultCategories, create_date, budget, selectedScheme]);
+    }, [transactions, defaultCategories, create_date, budget, selectedScheme, t]);
 
     return (
         <>
@@ -91,7 +95,7 @@ const BudgetCategories = ({ scheme }: { scheme: string }) => {
                         key={categoryData.type}
                         className="bg-muted/30 rounded-2xl"
                     >
-                        <div className="flex items-start gap-4">
+                        <div className="flex items-center gap-4 p-4 ">
                             <CircularProgress
                                 percentage={percentage}
                                 color={isOverBudget ? "#EF4444" : categoryData.color}
@@ -114,17 +118,17 @@ const BudgetCategories = ({ scheme }: { scheme: string }) => {
                                 </div>
                                 <div className="space-y-1">
                                     <div className="flex items-center justify-between text-sm">
-                                        <span className="text-muted-foreground">Потрачено</span>
+                                        <span className="text-muted-foreground">{t("budgetCategories.labels.spent")}</span>
                                         <span className={isOverBudget ? "text-red-600" : ""}>
                                             {categoryData.amount.toLocaleString("ru-RU")} {currency}
                                         </span>
                                     </div>
                                     <div className="flex items-center justify-between text-sm">
-                                        <span className="text-muted-foreground">Лимит</span>
+                                        <span className="text-muted-foreground">{t("budgetCategories.labels.limit")}</span>
                                         <span>{categoryData.limit.toLocaleString("ru-RU")} {currency}</span>
                                     </div>
                                     <div className="flex items-center justify-between text-sm">
-                                        <span className="text-muted-foreground">Осталось</span>
+                                        <span className="text-muted-foreground">{t("budgetCategories.labels.remaining")}</span>
                                         <span className={isOverBudget ? "text-red-600" : "text-green-600"}>
                                             {(categoryData.limit - categoryData.amount).toLocaleString("ru-RU")} {currency}
                                         </span>

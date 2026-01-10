@@ -4,11 +4,13 @@ import { useTransactionsStore } from "../entities/transactions/transactions.stor
 import TransactionCard from "../entities/transactions/ui/TransactionCard";
 import StatCard from "../widgets/StatCard/ui/StatCard";
 import { TrendingUp } from "lucide-react";
+import { useTranslate } from "../features/swapLanguages/useTranslate";
 
 const Transactions: React.FC = () => {
   const [filter, setFilter] = useState<"all" | "income" | "expense">("all");
   const currency = useCurrencyStore(state => state.selectedCurrency);
   const transactions = useTransactionsStore(state => state.transactions);
+  const t = useTranslate();
 
   // Обернем расчеты в useMemo, чтобы не пересчитывать их при каждом рендере
   const { filteredTransactions, totalIncome, totalExpense } = useMemo(() => {
@@ -36,12 +38,12 @@ const Transactions: React.FC = () => {
     <div className="min-h-screen bg-background text-primary p-6 pb-8 transition-colors duration-300">
       {/* Header */}
       <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-6">История операций</h2>
+        <h2 className="text-2xl font-bold mb-6">{t("titles.transactionsPage")}</h2>
 
         {/* Summary Cards */}
         <div className="grid grid-cols-2 gap-4 mb-8">
-          <StatCard label="Доходы" amount={totalIncome} currency={currency} type="income" icon={TrendingUp} />
-          <StatCard label="Расходы" amount={totalExpense} currency={currency} type="expense" icon={TrendingUp} />
+          <StatCard label={t("common.income")} amount={totalIncome} currency={currency} type="income" icon={TrendingUp} />
+          <StatCard label={t("common.expenses")} amount={totalExpense} currency={currency} type="expense" icon={TrendingUp} />
         </div>
         {/* Filter Buttons */}
         <div className="flex gap-2 p-1 bg-secondary/50 rounded-xl w-fit border border-muted">
@@ -55,7 +57,7 @@ const Transactions: React.FC = () => {
                   : "text-muted-foreground hover:text-primary"
               }`}
             >
-              {type === "all" ? "Все" : type === "income" ? "Доходы" : "Расходы"}
+              {type === "all" ? t("transactions.filters.all") : type === "income" ? t("transactions.filters.income") : t("transactions.filters.expense")}
             </button>
           ))}
         </div>
@@ -69,7 +71,7 @@ const Transactions: React.FC = () => {
           ))
         ) : (
           <div className="text-center py-12 text-muted-foreground">
-            Операций пока нет
+            {t("transactions.empty")}
           </div>
         )}
       </div>

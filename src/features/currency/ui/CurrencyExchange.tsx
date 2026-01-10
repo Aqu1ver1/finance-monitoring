@@ -1,20 +1,17 @@
 import { ChevronRight, Globe } from "lucide-react";
 import { useState } from "react";
 import { useCurrencyStore } from "../currency.store";
+import { useTranslate } from "../../swapLanguages/useTranslate";
 
 interface CurrencyDictionary {
   [key: string]: string;
 }
 
-const Currency: CurrencyDictionary = {
-  "€": "Эвро",
-  "$": "Доллар",
-  "₽": "Рубль",
-  "₴": "Гривна",
-};
+const currencySymbols = ["€", "$", "₽", "₴"] as const;
 
 const CurrencyExchange = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const t = useTranslate();
 
   const selectedCurrency = useCurrencyStore(state => state.selectedCurrency);
   const setCurrency = useCurrencyStore(state => state.setCurrency);
@@ -30,9 +27,9 @@ const CurrencyExchange = () => {
         </div>
 
         <div className="flex-1 text-left">
-          <p>Валюта</p>
+          <p>{t("settingsBTN.currency")}</p>
           <p className="text-sm text-muted-foreground">
-            {Currency[selectedCurrency]} ({selectedCurrency})
+            {t(`currencyNames.${selectedCurrency}`)} ({selectedCurrency})
           </p>
         </div>
 
@@ -45,7 +42,7 @@ const CurrencyExchange = () => {
 
       {isOpen && (
         <div className="flex flex-col gap-3 p-3 w-full">
-          {Object.keys(Currency).map(symbol => (
+          {currencySymbols.map(symbol => (
             <div
               key={symbol}
               className="cursor-pointer text-primary border border-border rounded-lg shadow-lg px-4 py-2 hover:bg-primary/10 transition-colors"
@@ -54,7 +51,7 @@ const CurrencyExchange = () => {
                 setIsOpen(false);
               }}
             >
-              {Currency[symbol]} ({symbol})
+              {t(`currencyNames.${symbol}`)} ({symbol})
             </div>
           ))}
         </div>

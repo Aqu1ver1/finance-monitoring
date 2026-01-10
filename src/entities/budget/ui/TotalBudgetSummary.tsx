@@ -4,6 +4,7 @@ import AddBudget from '../../../features/addBudget/ui/AddBudget';
 import { useEffect, useState } from 'react';
 import { formatDateToText } from '../../../shared/lib/dateFormatter';
 import { useCurrencyStore } from '../../../features/currency/currency.store';
+import { useTranslate } from '../../../features/swapLanguages/useTranslate';
 
 interface TotalBudgetSummaryProps {
   totalSpent: number;
@@ -17,6 +18,7 @@ const TotalBudgetSummary = ({ totalSpent, totalLimit, totalPercentage, isNull, d
   const [isModalOpen, setIsModalOpen] = useState(false);
   isNull = totalLimit === 0;
   const currency = useCurrencyStore(state => state.selectedCurrency);
+  const t = useTranslate();
   return (
     <div className="text-white bg-background flex flex-col gap-2">
       {isNull ?
@@ -25,18 +27,18 @@ const TotalBudgetSummary = ({ totalSpent, totalLimit, totalPercentage, isNull, d
       <AddBudget 
       isOpen={isModalOpen} 
       onClose={() => setIsModalOpen(false)} 
-      title="Установить бюджет" />
+      title={t("budgetSummary.setBudget")} />
       </> : 
         <div className="bg-linear-to-br from-blue-500 to-blue-600 rounded-2xl p-6 mb-6">
-          <p className="mb-2">Общий бюджет на {date}</p>
+          <p className="mb-2">{t("budgetSummary.budgetFor").replace("{date}", date)}</p>
           <p className="text-3xl mb-4">{totalLimit.toLocaleString("ru-RU")} {currency}</p>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm t">Потрачено</p>
+              <p className="text-sm t">{t("budgetSummary.spent")}</p>
               <p className="text-xl">{totalSpent.toLocaleString("ru-RU")} {currency}</p>
             </div>
             <div className="text-right">
-              <p className="text-sm">Осталось</p>
+              <p className="text-sm">{t("budgetSummary.remaining")}</p>
               <p className="text-xl">{(totalLimit - totalSpent).toLocaleString("ru-RU")} {currency}</p>
             </div>
           </div>

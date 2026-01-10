@@ -1,63 +1,45 @@
-import { useMemo } from 'react'
+import { useMemo, useCallback } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
-import { useCurrencyStore } from "../../../features/currency/currency.store";
-import { useTransactionsStore } from '../transactions.store';
+import { useCurrencyStore } from "../../currency/currency.store";
+import { useTransactionsStore } from '../../../entities/transactions/transactions.store';
 import { defaultCategories } from '../../../shared/config/defaultCategories';
-import { useCustomCategoriesStore } from '../../../features/customCategories/customCategories.store';
-import { defaultColors } from '../../../shared/config/defaultColors';
-
-type ExpenseItem = {
-    id_category: number;
-    amount: number;
-    color: string;
-    category: string;
-};
+import { useCustomCategoriesStore } from '../../customCategories/customCategories.store';
+import { useTranslate } from "../../swapLanguages/useTranslate";
+import { usePersistentColors } from '../usePersistentColors';
+import { useExpenseData } from '../useExpenseData';
 
 const ExpenseChart = () => {
     const transactions = useTransactionsStore((state) => state.transactions);
     const currency = useCurrencyStore(state => state.selectedCurrency);
     const customCategories = useCustomCategoriesStore(state => state.categories);
-    const allCategories = [...defaultCategories, ...customCategories];
+    const t = useTranslate();
 
-    const expenseData: ExpenseItem[] = useMemo(() => {
-        const map = new Map<number, ExpenseItem>();
+    const allCategories = useMemo(
+        () => [...defaultCategories, ...customCategories],
+        [customCategories]
+    );
 
-        for (const item of transactions) {
-            if (item.type !== -1) continue;
+    const { getColorForCategory } = usePersistentColors();
 
-            const category = transactions.find(cat => cat.id_category === item.id_category)
-                ? allCategories.find(cat => cat.id === item.id_category && cat.type === "expense")
-                : null;
-            const color = defaultColors[item.id_category % defaultColors.length].value;
-            const prev = map.get(item.id_category);
+    const translateCategory = useCallback(
+        (categoryName: string): string => {
+            const key = `categories.${categoryName}`;
+            const translated = t(key);
+            return translated === key ? categoryName : translated;
+        },
+        [t]
+    );
 
-            if (prev) {
-                prev.amount += Math.abs(item.amount);
-            } else {
-                map.set(item.id_category, {
-                    id_category: item.id_category,
-                    amount: Math.abs(item.amount),
-                    color: color,
-                    category: category ? category.category : 'Без категории',
-                });
-            }
-        }
-
-        const aggregated = Array.from(map.values());
-        if (aggregated.length === 0) {
-            return [{
-                id_category: -1,
-                category: 'Нет расходов',
-                amount: 1,
-                color: '#E0E0E0',
-            }];
-        }
-
-        return aggregated;
-    }, [transactions]);
+    const expenseData = useExpenseData({
+        transactions,
+        allCategories,
+        getColorForCategory,
+        translateCategory,
+        noExpensesLabel: t("expenseChart.noExpenses"),
+    });
     return (
         <div className="mb-8">
-            <h3 className="mb-4">Расходы по категориям</h3>
+            <h3 className="mb-4">{t("expenseChart.title")}</h3>
             <div className="bg-muted/30 rounded-2xl p-6">
                 <ResponsiveContainer width="100%" height={200}>
                     <PieChart>
@@ -71,12 +53,12 @@ const ExpenseChart = () => {
                             dataKey="amount"
                         >
                             {expenseData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={entry.color} />
+                                <Cell key={`cell-${index}`} fill={entry.color} stroke="dark:gray-500 #E0E0E0" />
                             ))}
                         </Pie>
                     </PieChart>
                 </ResponsiveContainer>
-                <div className="flex flex-col gap-3 mt-4">
+                <div className="grid grid-cols-2 gap-3 mt-4">
                     {expenseData.map((item) => {
                         return (
                             <div key={item.id_category} className="flex items-center gap-2">
@@ -92,7 +74,6 @@ const ExpenseChart = () => {
                                 </div>
                             </div>
                         )
-
                     })}
                 </div>
             </div>

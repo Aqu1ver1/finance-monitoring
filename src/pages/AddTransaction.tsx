@@ -7,6 +7,7 @@ import type { TransactionType } from "../shared/lib/transactionType";
 import AddCategoryCard from "../features/customCategories/ui/AddCategoryCard";
 import { useCustomCategoriesStore } from "../features/customCategories/customCategories.store";
 import EditCategoryCard from "../features/customCategories/ui/editCategoryCard";
+import { useTranslate } from "../features/swapLanguages/useTranslate";
 
 
 
@@ -27,8 +28,7 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
   const addTransaction = useTransactionsStore(state => state.addTransaction);
   const customCategory = useCustomCategoriesStore(state => state.categories);
   const allCategories = [...defaultCategories, ...customCategory];
-  
-  console.log(defaultCategories.length);
+  const t = useTranslate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,7 +53,7 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
     <div className="min-h-full bg-background p-6 flex flex-col text-primary transition-colors duration-300">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
-        <h2 className="text-xl font-bold">Новая операция</h2>
+        <h2 className="text-xl font-bold">{t("addTransaction.title")}</h2>
         <button
           onClick={onClose}
           className="w-10 h-10 flex items-center justify-center rounded-full bg-secondary text-primary hover:bg-muted transition-colors"
@@ -73,7 +73,7 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
               : "text-muted-foreground hover:text-primary"
               }`}
           >
-            Расход
+            {t("addTransaction.expense")}
           </button>
           <button
             type="button"
@@ -83,13 +83,13 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
               : "text-muted-foreground hover:text-primary"
               }`}
           >
-            Доход
+            {t("addTransaction.income")}
           </button>
         </div>
 
         {/* Amount Input */}
         <div className="mb-8">
-          <label className="block text-sm text-muted-foreground mb-2">Сумма</label>
+          <label className="block text-sm text-muted-foreground mb-2">{t("addTransaction.amount")}</label>
           <div className="relative border-b-2 border-muted focus-within:border-primary transition-colors">
             <input
               type="number"
@@ -109,10 +109,10 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
         {/* Category Selection */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <label className="text-sm text-muted-foreground mb-4">Категория</label>
+            <label className="text-sm text-muted-foreground mb-4">{t("addTransaction.category")}</label>
             <div className="flex  gap-2">
-              <label className="text-sm text-blue-600 hover:text-blue-800 font-medium transition-all active:scale-95 mb-4 hover:cursor-pointer" onClick={() => { setIsAddModalOpen(true); setIsEdit(false); }}>+ Новая</label>
-              <label className="text-sm text-blue-600 hover:text-blue-800 font-medium transition-all active:scale-95 mb-4 hover:cursor-pointer" onClick={() => { setIsEdit(true); setSelectedCategory(null); }}>Редактирование</label>
+              <label className="text-sm text-blue-600 hover:text-blue-800 font-medium transition-all active:scale-95 mb-4 hover:cursor-pointer" onClick={() => { setIsAddModalOpen(true); setIsEdit(false); }}>{t("addTransaction.newCategory")}</label>
+              <label className="text-sm text-blue-600 hover:text-blue-800 font-medium transition-all active:scale-95 mb-4 hover:cursor-pointer" onClick={() => { setIsEdit(true); setSelectedCategory(null); }}>{t("addTransaction.editCategory")}</label>
 
             </div>
             <AddCategoryCard isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />
@@ -147,7 +147,11 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
                     className={`text-[10px] font-medium text-center uppercase tracking-wider ${isSelected ? "text-primary" : "text-muted-foreground"
                       }`}
                   >
-                    {category.category}
+                    {(() => {
+                      const key = `categories.${category.category}`;
+                      const translated = t(key);
+                      return translated === key ? category.category : translated;
+                    })()}
                   </p>
                 </button>
               );
@@ -157,12 +161,12 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
 
         {/* Description */}
         <div className="mb-8">
-          <label className="block text-sm text-muted-foreground mb-2">Описание</label>
+          <label className="block text-sm text-muted-foreground mb-2">{t("addTransaction.description")}</label>
           <input
             type="text"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="На что потратили?"
+            placeholder={t("addTransaction.descriptionPlaceholder")}
             className="w-full px-5 py-4 bg-secondary rounded-2xl outline-none border border-transparent focus:border-primary transition-all placeholder:text-muted-foreground/50"
           />
         </div>
@@ -174,7 +178,7 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ onClose }) => {
             disabled={!amount || !selectedCategory}
             className="w-full py-5 bg-primary text-primary-foreground rounded-2xl font-bold text-lg shadow-lg active:scale-[0.98] disabled:opacity-30 disabled:grayscale disabled:scale-100 transition-all"
           >
-            Подтвердить
+            {t("addTransaction.submit")}
           </button>
         </div>
       </form>

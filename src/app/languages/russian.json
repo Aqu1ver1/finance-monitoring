@@ -1,0 +1,105 @@
+{
+    "titles": {
+        "transactionsPage": "История операций",
+        "budgetPage": "Бюджет",
+        "settingsPage": "Настройки"
+    },
+    "navigation": {
+        "dashboard": "Главная",
+        "budget": "Бюджет",
+        "transactions": "Операции",
+        "settings": "Настройки"
+    },
+    "common": {
+        "balance": "Баланс",
+        "income": "Доход",
+        "expenses": "Расход",
+        "all": "Все",
+        "spent": "Потрачено",
+        "limit": "Лимит",
+        "remaining": "Осталось"
+    },
+    "SettingGroups": {
+        "settingsPage": "Общие"
+    },
+    "settingsBTN": {
+        "language": "Язык",
+        "Darktheme": "Темная Тема",
+        "EconomizesBattery": "Экономит заряд батареи",
+        "ClassicView": "Классический вид",
+        "currency": "Валюта",
+        "Removebudget": "Удалить бюджет",
+        "Confirmremovebudget": "Вы уверены, что хотите удалить бюджет? Это действие необратимо.",
+        "RemoveTransactions": "Удалить все транзакции",
+        "ConfirmremoveTransactions": "Вы уверены, что хотите удалить все транзакции? Это действие необратимо.",
+        "Cancel": "Отмена",
+        "Remove": "Удалить"
+    },
+    "currencyNames": {
+        "€": "Евро",
+        "$": "Доллар",
+        "₽": "Рубль",
+        "₴": "Гривна"
+    },
+    "categories": {
+        "Food": "Еда",
+        "Transport": "Транспорт",
+        "Housing": "Жилье",
+        "Restaurants": "Рестораны",
+        "Other": "Другое",
+        "Income": "Доход",
+        "Crypto": "Крипто"
+    },
+    "dashboard": {
+        "expenseChartTitle": "Расходы по категориям"
+    },
+    "transactions": {
+        "filters": {
+            "all": "Все",
+            "income": "Доходы",
+            "expense": "Расходы"
+        },
+        "empty": "Операций пока нет"
+    },
+    "addTransaction": {
+        "title": "Новая операция",
+        "expense": "Расход",
+        "income": "Доход",
+        "amount": "Сумма",
+        "category": "Категория",
+        "newCategory": "+ Новая",
+        "editCategory": "Редактирование",
+        "description": "Описание",
+        "descriptionPlaceholder": "На что потратили?",
+        "submit": "Подтвердить"
+    },
+    "transactionCard": {
+        "noCategory": "Без категории"
+    },
+    "expenseChart": {
+        "title": "Расходы по категориям",
+        "noCategory": "Без категории",
+        "noExpenses": "Нет расходов"
+    },
+    "budgetCategories": {
+        "types": {
+            "needs": "Нужды",
+            "wants": "Желания",
+            "savings": "Сбережения"
+        },
+        "labels": {
+            "spent": "Потрачено",
+            "limit": "Лимит",
+            "remaining": "Осталось"
+        }
+    },
+    "budgetSummary": {
+        "setBudget": "Установить бюджет",
+        "budgetFor": "Бюджет на {date}",
+        "spent": "Потрачено",
+        "remaining": "Осталось"
+    },
+    "footer": {
+        "version": "Finance App • v1.0.0"
+    }
+}

@@ -1,0 +1,105 @@
+{
+    "titles": {
+        "transactionsPage": "Transaction History",
+        "budgetPage": "Budget",
+        "settingsPage": "Settings"
+    },
+    "navigation": {
+        "dashboard": "Dashboard",
+        "budget": "Budget",
+        "transactions": "Transactions",
+        "settings": "Settings"
+    },
+    "common": {
+        "balance": "Balance",
+        "income": "Income",
+        "expenses": "Expenses",
+        "all": "All",
+        "spent": "Spent",
+        "limit": "Limit",
+        "remaining": "Remaining"
+    },
+    "SettingGroups": {
+        "settingsPage": "General"
+    },
+    "settingsBTN": {
+        "language": "Language",
+        "Darktheme": "Dark Theme",
+        "EconomizesBattery": "Saves battery",
+        "ClassicView": "Classic view",
+        "currency": "Currency",
+        "Removebudget": "Remove Budget",
+        "Confirmremovebudget": "Are you sure you want to remove the budget? This action is irreversible.",
+        "RemoveTransactions": "Remove All Transactions",
+        "ConfirmremoveTransactions": "Are you sure you want to remove all transactions? This action is irreversible.",
+        "Cancel": "Cancel",
+        "Remove": "Remove"
+    },
+    "currencyNames": {
+        "€": "Euro",
+        "$": "Dollar",
+        "₽": "Ruble",
+        "₴": "Hryvnia"
+    },
+    "categories": {
+        "Food": "Food",
+        "Transport": "Transport",
+        "Housing": "Housing",
+        "Restaurants": "Restaurants",
+        "Other": "Other",
+        "Income": "Income",
+        "Crypto": "Crypto"
+    },
+    "dashboard": {
+        "expenseChartTitle": "Expenses by Category"
+    },
+    "transactions": {
+        "filters": {
+            "all": "All",
+            "income": "Income",
+            "expense": "Expenses"
+        },
+        "empty": "No transactions yet"
+    },
+    "addTransaction": {
+        "title": "New transaction",
+        "expense": "Expense",
+        "income": "Income",
+        "amount": "Amount",
+        "category": "Category",
+        "newCategory": "New",
+        "editCategory": "Edit",
+        "description": "Description",
+        "descriptionPlaceholder": "What did you spend on?",
+        "submit": "Confirm"
+    },
+    "transactionCard": {
+        "noCategory": "No category"
+    },
+    "expenseChart": {
+        "title": "Expenses by Category",
+        "noCategory": "No category",
+        "noExpenses": "No expenses"
+    },
+    "budgetCategories": {
+        "types": {
+            "needs": "Needs",
+            "wants": "Wants",
+            "savings": "Savings"
+        },
+        "labels": {
+            "spent": "Spent",
+            "limit": "Limit",
+            "remaining": "Remaining"
+        }
+    },
+    "budgetSummary": {
+        "setBudget": "Set Budget",
+        "budgetFor": "Budget for {date}",
+        "spent": "Spent",
+        "remaining": "Remaining"
+    },
+    "footer": {
+        "version": "Finance App • v1.0.0"
+    }
+}

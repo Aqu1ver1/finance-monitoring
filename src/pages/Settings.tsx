@@ -13,6 +13,8 @@ import CurrencyExchange from "../features/currency/ui/CurrencyExchange";
 import { useThemeContext } from "../app/provides/ThemeProvides";
 import { useBudgetStore } from "../entities/budget/budget.store";
 import { useTransactionsStore } from "../entities/transactions/transactions.store";
+import { useTranslate } from "../features/swapLanguages/useTranslate";
+import LanguageSwitcher from "../features/swapLanguages/ui/LanguageSwitcher";
 
 const removeAllTransactions = () => {
   useTransactionsStore.getState().removeAllTransactions();
@@ -31,17 +33,19 @@ const removeAllTransactions = () => {
 //     <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
 //   </button>
 // );
+
 const Settings = () => {
   const { isDark, toggle } = useThemeContext();
   // const [notifications, setNotifications] = useState(true);
   const resetBudgetData = () => {
     useBudgetStore.getState().resetBudgetData();
   }
+  const t = useTranslate();
   return (
     <div className="min-h-screen bg-background p-6 pb-12 text-primary transition-colors duration-300">
       {/* Header */}
       <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-6">Настройки</h2>
+        <h2 className="text-2xl font-bold mb-6">{t("titles.settingsPage")}</h2>
 
         {/* Profile Card - Используем градиент, который хорошо смотрится в обеих темах */}
         {/* <div className="bg-linear-to-br from-indigo-600 to-blue-700 text-white rounded-4xl p-6 shadow-lg shadow-blue-500/20">
@@ -64,7 +68,7 @@ const Settings = () => {
       <div className="space-y-8">
         {/* General Settings */}
         <section>
-          <h4 className="px-2 mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">Общие</h4>
+          <h4 className="px-2 mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">{t("SettingGroups.settingsPage")}</h4>
           <div className="bg-secondary rounded-3xl border border-muted overflow-hidden">
             {/* Dark Mode Toggle */}
             <button
@@ -75,9 +79,9 @@ const Settings = () => {
                 <Moon className="w-5 h-5 text-primary" />
               </div>
               <div className="flex-1 text-left">
-                <p className="font-medium">Темная тема</p>
+                <p className="font-medium">{t("settingsBTN.Darktheme")}</p>
                 <p className="text-xs text-muted-foreground italic">
-                  {isDark ? "Экономит заряд батареи" : "Классический вид"}
+                  {isDark ? t("settingsBTN.EconomizesBattery") : t("settingsBTN.ClassicView")}
                 </p>
               </div>
               {/* Custom Toggle Switch */}
@@ -85,35 +89,32 @@ const Settings = () => {
                 <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300 ${isDark ? "translate-x-6" : "translate-x-0"}`} />
               </div>
             </button>
-
             <div className="h-px bg-border/50 mx-4"></div>
-
             <CurrencyExchange />
-
             <div className="h-px bg-border/50 mx-4"></div>
+            {/* Language Selection */}
+            <LanguageSwitcher />
+          <div className="h-px bg-border/50 mx-4"></div>
+          <button
+            className="w-full flex items-center gap-2 p-5  text-destructive rounded-3xl font-bold hover:bg-destructive/20 transition-all active:scale-[0.98]"
+            onClick={resetBudgetData}
+          >
+            <LogOut className="w-5 h-5" />
+            <span>{t("settingsBTN.Removebudget")}</span>
+          </button>
 
+          <div className="h-px bg-border/50 mx-4"></div>
 
+          <button
+            className="w-full flex items-center gap-2 p-5  text-destructive rounded-3xl font-bold hover:bg-destructive/20 transition-all active:scale-[0.98]"
+            onClick={removeAllTransactions}
+          >
+            <LogOut className="w-5 h-5" />
+            <span>{t("settingsBTN.RemoveTransactions")}</span>
+          </button>
 
-            <button
-              className="w-full flex items-center gap-2 p-5  text-destructive rounded-3xl font-bold hover:bg-destructive/20 transition-all active:scale-[0.98]"
-              onClick={resetBudgetData}
-            >
-              <LogOut className="w-5 h-5" />
-              <span>Сбросить бюджет</span>
-            </button>
-
-            <div className="h-px bg-border/50 mx-4"></div>
-
-            <button
-              className="w-full flex items-center gap-2 p-5  text-destructive rounded-3xl font-bold hover:bg-destructive/20 transition-all active:scale-[0.98]"
-              onClick={removeAllTransactions}
-            >
-              <LogOut className="w-5 h-5" />
-              <span>Сбросить транзакции</span>
-            </button>
-
-            {/* Notifications Toggle */}
-            {/* <button
+          {/* Notifications Toggle */}
+          {/* <button
               onClick={() => setNotifications(!notifications)}
               className="w-full flex items-center gap-4 p-4 hover:bg-muted/50 transition-colors"
             >
@@ -128,11 +129,11 @@ const Settings = () => {
                 <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300 ${notifications ? "translate-x-6" : "translate-x-0"}`} />
               </div>
             </button> */}
-          </div>
-        </section>
+      </div>
+    </section>
 
-        {/* Security & Support */}
-        {/* <section>
+        {/* Security & Support */ }
+  {/* <section>
           <h4 className="px-2 mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">Система</h4>
           <div className="bg-secondary rounded-3xl border border-muted overflow-hidden">
             <MenuButton icon={<Lock className="w-5 h-5 text-purple-500" />} title="Безопасность" sub="Пароль и FaceID" color="bg-purple-500/10" />
@@ -143,17 +144,17 @@ const Settings = () => {
           </div>
         </section> */}
 
-        {/* Logout */}
-        <button className="w-full flex items-center justify-center gap-2 p-5 bg-destructive/10 text-destructive rounded-3xl font-bold hover:bg-destructive/20 transition-all active:scale-[0.98]">
+  {/* Logout */ }
+  {/* <button className="w-full flex items-center justify-center gap-2 p-5 bg-destructive/10 text-destructive rounded-3xl font-bold hover:bg-destructive/20 transition-all active:scale-[0.98]">
           <LogOut className="w-5 h-5" />
-          <span>Выйти из аккаунта</span>
-        </button>
+          <span>{ru.settingsBTN.Logout}</span>
+        </button> */}
 
-        <div className="text-center text-xs text-muted-foreground opacity-50 pb-4">
-          <p>Finance App • v1.0.0</p>
-        </div>
-      </div>
-    </div>
+  <div className="text-center text-xs text-muted-foreground opacity-50 pb-4">
+    <p>{t("footer.version")}</p>
+  </div>
+      </div >
+    </div >
   );
 };
 

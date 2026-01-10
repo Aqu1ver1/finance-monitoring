@@ -34,7 +34,7 @@ const Budget = () => {
           isNull={isNull}
           date={dateRange}
         />
-        <div className="px-4 gap-5 flex flex-col">
+        <div className="px-4 gap-6 flex flex-col">
           <BudgetCategories scheme={scheme} />
         </div>
     </div>

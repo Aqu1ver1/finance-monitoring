@@ -16,10 +16,11 @@ export interface Category {
 }
 
 export const defaultCategories: Category[] = [
-  { id: 1, category: "Еда", iconUrl: food, type: "expense", budgetType: 'needs' },
-  { id: 2, category: "Транспорт", iconUrl: car, type: "expense", budgetType: 'needs' },
-  { id: 3, category: "Жильё", iconUrl: home, type: "expense", budgetType: 'needs' },
-  { id: 4, category: "Развлечения", iconUrl: restaurant, type: "expense", budgetType: 'wants' },
-  { id: 5, category: "Прочее", iconUrl: sparkles, type: "expense", budgetType: 'wants' },
-  { id: 6, category: "Доход", iconUrl: trendingup, type: "income" },
+  { id: 1, category: "Food", iconUrl: food, type: "expense", budgetType: 'needs' },
+  { id: 2, category: "Transport", iconUrl: car, type: "expense", budgetType: 'needs' },
+  { id: 3, category: "Housing", iconUrl: home, type: "expense", budgetType: 'needs' },
+  { id: 4, category: "Restaurants", iconUrl: restaurant, type: "expense", budgetType: 'wants' },
+  { id: 5, category: "Other", iconUrl: sparkles, type: "expense", budgetType: 'wants' },
+  { id: 6, category: "Income", iconUrl: trendingup, type: "income" },
+  { id: 7, category: "Crypto", iconUrl: trendingup, type: "expense", budgetType: 'savings' },
 ];
