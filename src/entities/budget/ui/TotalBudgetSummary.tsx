@@ -1,8 +1,7 @@
 
 import BudgetIsNull from './BudgetIsNull';
 import AddBudget from '../../../features/addBudget/ui/AddBudget';
-import { useEffect, useState } from 'react';
-import { formatDateToText } from '../../../shared/lib/dateFormatter';
+import { useState } from 'react';
 import { useCurrencyStore } from '../../../features/currency/currency.store';
 import { useTranslate } from '../../../features/swapLanguages/useTranslate';
 

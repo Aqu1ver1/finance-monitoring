@@ -3,10 +3,6 @@ import { useState } from "react";
 import { useCurrencyStore } from "../currency.store";
 import { useTranslate } from "../../swapLanguages/useTranslate";
 
-interface CurrencyDictionary {
-  [key: string]: string;
-}
-
 const currencySymbols = ["€", "$", "₽", "₴"] as const;
 
 const CurrencyExchange = () => {
