@@ -96,6 +96,7 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
                                     variant={newCategory.budgetType === "needs" ? "primary" : "secondary"}
                                     fullWidth
                                     onClick={() => setNewCategory({ ...newCategory, budgetType: "needs" })}
+                                    size="sm"
                                 >
                                     Необходимые
                                 </Button>
@@ -104,6 +105,7 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
                                     variant={newCategory.budgetType === "wants" ? "primary" : "secondary"}
                                     fullWidth
                                     onClick={() => setNewCategory({ ...newCategory, budgetType: "wants" })}
+                                    size="sm"
                                 >
                                     Развлечения
                                 </Button>
@@ -112,6 +114,7 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
                                     variant={newCategory.budgetType === "savings" ? "primary" : "secondary"}
                                     fullWidth
                                     onClick={() => setNewCategory({ ...newCategory, budgetType: "savings" })}
+                                    size="sm"
                                 >
                                     Сбережения
                                 </Button>

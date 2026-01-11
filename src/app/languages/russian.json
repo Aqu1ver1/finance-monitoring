@@ -33,7 +33,8 @@
         "RemoveTransactions": "Удалить все транзакции",
         "ConfirmremoveTransactions": "Вы уверены, что хотите удалить все транзакции? Это действие необратимо.",
         "Cancel": "Отмена",
-        "Remove": "Удалить"
+        "Remove": "Удалить",
+        "Logout": "Выйти из аккаунта"
     },
     "currencyNames": {
         "€": "Евро",

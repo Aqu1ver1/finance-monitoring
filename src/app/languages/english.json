@@ -33,7 +33,8 @@
         "RemoveTransactions": "Remove All Transactions",
         "ConfirmremoveTransactions": "Are you sure you want to remove all transactions? This action is irreversible.",
         "Cancel": "Cancel",
-        "Remove": "Remove"
+        "Remove": "Remove",
+        "Logout": "Log Out"
     },
     "currencyNames": {
         "€": "Euro",
