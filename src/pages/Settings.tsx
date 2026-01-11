@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import CurrencyExchange from "../features/currency/ui/CurrencyExchange";
 import { useThemeContext } from "../app/provides/ThemeProvides";
-import { useBudgetStore } from "../entities/budget/budget.store";
+import { useBudgetStore } from "../features/addBudget/budget.store";
 import { useTransactionsStore } from "../entities/transactions/transactions.store";
 import { useTranslate } from "../features/swapLanguages/useTranslate";
 import LanguageSwitcher from "../features/swapLanguages/ui/LanguageSwitcher";

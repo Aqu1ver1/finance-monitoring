@@ -2,9 +2,9 @@ import { useMemo } from 'react'
 import CircularProgress from "../../../shared/ui/CircularProgress";
 import { useCurrencyStore } from '../../../features/currency/currency.store';
 import { useTransactionsStore } from '../../transactions/transactions.store';
-import { useBudgetStore } from '../budget.store';
+import { useBudgetStore } from '../../../features/addBudget/budget.store';
 import { defaultCategories } from '../../../shared/config/defaultCategories';
-import { BUDGET_SCHEMES } from '../budgetConfig';
+import { BUDGET_SCHEMES } from '../../../features/addBudget/budgetConfig';
 import {useCustomCategoriesStore} from "../../../features/customCategories/customCategories.store";
 import { useTranslate } from "../../../features/swapLanguages/useTranslate";
 

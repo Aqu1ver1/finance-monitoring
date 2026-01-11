@@ -48,10 +48,10 @@ const BudgetForm: React.FC<BudgetFormProps> = ({ onSubmit }) => {
   };
 
   return (
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             {/* Ввод бюджета */}
-            <div>
-                <label className="block text-sm font-medium mb-2">
+            <div className="flex flex-col gap-2">
+                <label className="block text-sm font-medium">
                     Введите сумму бюджета ({currency})
                 </label>
                 <input
@@ -67,21 +67,22 @@ const BudgetForm: React.FC<BudgetFormProps> = ({ onSubmit }) => {
             </div>
 
             {/* Выбор схемы */}
-            <div>
-                <label className="block text-sm font-medium mb-2">
+            <div className="flex flex-col gap-2">
+                <label className="block text-sm font-medium">
                     Выберите схему разделения бюджета
                 </label>
+                <p className="block text-[14px]">Потребности, Желания, Накопления</p>
                 <select
                     value={schemeId}
                     onChange={(e) => setSchemeId(e.target.value as BudgetSchemeId)}
-                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="w-full h-10 p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 >
                     <option value="" disabled hidden>
                         Выберите схему
                     </option>
                     {Object.values(BUDGET_SCHEMES).map((scheme) => (
                         <option key={scheme.id} value={scheme.id}>
-                            {scheme.name} (Потребности: {scheme.needs}%, Желания: {scheme.wants}%, Накопления: {scheme.savings}%)
+                            {scheme.name}
                         </option>
                     ))}
                 </select>
