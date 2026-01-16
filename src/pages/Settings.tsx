@@ -43,7 +43,7 @@ const Settings = () => {
     useTransactionsStore.getState().removeAllTransactions();
   }
   const logOut = () => {
-    useUserStore.getState().logout();
+    useUserStore.getState().clearUser();
   }
   const t = useTranslate();
   return (

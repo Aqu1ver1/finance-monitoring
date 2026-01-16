@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal } from '../../../shared/ui/Modal';
 import { Button } from '../../../shared/ui/Button';
 import { Eye, EyeOff } from 'lucide-react';
 import { useUserStore } from '../user.store';
+import { updateUser } from '../api/auth';
+import axios from 'axios';
 
 interface UpdateFormModalProps {
   isOpen: boolean;
@@ -23,13 +25,25 @@ const user = useUserStore((s) => s.user);
     email: user?.email || '',
     password: '',
     confirmPassword: '',
-    fullName: user?.fullName || '',
+    fullName: user?.name || '',
   });
 
   const [errors, setErrors] = useState<Partial<UpdateData>>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Update form data when modal opens with current user data
+  useEffect(() => {
+    if (isOpen && user) {
+      setFormData({
+        email: user.email || '',
+        password: '',
+        confirmPassword: '',
+        fullName: user.name || '',
+      });
+    }
+  }, [isOpen, user]);
 
   const validateForm = (): boolean => {
     const newErrors: Partial<UpdateData> = {};
@@ -40,17 +54,17 @@ const user = useUserStore((s) => s.user);
     } else {
       const trimmedName = formData.fullName.trim();
       
-      // Check if name has at least 2 characters
+      // Check if full name has at least 2 characters
       if (trimmedName.length < 2) {
         newErrors.fullName = 'Full name must be at least 2 characters';
       }
-      // Check if name contains invalid characters (numbers, special chars except space, dash, apostrophe)
+      // Check if full name contains invalid characters (numbers, special chars except space, dash, apostrophe)
       else if (!/^[a-zA-Zа-яА-ЯёЁ\s\-']+$/.test(trimmedName)) {
-        newErrors.fullName = 'Name contains invalid characters (use letters, spaces, dashes, or apostrophes only)';
+        newErrors.fullName = 'Full name contains invalid characters (use letters, spaces, dashes, or apostrophes only)';
       }
-      // Check if name has at least one letter
+      // Check if full name has at least one letter
       else if (!/[a-zA-Zа-яА-ЯёЁ]/.test(trimmedName)) {
-        newErrors.fullName = 'Name must contain at least one letter';
+        newErrors.fullName = 'Full name must contain at least one letter';
       }
       // Check for excessive spaces or formatting
       else if (/\s{2,}/.test(trimmedName)) {
@@ -76,20 +90,20 @@ const user = useUserStore((s) => s.user);
       }
     }
 
-    // Password validation
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    } else if (formData.password.length > 128) {
-      newErrors.password = 'Password is too long (max 128 characters)';
-    }
+    // Password validation (optional for update)
+    if (formData.password || formData.confirmPassword) {
+      if (formData.password.length < 6) {
+        newErrors.password = 'Password must be at least 6 characters';
+      } else if (formData.password.length > 128) {
+        newErrors.password = 'Password is too long (max 128 characters)';
+      }
 
-    // Confirm Password validation
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      // Confirm Password validation (only if password is provided)
+      if (!formData.confirmPassword && formData.password) {
+        newErrors.confirmPassword = 'Please confirm your password';
+      } else if (formData.password !== formData.confirmPassword) {
+        newErrors.confirmPassword = 'Passwords do not match';
+      }
     }
 
     setErrors(newErrors);
@@ -120,27 +134,40 @@ const user = useUserStore((s) => s.user);
 
     setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Отправляем только измененные данные
+      const updateData: any = { userId: user?.id };
+      
+      if (formData.email && formData.email !== user?.email) {
+        updateData.email = formData.email;
+      }
+      if (formData.fullName && formData.fullName !== user?.name) {
+        updateData.name = formData.fullName;
+      }
+      if (formData.password) {
+        updateData.password = formData.password;
+      }
 
+      // Если ничего не изменилось, просто закрываем модаль
+      if (Object.keys(updateData).length === 1) { // только userId
+        onClose();
+        return;
+      }
+
+      const updatedUser = await updateUser(updateData);
+      useUserStore.getState().setUser(updatedUser.user, updatedUser.token, true);
       // Call the onUpdate callback
       if (onUpdate) {
         onUpdate(formData);
       }
-
-      // Reset form
-      setFormData({
-        email: '',
-        password: '',
-        confirmPassword: '',
-        fullName: '',
-      });
-
       // Close modal
       onClose();
-    } catch (error) {
-      console.error('Update failed:', error);
-    } finally {
+    } catch (err: any) {
+      if (axios.isAxiosError(err)) {
+        setErrors({ email: err.response?.data?.error });
+      } else {
+        console.error(err);
+      }
+    }finally {
       setIsLoading(false);
     }
   };
@@ -158,7 +185,7 @@ const user = useUserStore((s) => s.user);
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} title="Create Account">
+    <Modal isOpen={isOpen} onClose={handleClose} title="Update Profile">
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Full Name */}
         <div>

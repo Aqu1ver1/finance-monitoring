@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { Modal } from '../../../shared/ui/Modal';
 import { Button } from '../../../shared/ui/Button';
 import { Eye, EyeOff } from 'lucide-react';
+import { useUserStore } from '../user.store';
+import { registerUser } from '../api/auth';
+import axios from 'axios';
 
 interface SignUpFormModalProps {
   isOpen: boolean;
@@ -28,6 +31,8 @@ export const SignUpFormModal = ({ isOpen, onClose, onSignUp }: SignUpFormModalPr
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [remember, setRemember] = useState(false);
+  const setUser = useUserStore((state) => state.setUser);
 
   const validateForm = (): boolean => {
     const newErrors: Partial<SignUpData> = {};
@@ -37,7 +42,7 @@ export const SignUpFormModal = ({ isOpen, onClose, onSignUp }: SignUpFormModalPr
       newErrors.fullName = 'Full name is required';
     } else {
       const trimmedName = formData.fullName.trim();
-      
+
       // Check if name has at least 2 characters
       if (trimmedName.length < 2) {
         newErrors.fullName = 'Full name must be at least 2 characters';
@@ -118,26 +123,16 @@ export const SignUpFormModal = ({ isOpen, onClose, onSignUp }: SignUpFormModalPr
 
     setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Call the onSignUp callback
-      if (onSignUp) {
-        onSignUp(formData);
+      const data = await registerUser(formData.email, formData.fullName, formData.password);
+      setUser(data.user, data.token, remember);
+      onSignUp?.(formData);
+      handleClose();
+    } catch (err: any) {
+      if (axios.isAxiosError(err)) {
+        setErrors({ email: err.response?.data?.error });
+      } else {
+        console.error(err);
       }
-
-      // Reset form
-      setFormData({
-        email: '',
-        password: '',
-        confirmPassword: '',
-        fullName: '',
-      });
-
-      // Close modal
-      onClose();
-    } catch (error) {
-      console.error('Sign up failed:', error);
     } finally {
       setIsLoading(false);
     }
@@ -170,11 +165,10 @@ export const SignUpFormModal = ({ isOpen, onClose, onSignUp }: SignUpFormModalPr
             value={formData.fullName}
             onChange={handleChange}
             placeholder="John Doe"
-            className={`w-full px-4 py-2.5 rounded-lg border-2 transition-colors focus:outline-none ${
-              errors.fullName
-                ? 'border-red-500 focus:border-red-500'
-                : 'border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500'
-            } bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500`}
+            className={`w-full px-4 py-2.5 rounded-lg border-2 transition-colors focus:outline-none ${errors.fullName
+              ? 'border-red-500 focus:border-red-500'
+              : 'border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500'
+              } bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500`}
           />
           {errors.fullName && (
             <p className="text-sm text-red-500 mt-1">{errors.fullName}</p>
@@ -193,11 +187,10 @@ export const SignUpFormModal = ({ isOpen, onClose, onSignUp }: SignUpFormModalPr
             value={formData.email}
             onChange={handleChange}
             placeholder="john@example.com"
-            className={`w-full px-4 py-2.5 rounded-lg border-2 transition-colors focus:outline-none ${
-              errors.email
-                ? 'border-red-500 focus:border-red-500'
-                : 'border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500'
-            } bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500`}
+            className={`w-full px-4 py-2.5 rounded-lg border-2 transition-colors focus:outline-none ${errors.email
+              ? 'border-red-500 focus:border-red-500'
+              : 'border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500'
+              } bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500`}
           />
           {errors.email && (
             <p className="text-sm text-red-500 mt-1">{errors.email}</p>
@@ -217,11 +210,10 @@ export const SignUpFormModal = ({ isOpen, onClose, onSignUp }: SignUpFormModalPr
               value={formData.password}
               onChange={handleChange}
               placeholder="••••••••"
-              className={`w-full px-4 py-2.5 rounded-lg border-2 transition-colors focus:outline-none ${
-                errors.password
-                  ? 'border-red-500 focus:border-red-500'
-                  : 'border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500'
-              } bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500`}
+              className={`w-full px-4 py-2.5 rounded-lg border-2 transition-colors focus:outline-none ${errors.password
+                ? 'border-red-500 focus:border-red-500'
+                : 'border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500'
+                } bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500`}
             />
             <button
               type="button"
@@ -249,11 +241,10 @@ export const SignUpFormModal = ({ isOpen, onClose, onSignUp }: SignUpFormModalPr
               value={formData.confirmPassword}
               onChange={handleChange}
               placeholder="••••••••"
-              className={`w-full px-4 py-2.5 rounded-lg border-2 transition-colors focus:outline-none ${
-                errors.confirmPassword
-                  ? 'border-red-500 focus:border-red-500'
-                  : 'border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500'
-              } bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500`}
+              className={`w-full px-4 py-2.5 rounded-lg border-2 transition-colors focus:outline-none ${errors.confirmPassword
+                ? 'border-red-500 focus:border-red-500'
+                : 'border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500'
+                } bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500`}
             />
             <button
               type="button"
@@ -267,7 +258,10 @@ export const SignUpFormModal = ({ isOpen, onClose, onSignUp }: SignUpFormModalPr
             <p className="text-sm text-red-500 mt-1">{errors.confirmPassword}</p>
           )}
         </div>
-
+        <label>
+          <input type="checkbox" checked={remember} onChange={e => setRemember(e.target.checked)} />
+          Не выходить
+        </label>
         {/* Buttons */}
         <div className="flex gap-3 pt-4">
           <Button

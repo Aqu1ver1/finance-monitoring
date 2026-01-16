@@ -1,44 +1,43 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import type { SignUpData } from './ui/sirnUpForm';
+import { create } from "zustand";
 
-export interface User extends SignUpData {
+interface User {
   id: number;
-  createdAt: string;
+  email: string;
+  name: string;
 }
 
-interface UserStore {
+interface UserState {
   user: User | null;
-  register: (data: SignUpData) => void;
-  updateUser: (updates: Partial<Omit<User, 'id' | 'createdAt'>>) => void;
-  logout: () => void;
+  token: string | null;
+  setUser: (user: User, token: string, remember?: boolean) => void;
+  clearUser: () => void;
 }
 
-export const useUserStore = create<UserStore>()(
-  persist(
-    (set) => ({
-      user: null,
-
-      register: (data) => {
-        const newUser: User = {
-          ...data,
-          id: Date.now(),
-          createdAt: new Date().toISOString(),
-        };
-        set({ user: newUser });
-      },
-
-      updateUser: (updates) =>
-        set((state) => ({
-          user: state.user ? { ...state.user, ...updates } : state.user,
-        })),
-
-      logout: () => set({ user: null }),
-    }),
-    {
-      name: 'user-storage',
-      version: 1,
-      partialize: (state) => ({ user: state.user }),
+export const useUserStore = create<UserState>((set) => ({
+  user: null,
+  token: null,
+  setUser: (user, token, remember = false) => {
+    if (remember) {
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
     }
-  )
-);
+    set({ user, token });
+  },
+  clearUser: () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    set({ user: null, token: null });
+  },
+}));
+
+// Инициализация при старте приложения
+export const initUserStore = () => {
+  const storedUser = localStorage.getItem("user");
+  const storedToken = localStorage.getItem("token");
+  if (storedUser && storedToken) {
+    useUserStore.setState({
+      user: JSON.parse(storedUser),
+      token: storedToken,
+    });
+  }
+};

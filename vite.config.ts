@@ -4,7 +4,14 @@ import { VitePWA } from 'vite-plugin-pwa';
 import path from "path";
 
 export default defineConfig({
-  base: '/finance-monitoring/',
+  base: '/',
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+    watch: {
+      usePolling: true,
+    },
+  },
   plugins: [
     react(),
     VitePWA({
@@ -12,7 +19,7 @@ export default defineConfig({
       manifest: {
         name: 'Finance Monitoring',
         short_name: 'FinanceApp',
-        start_url: '/finance-monitoring/',
+        start_url: '/',
         display: 'standalone',
         theme_color: '#1e40af',
         background_color: '#ffffff',

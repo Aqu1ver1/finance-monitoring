@@ -1,0 +1,20 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Устанавливаем pnpm
+RUN npm install -g pnpm
+
+# Копируем package.json и pnpm-lock.yaml
+COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml* ./
+
+# Устанавливаем зависимости
+RUN pnpm install
+
+# Копируем остальные файлы
+COPY . .
+
+EXPOSE 5173
+
+# Запускаем dev сервер с host 0.0.0.0 для доступа снаружи контейнера
+CMD ["pnpm", "run", "dev", "--", "--host", "0.0.0.0"]
