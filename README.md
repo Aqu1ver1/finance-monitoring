@@ -1,4 +1,4 @@
-Finance Monitoring
+#Finance Monitoring
 
 A free web application for personal finance tracking.
 Designed for personal use and as a portfolio project to demonstrate frontend development skills.
@@ -10,21 +10,21 @@ Production URL (mock for now):
 
 🚀 Key Features
 
-Add income and expenses
+- Add income and expenses
 
-Built-in categories + ability to add custom categories
+- Built-in categories + ability to add custom categories
 
-Budget planning with structured schemes
+- Budget planning with structured schemes
 
-Charts and diagrams for financial insights
+- Charts and diagrams for financial insights
 
-Currency switcher
+- Currency switcher
 
-Dark and light themes
+- Dark and light themes
 
-Two languages
+- Two languages(russian and english)
 
-Fully responsive design for mobile
+- Fully responsive design for mobile
 
 📱 Mobile Experience
 
