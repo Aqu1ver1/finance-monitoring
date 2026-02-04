@@ -28,35 +28,35 @@ Production URL (mock for now):
 
 📱 Mobile Experience
 
-Optimized for mobile-first usage
+- Optimized for mobile-first usage
 
-Users can add the app to their home screen and use it like a native mobile app
+- Users can add the app to their home screen and use it like a native mobile app
 
-Full-screen, app-like experience for quick access to finances
+- Full-screen, app-like experience for quick access to finances
 
-Clean, simple, and user-friendly UI for smartphone usage
+- Clean, simple, and user-friendly UI for smartphone usage
 
 🛠 Tech Stack
 
 Frontend
 
-React
+- React
 
-Vite
+- Vite
 
-TypeScript
+- TypeScript
 
-Tailwind CSS
+- Tailwind CSS
 
-Zustand (state management)
+- Zustand (state management)
 
 Backend
 
-None (client-side only)
+- None (client-side only)
 
 Data Storage
 
-Browser local storage
+- Browser local storage
 
 🎯 Purpose & Portfolio Focus
 
