@@ -3,6 +3,7 @@ import { Transition } from '@headlessui/react';
 import { useCustomCategoriesStore } from '../customCategories.store';
 import { defaultIcons } from '../../../shared/config/defaultIcons';
 import { Button } from '../../../shared/ui/Button';
+import { useTranslate } from '../../swapLanguages/useTranslate';
 
 interface ModalProps {
     isOpen: boolean;
@@ -18,6 +19,9 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
         iconUrl: "",
         budgetType: 'needs' as 'needs' | 'wants' | 'savings'
     });
+    //add languages
+    const t = useTranslate()
+
     const addCategory = useCustomCategoriesStore(state => state.addCategory);
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

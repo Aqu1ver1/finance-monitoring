@@ -1,13 +1,7 @@
 // import { useState } from "react";
 import {
-  User,
-  // Bell,
-  // Lock,
-  // CreditCard,
-  // HelpCircle,
   Moon,
   LogOut,
-  // ChevronRight,
 } from "lucide-react";
 import CurrencyExchange from "../features/currency/ui/CurrencyExchange";
 import { useThemeContext } from "../app/provides/ThemeProvides";
@@ -15,9 +9,6 @@ import { useBudgetStore } from "../entities/budget/budget.store";
 import { useTransactionsStore } from "../entities/transactions/transactions.store";
 import { useTranslate } from "../features/swapLanguages/useTranslate";
 import LanguageSwitcher from "../features/swapLanguages/ui/LanguageSwitcher";
-import ProfileCard from "../entities/user/ui/profileCard";
-import { useUserStore } from "../features/addUser/user.store";
-import { use } from "react";
 
 // Вспомогательный компонент для строк меню
 // const MenuButton = ({ icon, title, sub, color }: any) => (
@@ -35,26 +26,15 @@ import { use } from "react";
 
 const Settings = () => {
   const { isDark, toggle } = useThemeContext();
-  // const [notifications, setNotifications] = useState(true);
   const resetBudgetData = () => {
     useBudgetStore.getState().resetBudgetData();
   }
   const removeAllTransactions = () => {
     useTransactionsStore.getState().removeAllTransactions();
   }
-  const logOut = () => {
-    useUserStore.getState().clearUser();
-  }
   const t = useTranslate();
   return (
     <div className="min-h-screen bg-background p-6 pb-12 text-primary transition-colors duration-300">
-      {/* Header */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-6">{t("titles.settingsPage")}</h2>
-
-        {/* Profile Card - Используем градиент, который хорошо смотрится в обеих темах */}
-        <ProfileCard />
-      </div>
       {/* Settings Sections */}
       <div className="space-y-8">
         {/* General Settings */}
@@ -85,6 +65,7 @@ const Settings = () => {
             <div className="h-px bg-border/50 mx-4"></div>
             {/* Language Selection */}
             <LanguageSwitcher />
+            {/* Reaet Budget Data */}
             <div className="h-px bg-border/50 mx-4"></div>
             <button
               className="w-full flex items-center gap-2 p-5  text-destructive rounded-3xl font-bold hover:bg-destructive/20 transition-all active:scale-[0.98]"
@@ -93,9 +74,8 @@ const Settings = () => {
               <LogOut className="w-5 h-5" />
               <span>{t("settingsBTN.Removebudget")}</span>
             </button>
-
             <div className="h-px bg-border/50 mx-4"></div>
-
+            {/* Remove All Transactions */}
             <button
               className="w-full flex items-center gap-2 p-5  text-destructive rounded-3xl font-bold hover:bg-destructive/20 transition-all active:scale-[0.98]"
               onClick={removeAllTransactions}
@@ -103,45 +83,8 @@ const Settings = () => {
               <LogOut className="w-5 h-5" />
               <span>{t("settingsBTN.RemoveTransactions")}</span>
             </button>
-
-            {/* Notifications Toggle */}
-            {/* <button
-              onClick={() => setNotifications(!notifications)}
-              className="w-full flex items-center gap-4 p-4 hover:bg-muted/50 transition-colors"
-            >
-              <div className="w-10 h-10 bg-orange-500/10 rounded-xl flex items-center justify-center">
-                <Bell className="w-5 h-5 text-orange-500" />
-              </div>
-              <div className="flex-1 text-left">
-                <p className="font-medium">Уведомления</p>
-                <p className="text-xs text-muted-foreground">{notifications ? "Активны" : "Приглушены"}</p>
-              </div>
-              <div className={`w-12 h-6 rounded-full transition-all duration-300 relative ${notifications ? "bg-primary" : "bg-muted"}`}>
-                <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300 ${notifications ? "translate-x-6" : "translate-x-0"}`} />
-              </div>
-            </button> */}
           </div>
         </section>
-
-        {/* Security & Support */}
-        {/* <section>
-          <h4 className="px-2 mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">Система</h4>
-          <div className="bg-secondary rounded-3xl border border-muted overflow-hidden">
-            <MenuButton icon={<Lock className="w-5 h-5 text-purple-500" />} title="Безопасность" sub="Пароль и FaceID" color="bg-purple-500/10" />
-            <div className="h-px bg-border/50 mx-4"></div>
-            <MenuButton icon={<CreditCard className="w-5 h-5 text-blue-500" />} title="Счета" sub="2 карты привязаны" color="bg-blue-500/10" />
-            <div className="h-px bg-border/50 mx-4"></div>
-            <MenuButton icon={<HelpCircle className="w-5 h-5 text-emerald-500" />} title="Поддержка" sub="Чат 24/7" color="bg-emerald-500/10" />
-          </div>
-        </section> */}
-
-        {/* Logout */}
-        <button className="w-full flex items-center justify-center gap-2 p-5 bg-destructive/10 text-destructive rounded-3xl font-bold hover:bg-destructive/20 transition-all active:scale-[0.98]"
-          onClick={logOut}>
-          <LogOut className="w-5 h-5" />
-          <span>{t("settingsBTN.Logout")}</span>
-        </button>
-
         <div className="text-center text-xs text-muted-foreground opacity-50 pb-4">
           <p>{t("footer.version")}</p>
         </div>

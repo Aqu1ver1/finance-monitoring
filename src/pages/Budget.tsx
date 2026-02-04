@@ -27,6 +27,7 @@ const Budget = () => {
   return (
     <div className="min-h-screen bg-background text-primary p-6 pb-8 transition-colors duration-300">
       {/* Header */}
+      {/*fix problem wth language*/}
         <TotalBudgetSummary
           totalSpent={totalExpenses}
           totalLimit={budget}

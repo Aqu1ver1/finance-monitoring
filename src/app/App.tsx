@@ -1,7 +1,6 @@
 import Navigation from '../pages/Navigation/Navigation'
 import { lazy, Suspense, useState, useEffect, useRef } from 'react'
 import { ThemeProvider } from './provides/ThemeProvides'
-import { initUserStore } from '../features/addUser/user.store'
 
 const Dashboard = lazy(() => import('../pages/Dashboard'))
 const Budget = lazy(() => import('../pages/Budget'))
@@ -14,7 +13,6 @@ type Screen = "dashboard" | "budget" | "transactions" | "add" | "settings";
 function App() {
   const [activeScreen, setActiveScreen] = useState<Screen>("dashboard");
   const contentRef = useRef<HTMLDivElement>(null);
-  initUserStore();
 
   useEffect(() => {
     // Скролл наверх при смене экрана
