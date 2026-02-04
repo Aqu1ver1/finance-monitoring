@@ -1,4 +1,4 @@
-import { BUDGET_SCHEMES, type BudgetSchemeId } from "../../features/addBudget/budgetConfig";
+import { BUDGET_SCHEMES, type BudgetSchemeId } from "./budgetConfig";
 
 export interface BudgetDistribution {
     needs: number;

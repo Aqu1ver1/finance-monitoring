@@ -42,7 +42,7 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
             leaveTo="opacity-0 scale-95"
         >
             <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-                <div className="relative w-full max-w-lg bg-secondary  rounded-2xl shadow-lg p-6 border border-muted transition-colors duration-300">
+                <div className="relative w-full max-w-md bg-secondary/50 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-muted transition-colors duration-300">
                     {/* Крестик закрытия */}
                     <button
                         className="absolute top-3 right-3 text-muted-foreground hover:text-primary text-lg font-bold transition-colors"
@@ -85,7 +85,7 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
                                 Доход
                             </Button>
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div>
                             <label className="text-primary">Бюджетный тип</label>
                             {newCategory.type === "income" ? (
                                 <p className="text-sm text-muted-foreground">Бюджетный тип доступен только для расходов</p>

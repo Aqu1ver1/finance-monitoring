@@ -1,6 +1,6 @@
 import TotalBudgetSummary from "../entities/budget/ui/TotalBudgetSummary";
 import { useTransactionsStore } from "../entities/transactions/transactions.store";
-import { useBudgetStore } from "../features/addBudget/budget.store";
+import { useBudgetStore } from "../entities/budget/budget.store";
 import BudgetCategories from "../entities/budget/ui/BudgetCategories";
 import { formatDateToText } from "../shared/lib/dateFormatter";
 import {getMonthEndDate, getMonthStartDate} from "../shared/lib/date";
