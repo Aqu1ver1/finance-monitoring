@@ -64,31 +64,33 @@ This project was built as a portfolio project to showcase skills relevant for a 
 
 Demonstrates:
 
-Real-world frontend development using React + TypeScript
+- Real-world frontend development using React + TypeScript
 
-State management and component architecture with Zustand
+- State management and component architecture with Zustand
 
-Responsive design and mobile-first UI
+- Responsive design and mobile-first UI
 
-Ability to implement practical features (finance tracking, charts, budgets)
+- Ability to implement practical features (finance tracking, charts, budgets)
 
-Clean, structured, deployable project
+- Clean, structured, deployable project
 
 📦 Run Locally
-git clone https://github.com/your-username/finance-monitoring.git
+```bash
+git clone https://github.com/Aqu1ver1/finance-monitoring.git
 cd finance-monitoring
 npm install
 npm run dev
+```
 
 🔒 Architecture Decision
 
-No backend or authentication for simplicity
+- No backend or authentication for simplicity
 
-Data stored locally in browser
+- Data stored locally in browser
 
-Focus is on frontend skills, clean UI, and responsive design
+- Focus is on frontend skills, clean UI, and responsive design
 
-Backend integration could be added later, but is not required for portfolio demonstration
+- Backend integration could be added later, but is not required for portfolio demonstration
 
 👤 Author
 
