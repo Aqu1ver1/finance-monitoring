@@ -1,75 +1,95 @@
-# React + TypeScript + Vite
+Finance Monitoring
 
-https://aqu1ver1.github.io/finance-monitoring/
+A free web application for personal finance tracking.
+Designed for personal use and as a portfolio project to demonstrate frontend development skills.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🌍 Live Demo
 
-Currently, two official plugins are available:
+Production URL (mock for now):
+👉 https://finance-monitoring.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🚀 Key Features
 
-## React Compiler
+Add income and expenses
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Built-in categories + ability to add custom categories
 
-## Expanding the ESLint configuration
+Budget planning with structured schemes
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Charts and diagrams for financial insights
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Currency switcher
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Dark and light themes
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Two languages
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Fully responsive design for mobile
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+📱 Mobile Experience
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Optimized for mobile-first usage
+
+Users can add the app to their home screen and use it like a native mobile app
+
+Full-screen, app-like experience for quick access to finances
+
+Clean, simple, and user-friendly UI for smartphone usage
+
+🛠 Tech Stack
+
+Frontend
+
+React
+
+Vite
+
+TypeScript
+
+Tailwind CSS
+
+Zustand (state management)
+
+Backend
+
+None (client-side only)
+
+Data Storage
+
+Browser local storage
+
+🎯 Purpose & Portfolio Focus
+
+This project was built as a portfolio project to showcase skills relevant for a junior / strong junior frontend developer role.
+
+Demonstrates:
+
+Real-world frontend development using React + TypeScript
+
+State management and component architecture with Zustand
+
+Responsive design and mobile-first UI
+
+Ability to implement practical features (finance tracking, charts, budgets)
+
+Clean, structured, deployable project
+
+📦 Run Locally
+git clone https://github.com/your-username/finance-monitoring.git
+cd finance-monitoring
+npm install
+npm run dev
+
+🔒 Architecture Decision
+
+No backend or authentication for simplicity
+
+Data stored locally in browser
+
+Focus is on frontend skills, clean UI, and responsive design
+
+Backend integration could be added later, but is not required for portfolio demonstration
+
+👤 Author
+
+Created by Maksym Hopaitsa – Frontend Developer (React / TypeScript)
