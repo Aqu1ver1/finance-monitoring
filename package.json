@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "pnpm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "vercel-build": "vite build"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",
@@ -40,5 +41,13 @@
     "typescript-eslint": "^8.46.4",
     "vite": "^7.3.0",
     "vite-plugin-pwa": "^1.2.0"
+  },
+  "vercel": {
+    "builds": [
+      {
+        "src": "index.html",
+        "use": "@vercel/static"
+      }
+    ]
   }
 }
