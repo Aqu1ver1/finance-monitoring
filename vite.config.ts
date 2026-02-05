@@ -3,8 +3,12 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from "path";
 
-export default defineConfig({
-  base: '/finance-monitoring/',
+export default defineConfig(() => {
+  const isVercel = process.env.VERCEL === '1';
+  const base = isVercel ? '/' : '/finance-monitoring/';
+
+  return {
+  base,
   server: {
     host: '0.0.0.0',
     port: 5173,
@@ -19,7 +23,7 @@ export default defineConfig({
       manifest: {
         name: 'Finance Monitoring',
         short_name: 'FinanceApp',
-        start_url: '/finance-monitoring/',
+        start_url: base,
         display: 'standalone',
         theme_color: '#1e40af',
         background_color: '#ffffff',
@@ -43,4 +47,5 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"),
     },
   },
+  };
 });
