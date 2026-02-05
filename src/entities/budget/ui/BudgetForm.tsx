@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useCurrencyStore } from '../../../features/currency/currency.store';
 import { BUDGET_SCHEMES, type BudgetSchemeId } from '../budgetConfig';
+import { useTranslate } from '../../../features/swapLanguages/useTranslate';
 
 interface BudgetFormData {
   amount: number;
@@ -19,17 +20,18 @@ const BudgetForm: React.FC<BudgetFormProps> = ({ onSubmit }) => {
   const [amount, setAmount] = useState<string>('');
   const [schemeId, setSchemeId] = useState<BudgetSchemeId | ''>('');
   const currency = useCurrencyStore(state => state.selectedCurrency);
+    const t = useTranslate();
 
   const validate = (): boolean => {
     const newErrors: typeof errors = {};
 
     const numAmount = Number(amount);
     if (!amount || isNaN(numAmount) || numAmount <= 0) {
-      newErrors.amount = 'Введите корректную сумму бюджета';
+            newErrors.amount = t('budgetForm.errors.amountInvalid');
     }
 
     if (!schemeId) {
-      newErrors.scheme = 'Выберите схему разделения';
+            newErrors.scheme = t('budgetForm.errors.schemeRequired');
     }
 
     setErrors(newErrors);
@@ -52,7 +54,7 @@ const BudgetForm: React.FC<BudgetFormProps> = ({ onSubmit }) => {
             {/* Ввод бюджета */}
             <div>
                 <label className="block text-sm font-medium mb-2">
-                    Введите сумму бюджета ({currency})
+                    {t('budgetForm.amountLabel').replace('{currency}', currency)}
                 </label>
                 <input
                     type="number"
@@ -69,7 +71,7 @@ const BudgetForm: React.FC<BudgetFormProps> = ({ onSubmit }) => {
             {/* Выбор схемы */}
             <div>
                 <label className="block text-sm font-medium mb-2">
-                    Выберите схему разделения бюджета
+                    {t('budgetForm.schemeLabel')}
                 </label>
                 <select
                     value={schemeId}
@@ -77,11 +79,14 @@ const BudgetForm: React.FC<BudgetFormProps> = ({ onSubmit }) => {
                     className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 >
                     <option value="" disabled hidden>
-                        Выберите схему
+                        {t('budgetForm.schemePlaceholder')}
                     </option>
                     {Object.values(BUDGET_SCHEMES).map((scheme) => (
                         <option key={scheme.id} value={scheme.id}>
-                            {scheme.name} (Потребности: {scheme.needs}%, Желания: {scheme.wants}%, Накопления: {scheme.savings}%)
+                            {scheme.name} ({t('budgetForm.schemeOption')
+                                .replace('{needs}', String(scheme.needs))
+                                .replace('{wants}', String(scheme.wants))
+                                .replace('{savings}', String(scheme.savings))})
                         </option>
                     ))}
                 </select>
@@ -95,7 +100,7 @@ const BudgetForm: React.FC<BudgetFormProps> = ({ onSubmit }) => {
                 className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
                 disabled={!amount || !schemeId}
             >
-                Сохранить
+                {t('budgetForm.save')}
             </button>
         </form >
     );

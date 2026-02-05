@@ -42,7 +42,7 @@ function App() {
     <ThemeProvider>
       <div className="flex flex-col min-w-full bg-white dark:bg-background">
         <div ref={contentRef} className='mb-16 overflow-auto'>
-        <Suspense fallback={<div className="flex items-center justify-center h-screen">Загрузка...</div>}>
+        <Suspense fallback={<div className="flex items-center justify-center h-screen bg-background text-primary">Загрузка...</div>}>
           {activeScreen === "dashboard" && <Dashboard/>}
           {activeScreen === "budget" && <Budget />}
           {activeScreen === "transactions" && <Transactions />}

@@ -100,6 +100,41 @@
         "spent": "Потрачено",
         "remaining": "Осталось"
     },
+    "budgetEmpty": {
+        "title": "Общий бюджет",
+        "description": "Еще не установлен, пора начать",
+        "action": "Установить бюджет"
+    },
+    "budgetForm": {
+        "amountLabel": "Введите сумму бюджета ({currency})",
+        "schemeLabel": "Выберите схему разделения бюджета",
+        "schemePlaceholder": "Выберите схему",
+        "schemeOption": "Потребности: {needs}%, Желания: {wants}%, Накопления: {savings}%",
+        "errors": {
+            "amountInvalid": "Введите корректную сумму бюджета",
+            "schemeRequired": "Выберите схему разделения"
+        },
+        "save": "Сохранить"
+    },
+    "customCategories": {
+        "titleAdd": "Добавить категорию",
+        "titleEdit": "Редактирование категории",
+        "nameLabel": "Название",
+        "namePlaceholder": "Например: Здоровье",
+        "typeLabel": "Тип",
+        "typeExpense": "Расход",
+        "typeIncome": "Доход",
+        "budgetTypeLabel": "Бюджетный тип",
+        "budgetTypeOnlyExpense": "Бюджетный тип доступен только для расходов",
+        "budgetTypeNeeds": "Необходимые",
+        "budgetTypeWants": "Развлечения",
+        "budgetTypeSavings": "Сбережения",
+        "iconLabel": "Иконка",
+        "addButton": "Добавить категорию",
+        "deleteButton": "Удалить категорию",
+        "saveButton": "Сохранить изменения",
+        "deleteBlocked": "Невозможно удалить категорию, так как существуют транзакции с этой категорией."
+    },
     "footer": {
         "version": "Finance App • v1.0.0"
     }

@@ -5,6 +5,7 @@ import { defaultIcons } from '../../../shared/config/defaultIcons';
 import { Button } from '../../../shared/ui/Button';
 import type { Category } from '../../../shared/config/defaultCategories';
 import { useTransactionsStore } from '../../../entities/transactions/transactions.store';
+import { useTranslate } from '../../swapLanguages/useTranslate';
 
 interface EditCategoryCardProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ const EditCategoryCard: React.FC<EditCategoryCardProps> = ({
 }) => {
     const { editCategory, deleteCategory } = useCustomCategoriesStore();
     const transactionWithCategory = useTransactionsStore(state => state.transactions.find(tr => tr.id_category === category?.id));
+    const t = useTranslate();
     const [formData, setFormData] = useState({
     category: '',
     type: 'expense' as 'expense' | 'income',
@@ -54,7 +56,7 @@ const EditCategoryCard: React.FC<EditCategoryCardProps> = ({
     e.preventDefault();
     if (!category) return;
     if(transactionWithCategory != null) {
-        alert("Невозможно удалить категорию, так как существуют транзакции с этой категорией.");
+        alert(t('customCategories.deleteBlocked'));
         return;
     };
     deleteCategory(category.id);
@@ -85,21 +87,21 @@ const EditCategoryCard: React.FC<EditCategoryCardProps> = ({
                     </button>
 
                     {/* Заголовок */}
-                    <h2 className="text-xl font-semibold mb-4 text-primary">Редактирование категории</h2>
+                    <h2 className="text-xl font-semibold mb-4 text-primary">{t('customCategories.titleEdit')}</h2>
 
                     {/* Контент */}
                     <div className='flex flex-col gap-2'>
-                        <label className="text-primary">Название</label>
+                        <label className="text-primary">{t('customCategories.nameLabel')}</label>
                         <input
                             type="text"
-                            placeholder="Например: Здоровье"
+                            placeholder={t('customCategories.namePlaceholder')}
                             value={formData.category}
                             onChange={(e) =>
                                 setFormData({ ...formData, category: e.target.value })
                             }
                             className="w-full p-2 bg-background text-primary border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
                         />
-                        <label className="text-primary">Тип</label>
+                        <label className="text-primary">{t('customCategories.typeLabel')}</label>
                         <div className="flex gap-2">
                             <Button
                                 type="button"
@@ -107,7 +109,7 @@ const EditCategoryCard: React.FC<EditCategoryCardProps> = ({
                                 fullWidth
                                 onClick={() => setFormData({ ...formData, type: "expense" })}
                             >
-                                Расход
+                                {t('customCategories.typeExpense')}
                             </Button>
                             <Button
                                 type="button"
@@ -115,11 +117,11 @@ const EditCategoryCard: React.FC<EditCategoryCardProps> = ({
                                 fullWidth
                                 onClick={() => setFormData({ ...formData, type: "income" })}
                             >
-                                Доход
+                                {t('customCategories.typeIncome')}
                             </Button>
                         </div>
                         <div>
-                            <label className="text-primary">Бюджетный тип</label>
+                            <label className="text-primary">{t('customCategories.budgetTypeLabel')}</label>
                             <div className="flex gap-2">
                                 <Button
                                     type="button"
@@ -127,7 +129,7 @@ const EditCategoryCard: React.FC<EditCategoryCardProps> = ({
                                     fullWidth
                                     onClick={() => setFormData({ ...formData, budgetType: "needs" })}
                                 >
-                                    Необходимые
+                                    {t('customCategories.budgetTypeNeeds')}
                                 </Button>
                                 <Button
                                     type="button"
@@ -135,7 +137,7 @@ const EditCategoryCard: React.FC<EditCategoryCardProps> = ({
                                     fullWidth
                                     onClick={() => setFormData({ ...formData, budgetType: "wants" })}
                                 >
-                                    Развлечения
+                                    {t('customCategories.budgetTypeWants')}
                                 </Button>
                                 <Button
                                     type="button"
@@ -143,12 +145,12 @@ const EditCategoryCard: React.FC<EditCategoryCardProps> = ({
                                     fullWidth
                                     onClick={() => setFormData({ ...formData, budgetType: "savings" })}
                                 >
-                                    Сбережения
+                                    {t('customCategories.budgetTypeSavings')}
                                 </Button>
                             </div>
                         </div>
                         <div>
-                            <label className="text-primary">Иконка</label>
+                            <label className="text-primary">{t('customCategories.iconLabel')}</label>
                             <div className="grid grid-cols-7 gap-2 mt-2">
                                 {defaultIcons.map((iconItem) => {
                                     return (
@@ -173,7 +175,7 @@ const EditCategoryCard: React.FC<EditCategoryCardProps> = ({
                                 onClick={handleDelete}
                                 className="bg-red-600 hover:bg-red-700"
                             >
-                                Удалить категорию
+                                {t('customCategories.deleteButton')}
                             </Button>
                             <Button
                                 type="button"
@@ -182,7 +184,7 @@ const EditCategoryCard: React.FC<EditCategoryCardProps> = ({
                                 onClick={handleSubmit}
                                 disabled={!formData.category || !formData.iconUrl}
                             >
-                                Сохранить изменения
+                                {t('customCategories.saveButton')}
                             </Button>
                         </div>
                     </div>

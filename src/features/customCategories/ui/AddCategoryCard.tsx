@@ -19,8 +19,7 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
         iconUrl: "",
         budgetType: 'needs' as 'needs' | 'wants' | 'savings'
     });
-    //add languages
-    const t = useTranslate()
+    const t = useTranslate();
 
     const addCategory = useCustomCategoriesStore(state => state.addCategory);
     const handleSubmit = (e: React.FormEvent) => {
@@ -56,21 +55,23 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
                     </button>
 
                     {/* Заголовок */}
-                    {title && <h2 className="text-xl font-semibold mb-4 text-primary">{title}</h2>}
+                    <h2 className="text-xl font-semibold mb-4 text-primary">
+                        {title ?? t('customCategories.titleAdd')}
+                    </h2>
 
                     {/* Контент */}
                     <div className='flex flex-col gap-2'>
-                        <label className="text-primary">Название</label>
+                        <label className="text-primary">{t('customCategories.nameLabel')}</label>
                         <input
                             type="text"
-                            placeholder="Например: Здоровье"
+                            placeholder={t('customCategories.namePlaceholder')}
                             value={newCategory.category}
                             onChange={(e) =>
                                 setNewCategory({ ...newCategory, category: e.target.value })
                             }
                             className="w-full p-2 bg-background text-primary border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
                         />
-                        <label className="text-primary">Тип</label>
+                        <label className="text-primary">{t('customCategories.typeLabel')}</label>
                         <div className="flex gap-2">
                             <Button
                                 type="button"
@@ -78,7 +79,7 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
                                 fullWidth
                                 onClick={() => setNewCategory({ ...newCategory, type: "expense" })}
                             >
-                                Расход
+                                {t('customCategories.typeExpense')}
                             </Button>
                             <Button
                                 type="button"
@@ -86,13 +87,13 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
                                 fullWidth
                                 onClick={() => setNewCategory({ ...newCategory, type: "income" })}
                             >
-                                Доход
+                                {t('customCategories.typeIncome')}
                             </Button>
                         </div>
                         <div>
-                            <label className="text-primary">Бюджетный тип</label>
+                            <label className="text-primary">{t('customCategories.budgetTypeLabel')}</label>
                             {newCategory.type === "income" ? (
-                                <p className="text-sm text-muted-foreground">Бюджетный тип доступен только для расходов</p>
+                                <p className="text-sm text-muted-foreground">{t('customCategories.budgetTypeOnlyExpense')}</p>
                             ) : 
                             <div className="flex gap-2">
                                 <Button
@@ -102,7 +103,7 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
                                     onClick={() => setNewCategory({ ...newCategory, budgetType: "needs" })}
                                     size="sm"
                                 >
-                                    Необходимые
+                                    {t('customCategories.budgetTypeNeeds')}
                                 </Button>
                                 <Button
                                     type="button"
@@ -111,7 +112,7 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
                                     onClick={() => setNewCategory({ ...newCategory, budgetType: "wants" })}
                                     size="sm"
                                 >
-                                    Развлечения
+                                    {t('customCategories.budgetTypeWants')}
                                 </Button>
                                 <Button
                                     type="button"
@@ -120,12 +121,12 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
                                     onClick={() => setNewCategory({ ...newCategory, budgetType: "savings" })}
                                     size="sm"
                                 >
-                                    Сбережения
+                                    {t('customCategories.budgetTypeSavings')}
                                 </Button>
                             </div>}
                         </div>
                         <div>
-                            <label className="text-primary">Иконка</label>
+                            <label className="text-primary">{t('customCategories.iconLabel')}</label>
                             <div className="grid grid-cols-7 gap-2 mt-2">
                                 {defaultIcons.map((iconItem) => {
                                     return (
@@ -150,7 +151,7 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
                                 onClick={handleSubmit}
                                 disabled={!newCategory.category || !newCategory.iconUrl}
                             >
-                                Добавить категорию
+                                {t('customCategories.addButton')}
                             </Button>
                         </div>
                     </div>

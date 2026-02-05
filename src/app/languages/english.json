@@ -100,6 +100,41 @@
         "spent": "Spent",
         "remaining": "Remaining"
     },
+    "budgetEmpty": {
+        "title": "Total budget",
+        "description": "Not set yet, time to start",
+        "action": "Set budget"
+    },
+    "budgetForm": {
+        "amountLabel": "Enter budget amount ({currency})",
+        "schemeLabel": "Choose a budget split scheme",
+        "schemePlaceholder": "Select a scheme",
+        "schemeOption": "Needs: {needs}%, Wants: {wants}%, Savings: {savings}%",
+        "errors": {
+            "amountInvalid": "Enter a valid budget amount",
+            "schemeRequired": "Choose a split scheme"
+        },
+        "save": "Save"
+    },
+    "customCategories": {
+        "titleAdd": "Add category",
+        "titleEdit": "Edit category",
+        "nameLabel": "Name",
+        "namePlaceholder": "e.g. Health",
+        "typeLabel": "Type",
+        "typeExpense": "Expense",
+        "typeIncome": "Income",
+        "budgetTypeLabel": "Budget type",
+        "budgetTypeOnlyExpense": "Budget type is available only for expenses",
+        "budgetTypeNeeds": "Needs",
+        "budgetTypeWants": "Wants",
+        "budgetTypeSavings": "Savings",
+        "iconLabel": "Icon",
+        "addButton": "Add category",
+        "deleteButton": "Delete category",
+        "saveButton": "Save changes",
+        "deleteBlocked": "Cannot delete category because there are transactions using it."
+    },
     "footer": {
         "version": "Finance App • v1.0.0"
     }
