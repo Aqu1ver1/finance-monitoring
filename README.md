@@ -5,8 +5,11 @@ Designed for personal use and as a portfolio project to demonstrate frontend dev
 
 🌍 Live Demo
 
-Production URL (mock for now):
-👉 https://finance-monitoring.vercel.app
+Production URL (Vercel):
+👉 [https://finance-monitoring.vercel.app](https://finance-monitoring.vercel.app/)
+
+Production URL (GitHub Pages):
+👉 [https://aqu1ver1.github.io/finance-monitoring/](https://aqu1ver1.github.io/finance-monitoring/)
 
 🚀 Key Features
 
