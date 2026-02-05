@@ -2,6 +2,7 @@
   "name": "finance_app",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://aqu1ver1.github.io/finance-monitoring/",
   "type": "module",
   "scripts": {
     "dev": "vite",

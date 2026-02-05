@@ -4,7 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 import path from "path";
 
 export default defineConfig({
-  base: '/',
+  base: '/finance-monitoring/',
   server: {
     host: '0.0.0.0',
     port: 5173,
@@ -19,7 +19,7 @@ export default defineConfig({
       manifest: {
         name: 'Finance Monitoring',
         short_name: 'FinanceApp',
-        start_url: '/',
+        start_url: '/finance-monitoring/',
         display: 'standalone',
         theme_color: '#1e40af',
         background_color: '#ffffff',
