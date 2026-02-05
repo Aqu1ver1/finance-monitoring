@@ -41,13 +41,5 @@
     "typescript-eslint": "^8.46.4",
     "vite": "^7.3.0",
     "vite-plugin-pwa": "^1.2.0"
-  },
-  "vercel": {
-    "builds": [
-      {
-        "src": "index.html",
-        "use": "@vercel/static"
-      }
-    ]
   }
 }
