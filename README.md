@@ -1,4 +1,4 @@
-#Finance Monitoring
+# Finance Monitoring
 
 A free web application for personal finance tracking.
 Designed for personal use and as a portfolio project to demonstrate frontend development skills.
