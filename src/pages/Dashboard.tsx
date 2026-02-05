@@ -19,7 +19,7 @@ const Dashboard: React.FC = () => {
 
     return (
         // Используем bg-background и text-primary для автоматической смены цветов
-        <div className="bg-background text-primary p-6 transition-colors duration-300 ">
+        <div className="min-h-screen bg-background text-primary p-6 pb-24 transition-colors duration-300">
             <div className="mb-8">
                 <p className="text-muted-foreground mb-1">{t("common.balance")}</p>
                 <h1 className="text-5xl font-bold mb-6">
