@@ -8,7 +8,8 @@
 A modern, high-performance **Progressive Web App (PWA)** for personal finance tracking.
 Built with a focus on **Offline-first** experience, accessibility, and instant mobile responsiveness.
 
-![App Screenshot](https://via.placeholder.com/1200x600?text=Dashboard+Screenshot+Here)
+<img width="1920" height="1080" alt="FinMon" src="https://github.com/user-attachments/assets/81c7aa85-ced9-424f-a053-2ebb35a81b8e" />
+
 
 ## 🌍 Live Demo
 
