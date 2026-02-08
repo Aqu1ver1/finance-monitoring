@@ -62,3 +62,26 @@ To run the project locally:
    ```bash
    git clone [https://github.com/Aqu1ver1/finance-monitoring.git](https://github.com/Aqu1ver1/finance-monitoring.git)
    cd finance-monitoring
+   ```
+2. **Install dependencies**
+
+```bash
+npm install
+# or
+pnpm install
+```
+3. **Run development server**
+
+```bash
+npm run dev
+```
+
+### 💡 Architecture Decisions
+- **Client-Side Only:** Deliberately chose a serverless architecture to ensure zero latency and complete privacy. Data persists in the browser's localStorage.
+- **Zustand over Redux:** Chosen for its minimalistic API and smaller bundle size, perfect for this scale of application.
+- **Tailwind v4:** Adopted the alpha/beta version to leverage the new Oxy engine for faster compilation.
+
+### 👤 Author
+**Maksym Hopaitsa**
+- Frontend Developer (React / TypeScript)
+- [GitHub Profile](https://github.com/Aqu1ver1)
