@@ -8,7 +8,7 @@
 A modern, high-performance **Progressive Web App (PWA)** for personal finance tracking.
 Built with a focus on **Offline-first** experience, accessibility, and instant mobile responsiveness.
 
-<img width="1920" height="1080" alt="FinMon" src="https://github.com/user-attachments/assets/81c7aa85-ced9-424f-a053-2ebb35a81b8e" />
+[<img width="1920" height="1080" alt="FinMon" src="https://github.com/user-attachments/assets/81c7aa85-ced9-424f-a053-2ebb35a81b8e" />](https://github.com/Aqu1ver1/finance-monitoring/issues/2#issue-3974456837)
 
 ## 🌍 Live Demo
 - **Production (Vercel):** [finance-monitoring.vercel.app](https://finance-monitoring.vercel.app)
