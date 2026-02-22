@@ -51,7 +51,6 @@ const Dashboard: React.FC = () => {
                 </div>
                 <div className="space-y-3">
                     {transactions.slice(0, 5).map((transaction) => {
-                        console.log('Rendering transaction:', transaction.id);
                         return (
                                 <TransactionCard key={transaction.id} transaction={transaction} />
                             );
