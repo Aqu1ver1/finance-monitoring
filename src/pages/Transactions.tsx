@@ -80,7 +80,7 @@ const Transactions: React.FC = () => {
           currency,
           category: getCategoryLabel(transaction.id_category),
           description: transaction.description ?? ""
-        };
+        } as const;
       })
       .sort((a, b) => b.date.localeCompare(a.date))
       .slice(0, 80);
@@ -169,7 +169,7 @@ const Transactions: React.FC = () => {
                 value={adviceGoal}
                 onChange={(event) => setAdviceGoal(event.target.value)}
                 placeholder={t("transactions.gpt.goalPlaceholder")}
-                className="min-h-[44px] rounded-lg border border-muted bg-background px-3 py-2 text-sm text-primary"
+                className="min-h-11 rounded-lg border border-muted bg-background px-3 py-2 text-sm text-primary"
               />
             </div>
             <div className="flex items-end">
