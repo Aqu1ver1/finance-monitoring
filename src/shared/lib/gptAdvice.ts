@@ -25,7 +25,7 @@ type AdvicePayload = {
 };
 
 export async function getGptAdvice(payload: AdvicePayload): Promise<string> {
-  const baseUrl = import.meta.env.VITE_API_URL;
+  const baseUrl = import.meta.env.VITE_OPENAI_API_KEY;
   if (!baseUrl) throw new Error("Missing API URL");
 
   const response = await fetch(`${baseUrl}/api/advice`, {

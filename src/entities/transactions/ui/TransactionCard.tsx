@@ -20,7 +20,6 @@ const TransactionCard: React.FC<Props> = ({ transaction }) => {
     cat => cat.id === transaction.id_category
   );
   const iconUrl = category ? category.iconUrl : '';
-  console.log(iconUrl);
   const removeTransaction = useTransactionsStore(state => state.removeTransaction);
   const currency = useCurrencyStore(state => state.selectedCurrency);
   const [isHovered, setIsHovered] = useState(false);
