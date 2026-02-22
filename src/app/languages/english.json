@@ -60,7 +60,24 @@
             "income": "Income",
             "expense": "Expenses"
         },
-        "empty": "No transactions yet"
+        "empty": "No transactions yet",
+        "gpt": {
+            "title": "GPT advisor",
+            "typeLabel": "Recommendation focus",
+            "typeOverview": "Spending overview",
+            "typeSavings": "Savings plan",
+            "typeCuts": "Cost cutting",
+            "typeBudget": "Budget control",
+            "goalLabel": "Your goal or problem",
+            "goalPlaceholder": "e.g. Save $300/month, reduce dining out, plan for a trip...",
+            "cta": "Get advice",
+            "loading": "Analyzing...",
+            "resultTitle": "Advice",
+            "emptyError": "Describe your goal or problem to analyze.",
+            "noTransactions": "Add some transactions to get advice.",
+            "apiMissing": "Set VITE_OPENAI_API_KEY to enable GPT advice.",
+            "error": "Unable to get advice right now. Try again."
+        }
     },
     "addTransaction": {
         "title": "New transaction",
