@@ -2,6 +2,7 @@ import Navigation from '../pages/Navigation/Navigation'
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { ThemeProvider } from './provides/ThemeProvides'
 import { useTransactionsStore } from '../entities/transactions/transactions.store'
+import { useAuthStore } from '../store/authStore'
 
 const Dashboard = lazy(() => import('../pages/Dashboard'))
 const Budget = lazy(() => import('../pages/Budget'))
@@ -11,10 +12,14 @@ const Settings = lazy(() => import('../pages/Settings'))
 
 type Screen = "dashboard" | "budget" | "transactions" | "add" | "settings";
 
+
+
 function App() {
+
   const [activeScreen, setActiveScreen] = useState<Screen>("dashboard");
   const contentRef = useRef<HTMLDivElement>(null);
   const archivePastMonths = useTransactionsStore((state) => state.archivePastMonths);
+  const { rehydrate, isLoading } = useAuthStore();
 
   useEffect(() => {
     // Скролл наверх при смене экрана
@@ -44,6 +49,17 @@ function App() {
     archivePastMonths(new Date());
   }, [archivePastMonths]);
 
+  useEffect(() => {
+    rehydrate();
+  }, [rehydrate]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-background text-primary">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
   return (
     <ThemeProvider>
       <div className="flex flex-col min-w-full bg-white dark:bg-background">

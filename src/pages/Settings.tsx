@@ -9,20 +9,7 @@ import { useBudgetStore } from "../entities/budget/budget.store";
 import { useTransactionsStore } from "../entities/transactions/transactions.store";
 import { useTranslate } from "../features/swapLanguages/useTranslate";
 import LanguageSwitcher from "../features/swapLanguages/ui/LanguageSwitcher";
-
-// Вспомогательный компонент для строк меню
-// const MenuButton = ({ icon, title, sub, color }: any) => (
-//   <button className="w-full flex items-center gap-4 p-4 hover:bg-muted/50 transition-colors">
-//     <div className={`w-10 h-10 ${color} rounded-xl flex items-center justify-center`}>
-//       {icon}
-//     </div>
-//     <div className="flex-1 text-left">
-//       <p className="font-medium">{title}</p>
-//       <p className="text-xs text-muted-foreground">{sub}</p>
-//     </div>
-//     <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
-//   </button>
-// );
+import ProfileCard from "../entities/user/ui/profileCard";
 
 const Settings = () => {
   const { isDark, toggle } = useThemeContext();
@@ -36,6 +23,7 @@ const Settings = () => {
   return (
     <div className="min-h-screen bg-background p-6 pb-12 text-primary transition-colors duration-300">
       {/* Settings Sections */}
+      <ProfileCard />
       <div className="space-y-8">
         {/* General Settings */}
         <section>
@@ -83,6 +71,8 @@ const Settings = () => {
               <LogOut className="w-5 h-5" />
               <span>{t("settingsBTN.RemoveTransactions")}</span>
             </button>
+            {/*LogOut */}
+            
           </div>
         </section>
         <div className="text-center text-xs text-muted-foreground opacity-50 pb-4">
