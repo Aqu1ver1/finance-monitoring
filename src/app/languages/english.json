@@ -60,6 +60,7 @@
             "income": "Income",
             "expense": "Expenses"
         },
+        "categoryLabel": "Category",
         "monthLabel": "Month",
         "archivedNotice": "Archived month: statistics only.",
         "archivedEmpty": "No archived statistics for this month.",

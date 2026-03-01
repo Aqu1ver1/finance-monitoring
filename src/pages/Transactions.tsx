@@ -25,6 +25,7 @@ const formatMonthLabel = (monthKey: string, locale: string): string => {
 
 const Transactions: React.FC = () => {
   const [filter, setFilter] = useState<"all" | "income" | "expense">("all");
+  const [selectedCategoryId, setSelectedCategoryId] = useState<"all" | number>("all");
   const currency = useCurrencyStore(state => state.selectedCurrency);
   const transactions = useTransactionsStore(state => state.transactions);
   const monthlySummaries = useTransactionsStore(state => state.monthlySummaries ?? []);
@@ -39,6 +40,17 @@ const Transactions: React.FC = () => {
   const currentMonthKey = useMemo(() => formatMonthKey(new Date()), []);
   const [selectedMonthKey, setSelectedMonthKey] = useState(currentMonthKey);
   const isCurrentMonth = selectedMonthKey === currentMonthKey;
+
+  const categoryOptions = useMemo(() => {
+    return allCategories.map((category) => {
+      const key = `categories.${category.category}`;
+      const translated = t(key);
+      return {
+        value: category.id,
+        label: translated === key ? category.category : translated
+      };
+    });
+  }, [allCategories, t]);
 
   const monthOptions = useMemo(() => {
     const transactionMonthKeys = transactions.map((transaction) =>
@@ -69,6 +81,7 @@ const Transactions: React.FC = () => {
       .filter((t) => t.type < 0)
       .reduce((sum, t) => sum + Math.abs(t.amount * t.type), 0);
     const filtered = transactions.filter((t) => {
+      if (selectedCategoryId !== "all" && t.id_category !== selectedCategoryId) return false;
       if (filter === "income") return t.type > 0;
       if (filter === "expense") return t.type < 0;
       return true;
@@ -79,7 +92,7 @@ const Transactions: React.FC = () => {
       currentIncome: income,
       currentExpense: expense
     };
-  }, [transactions, filter]);
+  }, [transactions, filter, selectedCategoryId]);
 
   const selectedMonthSummary = useMemo<MonthlySummary | null>(() => {
     if (selectedMonthKey === currentMonthKey) return null;
@@ -188,6 +201,26 @@ const Transactions: React.FC = () => {
               onChange={(event) => setSelectedMonthKey(event.target.value)}
             >
               {monthOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-muted-foreground">
+              {t("transactions.categoryLabel")}
+            </label>
+            <select
+              className="rounded-lg border border-muted bg-background px-3 py-2 text-sm text-primary"
+              value={selectedCategoryId === "all" ? "all" : String(selectedCategoryId)}
+              onChange={(event) => {
+                const value = event.target.value;
+                setSelectedCategoryId(value === "all" ? "all" : Number(value));
+              }}
+            >
+              <option value="all">{t("common.all")}</option>
+              {categoryOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
