@@ -24,14 +24,18 @@ type AdvicePayload = {
   language: "en" | "ru";
 };
 
-export async function getGptAdvice(payload: AdvicePayload): Promise<string> {
+export async function getGptAdvice(
+  payload: AdvicePayload,
+  options?: { signal?: AbortSignal }
+): Promise<string> {
   const baseUrl = import.meta.env.VITE_OPENAI_API_KEY;
   if (!baseUrl) throw new Error("Missing API URL");
 
   const response = await fetch(`${baseUrl}/api/advice`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
+    signal: options?.signal
   });
 
   if (!response.ok) {

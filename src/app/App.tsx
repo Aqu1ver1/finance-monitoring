@@ -1,6 +1,7 @@
 import Navigation from '../pages/Navigation/Navigation'
-import { lazy, Suspense, useState, useEffect, useRef } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { ThemeProvider } from './provides/ThemeProvides'
+import { useTransactionsStore } from '../entities/transactions/transactions.store'
 
 const Dashboard = lazy(() => import('../pages/Dashboard'))
 const Budget = lazy(() => import('../pages/Budget'))
@@ -13,6 +14,7 @@ type Screen = "dashboard" | "budget" | "transactions" | "add" | "settings";
 function App() {
   const [activeScreen, setActiveScreen] = useState<Screen>("dashboard");
   const contentRef = useRef<HTMLDivElement>(null);
+  const archivePastMonths = useTransactionsStore((state) => state.archivePastMonths);
 
   useEffect(() => {
     // Скролл наверх при смене экрана
@@ -37,6 +39,10 @@ function App() {
 
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    archivePastMonths(new Date());
+  }, [archivePastMonths]);
 
   return (
     <ThemeProvider>

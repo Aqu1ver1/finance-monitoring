@@ -60,6 +60,11 @@
             "income": "Доходы",
             "expense": "Расходы"
         },
+        "monthLabel": "Месяц",
+        "archivedNotice": "Архивный месяц: доступна только статистика.",
+        "archivedEmpty": "Нет архивной статистики за этот месяц.",
+        "categorySummaryTitle": "Расходы по категориям",
+        "categorySummaryEmpty": "Нет данных по расходам за этот месяц.",
         "empty": "Операций пока нет",
         "gpt": {
             "title": "GPT советник",

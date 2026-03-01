@@ -5,21 +5,29 @@ import TransactionCard from "../entities/transactions/ui/TransactionCard";
 import StatCard from "../widgets/StatCard/ui/StatCard";
 import { TrendingUp } from "lucide-react";
 import { useTranslate } from "../features/swapLanguages/useTranslate";
+import AdviseSection from "../features/gptAdvicer/ui/adviseSection";
+import { useLanguageStore } from "../features/swapLanguages/language.store";
 import { useCustomCategoriesStore } from "../features/customCategories/customCategories.store";
 import { defaultCategories } from "../shared/config/defaultCategories";
-import { Button } from "../shared/ui/Button";
-import { getGptAdvice, type AdviceFocus } from "../shared/lib/gptAdvice";
-import { useLanguageStore } from "../features/swapLanguages/language.store";
+import { usePersistentColors } from "../features/expenseChart/usePersistentColors";
+
+const formatMonthKey = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, "0");
+  return `${year}-${month}`;
+};
+
+const formatMonthLabel = (monthKey: string, locale: string): string => {
+  const [year, month] = monthKey.split("-").map(Number);
+  const date = new Date(year, month - 1, 1);
+  return date.toLocaleString(locale, { month: "long", year: "numeric" });
+};
 
 const Transactions: React.FC = () => {
   const [filter, setFilter] = useState<"all" | "income" | "expense">("all");
-  const [adviceFocus, setAdviceFocus] = useState<AdviceFocus>("overview");
-  const [adviceGoal, setAdviceGoal] = useState("");
-  const [adviceText, setAdviceText] = useState("");
-  const [adviceError, setAdviceError] = useState<string | null>(null);
-  const [isAdviceLoading, setIsAdviceLoading] = useState(false);
   const currency = useCurrencyStore(state => state.selectedCurrency);
   const transactions = useTransactionsStore(state => state.transactions);
+  const monthlySummaries = useTransactionsStore(state => state.monthlySummaries ?? []);
   const customCategories = useCustomCategoriesStore(state => state.categories);
   const lang = useLanguageStore(state => state.lang);
   const t = useTranslate();
@@ -27,105 +35,76 @@ const Transactions: React.FC = () => {
     () => [...defaultCategories, ...customCategories],
     [customCategories]
   );
-  const adviceOptions = useMemo(
-    () => [
-      { value: "overview" as const, label: t("transactions.gpt.typeOverview") },
-      { value: "savings" as const, label: t("transactions.gpt.typeSavings") },
-      { value: "cuts" as const, label: t("transactions.gpt.typeCuts") },
-      { value: "budget" as const, label: t("transactions.gpt.typeBudget") }
-    ],
-    [t]
-  );
+  const { getColorForCategory } = usePersistentColors();
+  const currentMonthKey = useMemo(() => formatMonthKey(new Date()), []);
+  const [selectedMonthKey, setSelectedMonthKey] = useState(currentMonthKey);
+  const isCurrentMonth = selectedMonthKey === currentMonthKey;
+
+  const monthOptions = useMemo(() => {
+    const keys = new Set([currentMonthKey, ...monthlySummaries.map((summary) => summary.monthKey)]);
+    const locale = lang === "ru" ? "ru-RU" : "en-US";
+    return Array.from(keys)
+      .sort((a, b) => b.localeCompare(a))
+      .map((key) => ({
+        value: key,
+        label: formatMonthLabel(key, locale)
+      }));
+  }, [currentMonthKey, monthlySummaries, lang]);
+
 
   // Обернем расчеты в useMemo, чтобы не пересчитывать их при каждом рендере
-  const { filteredTransactions, totalIncome, totalExpense } = useMemo(() => {
+  const { filteredTransactions, currentIncome, currentExpense } = useMemo(() => {
     const income = transactions
       .filter((t) => t.type > 0)
-      .reduce((sum, t) => sum + t.amount*t.type, 0);
-      
+      .reduce((sum, t) => sum + t.amount * t.type, 0);
+
     const expense = transactions
       .filter((t) => t.type < 0)
-      .reduce((sum, t) => sum + Math.abs(t.amount*t.type), 0);
+      .reduce((sum, t) => sum + Math.abs(t.amount * t.type), 0);
     const filtered = transactions.filter((t) => {
       if (filter === "income") return t.type > 0;
       if (filter === "expense") return t.type < 0;
       return true;
     });
 
-    return { 
-      filteredTransactions: filtered, 
-      totalIncome: income, 
-      totalExpense: expense 
+    return {
+      filteredTransactions: filtered,
+      currentIncome: income,
+      currentExpense: expense
     };
   }, [transactions, filter]);
 
-  const transactionsForAdvice = useMemo(() => {
-    const getCategoryLabel = (categoryId: number) => {
-      const category = allCategories.find((cat) => cat.id === categoryId);
-      if (!category) return t("transactionCard.noCategory");
-      const key = `categories.${category.category}`;
-      const translated = t(key);
-      return translated === key ? category.category : translated;
-    };
+  const archivedSummary = useMemo(
+    () => monthlySummaries.find((summary) => summary.monthKey === selectedMonthKey) ?? null,
+    [monthlySummaries, selectedMonthKey]
+  );
 
-    return transactions
-      .map((transaction) => {
-        const date = new Date(transaction.date);
+  const totalIncome = isCurrentMonth ? currentIncome : archivedSummary?.income ?? 0;
+  const totalExpense = isCurrentMonth ? currentExpense : archivedSummary?.expense ?? 0;
+  const visibleTransactions = isCurrentMonth ? filteredTransactions : [];
+  const archivedExpenseByCategory = useMemo(() => {
+    if (isCurrentMonth || !archivedSummary) return [];
+    const usedColors: string[] = [];
+    const data = (archivedSummary.expenseByCategory ?? [])
+      .map((entry) => {
+        const category = allCategories.find((cat) => cat.id === entry.id_category);
+        const key = category ? `categories.${category.category}` : "transactionCard.noCategory";
+        const translated = t(key);
+        const label = translated === key && category ? category.category : translated;
+        const color = getColorForCategory(entry.id_category, usedColors);
+        usedColors.push(color);
+
         return {
-          date: Number.isNaN(date.getTime())
-            ? ""
-            : date.toISOString().slice(0, 10),
-          type: transaction.type > 0 ? "income" : "expense",
-          amount: Math.abs(transaction.amount * transaction.type),
-          currency,
-          category: getCategoryLabel(transaction.id_category),
-          description: transaction.description ?? ""
-        } as const;
+          id_category: entry.id_category,
+          amount: entry.amount,
+          label,
+          color
+        };
       })
-      .sort((a, b) => b.date.localeCompare(a.date))
-      .slice(0, 80);
-  }, [transactions, allCategories, t, currency]);
+      .sort((a, b) => b.amount - a.amount);
 
-  const handleGetAdvice = async () => {
-    setAdviceError(null);
-    setAdviceText("");
-
-    if (!adviceGoal.trim()) {
-      setAdviceError(t("transactions.gpt.emptyError"));
-      return;
-    }
-
-    if (transactions.length === 0) {
-      setAdviceError(t("transactions.gpt.noTransactions"));
-      return;
-    }
-
-    if (!import.meta.env.VITE_OPENAI_API_KEY) {
-      setAdviceError(t("transactions.gpt.apiMissing"));
-      return;
-    }
-
-    setIsAdviceLoading(true);
-    try {
-      const response = await getGptAdvice({
-        focus: adviceFocus,
-        goal: adviceGoal.trim(),
-        currency,
-        language: lang,
-        totals: {
-          income: totalIncome,
-          expense: totalExpense,
-          net: totalIncome - totalExpense
-        },
-        transactions: transactionsForAdvice
-      });
-      setAdviceText(response);
-    } catch {
-      setAdviceError(t("transactions.gpt.error"));
-    } finally {
-      setIsAdviceLoading(false);
-    }
-  };
+    return data;
+  }, [isCurrentMonth, archivedSummary, allCategories, getColorForCategory, t]);
 
   return (
     <div className="min-h-screen bg-background text-primary p-6 pb-8 transition-colors duration-300">
@@ -138,94 +117,86 @@ const Transactions: React.FC = () => {
           <StatCard label={t("common.income")} amount={totalIncome} currency={currency} type="income" icon={TrendingUp} />
           <StatCard label={t("common.expenses")} amount={totalExpense} currency={currency} type="expense" icon={TrendingUp} />
         </div>
-
-        <div className="mb-8 rounded-2xl border border-muted bg-secondary/40 p-4">
-          <div className="flex items-center justify-between gap-3">
-            <h3 className="text-lg font-semibold">{t("transactions.gpt.title")}</h3>
-          </div>
-          <div className="mt-4 grid gap-4 md:grid-cols-[220px,1fr,auto]">
-            <div className="flex flex-col gap-2">
-              <label className="text-sm text-muted-foreground">
-                {t("transactions.gpt.typeLabel")}
-              </label>
-              <select
-                className="rounded-lg border border-muted bg-background px-3 py-2 text-sm text-primary"
-                value={adviceFocus}
-                onChange={(event) => setAdviceFocus(event.target.value as AdviceFocus)}
-              >
-                {adviceOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex flex-col gap-2">
-              <label className="text-sm text-muted-foreground">
-                {t("transactions.gpt.goalLabel")}
-              </label>
-              <textarea
-                rows={2}
-                value={adviceGoal}
-                onChange={(event) => setAdviceGoal(event.target.value)}
-                placeholder={t("transactions.gpt.goalPlaceholder")}
-                className="min-h-11 rounded-lg border border-muted bg-background px-3 py-2 text-sm text-primary"
-              />
-            </div>
-            <div className="flex items-end">
-              <Button
-                onClick={handleGetAdvice}
-                loading={isAdviceLoading}
-              >
-                {isAdviceLoading
-                  ? t("transactions.gpt.loading")
-                  : t("transactions.gpt.cta")}
-              </Button>
-            </div>
-          </div>
-
-          {adviceError && (
-            <p className="mt-3 text-sm text-red-600">{adviceError}</p>
-          )}
-
-          {adviceText && (
-            <div className="mt-4 rounded-xl border border-muted bg-background/70 p-4">
-              <p className="text-sm font-semibold mb-2">
-                {t("transactions.gpt.resultTitle")}
-              </p>
-              <div className="whitespace-pre-line text-sm text-primary">
-                {adviceText}
-              </div>
-            </div>
-          )}
-        </div>
+        {/* GPT Advice Section */}
+        <AdviseSection totalExpense={totalExpense} totalIncome={totalIncome} />
         {/* Filter Buttons */}
-        <div className="flex gap-2 p-1 bg-secondary/50 rounded-xl w-fit border border-muted">
-          {(["all", "income", "expense"] as const).map((type) => (
-            <button
-              key={type}
-              onClick={() => setFilter(type)}
-              className={`px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                filter === type
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-primary"
-              }`}
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex gap-2 p-1 bg-secondary/50 rounded-xl w-fit border border-muted">
+            {(["all", "income", "expense"] as const).map((type) => (
+              <button
+                key={type}
+                onClick={() => setFilter(type)}
+                className={`px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${filter === type
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-primary"
+                  }`}
+              >
+                {type === "all" ? t("transactions.filters.all") : type === "income" ? t("transactions.filters.income") : t("transactions.filters.expense")}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-muted-foreground">
+              {t("transactions.monthLabel")}
+            </label>
+            <select
+              className="rounded-lg border border-muted bg-background px-3 py-2 text-sm text-primary"
+              value={selectedMonthKey}
+              onChange={(event) => setSelectedMonthKey(event.target.value)}
             >
-              {type === "all" ? t("transactions.filters.all") : type === "income" ? t("transactions.filters.income") : t("transactions.filters.expense")}
-            </button>
-          ))}
+              {monthOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
+        {!isCurrentMonth && (
+          <p className="mt-3 text-sm text-muted-foreground">
+            {t("transactions.archivedNotice")}
+          </p>
+        )}
       </div>
 
       {/* Transactions List */}
       <div className="space-y-4">
-        {filteredTransactions.length > 0 ? (
-          filteredTransactions.map((transaction) => (
+        {!isCurrentMonth && (
+          <div className="bg-muted/30 rounded-2xl p-6 border border-muted">
+            <h3 className="mb-4 font-semibold">
+              {t("transactions.categorySummaryTitle")}
+            </h3>
+            {archivedExpenseByCategory.length > 0 ? (
+              <div className="grid grid-cols-2 gap-3">
+                {archivedExpenseByCategory.map((item) => (
+                  <div key={item.id_category} className="flex items-center gap-2">
+                    <div
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: item.color }}
+                    ></div>
+                    <div className="flex-1">
+                      <p className="text-sm">{item.label}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {item.amount.toLocaleString(lang === "ru" ? "ru-RU" : "en-US")} {currency}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                {t("transactions.categorySummaryEmpty")}
+              </p>
+            )}
+          </div>
+        )}
+        {visibleTransactions.length > 0 ? (
+          visibleTransactions.map((transaction) => (
             <TransactionCard key={transaction.id} transaction={transaction} />
           ))
         ) : (
           <div className="text-center py-12 text-muted-foreground">
-            {t("transactions.empty")}
+            {isCurrentMonth ? t("transactions.empty") : t("transactions.archivedEmpty")}
           </div>
         )}
       </div>

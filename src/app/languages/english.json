@@ -60,6 +60,11 @@
             "income": "Income",
             "expense": "Expenses"
         },
+        "monthLabel": "Month",
+        "archivedNotice": "Archived month: statistics only.",
+        "archivedEmpty": "No archived statistics for this month.",
+        "categorySummaryTitle": "Expenses by category",
+        "categorySummaryEmpty": "No expense data for this month.",
         "empty": "No transactions yet",
         "gpt": {
             "title": "GPT advisor",
