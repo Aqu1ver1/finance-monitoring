@@ -5,7 +5,7 @@ import TransactionCard from "../entities/transactions/ui/TransactionCard";
 import StatCard from "../widgets/StatCard/ui/StatCard";
 import { TrendingUp } from "lucide-react";
 import { useTranslate } from "../features/swapLanguages/useTranslate";
-import AdviseSection from "../features/gptAdvicer/ui/adviseSection";
+import AdviseSection from "../features/gptAdvicer/ui/AdviseSection";
 import { useLanguageStore } from "../features/swapLanguages/language.store";
 import { useCustomCategoriesStore } from "../features/customCategories/customCategories.store";
 import { defaultCategories } from "../shared/config/defaultCategories";
