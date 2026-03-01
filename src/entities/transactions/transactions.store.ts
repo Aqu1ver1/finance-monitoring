@@ -79,8 +79,6 @@ export const useTransactionsStore = create<TransactionsStore>()(
       getTransactions: () => get().transactions,
 
       archivePastMonths: (today: Date) => {
-        if (today.getDate() !== 1) return;
-
         const archiveKey = formatArchiveKey(today);
         if (get().lastArchiveAt === archiveKey) return;
 

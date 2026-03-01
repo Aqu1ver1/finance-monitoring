@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useCurrencyStore } from "../features/currency/currency.store";
-import { useTransactionsStore } from "../entities/transactions/transactions.store";
+import { useTransactionsStore, type MonthlySummary } from "../entities/transactions/transactions.store";
 import TransactionCard from "../entities/transactions/ui/TransactionCard";
 import StatCard from "../widgets/StatCard/ui/StatCard";
 import { TrendingUp } from "lucide-react";
@@ -41,7 +41,14 @@ const Transactions: React.FC = () => {
   const isCurrentMonth = selectedMonthKey === currentMonthKey;
 
   const monthOptions = useMemo(() => {
-    const keys = new Set([currentMonthKey, ...monthlySummaries.map((summary) => summary.monthKey)]);
+    const transactionMonthKeys = transactions.map((transaction) =>
+      formatMonthKey(new Date(transaction.date))
+    );
+    const keys = new Set([
+      currentMonthKey,
+      ...monthlySummaries.map((summary) => summary.monthKey),
+      ...transactionMonthKeys
+    ]);
     const locale = lang === "ru" ? "ru-RU" : "en-US";
     return Array.from(keys)
       .sort((a, b) => b.localeCompare(a))
@@ -49,7 +56,7 @@ const Transactions: React.FC = () => {
         value: key,
         label: formatMonthLabel(key, locale)
       }));
-  }, [currentMonthKey, monthlySummaries, lang]);
+  }, [currentMonthKey, monthlySummaries, lang, transactions]);
 
 
   // Обернем расчеты в useMemo, чтобы не пересчитывать их при каждом рендере
@@ -74,18 +81,54 @@ const Transactions: React.FC = () => {
     };
   }, [transactions, filter]);
 
-  const archivedSummary = useMemo(
-    () => monthlySummaries.find((summary) => summary.monthKey === selectedMonthKey) ?? null,
-    [monthlySummaries, selectedMonthKey]
-  );
+  const selectedMonthSummary = useMemo<MonthlySummary | null>(() => {
+    if (selectedMonthKey === currentMonthKey) return null;
 
-  const totalIncome = isCurrentMonth ? currentIncome : archivedSummary?.income ?? 0;
-  const totalExpense = isCurrentMonth ? currentExpense : archivedSummary?.expense ?? 0;
+    const archived = monthlySummaries.find((summary) => summary.monthKey === selectedMonthKey);
+    if (archived) return archived;
+
+    const categoryMap = new Map<number, number>();
+    const summary: MonthlySummary = {
+      monthKey: selectedMonthKey,
+      income: 0,
+      expense: 0,
+      net: 0,
+      count: 0,
+      expenseByCategory: []
+    };
+
+    transactions.forEach((transaction) => {
+      const transactionMonth = formatMonthKey(new Date(transaction.date));
+      if (transactionMonth !== selectedMonthKey) return;
+
+      summary.count += 1;
+      if (transaction.type > 0) {
+        summary.income += transaction.amount * transaction.type;
+      } else if (transaction.type < 0) {
+        const expenseAmount = Math.abs(transaction.amount * transaction.type);
+        summary.expense += expenseAmount;
+        categoryMap.set(
+          transaction.id_category,
+          (categoryMap.get(transaction.id_category) ?? 0) + expenseAmount
+        );
+      }
+    });
+
+    summary.net = summary.income - summary.expense;
+    summary.expenseByCategory = Array.from(categoryMap.entries()).map(
+      ([id_category, amount]) => ({ id_category, amount })
+    );
+
+    return summary.count > 0 ? summary : null;
+  }, [currentMonthKey, monthlySummaries, selectedMonthKey, transactions]);
+
+  const totalIncome = isCurrentMonth ? currentIncome : selectedMonthSummary?.income ?? 0;
+  const totalExpense = isCurrentMonth ? currentExpense : selectedMonthSummary?.expense ?? 0;
   const visibleTransactions = isCurrentMonth ? filteredTransactions : [];
-  const archivedExpenseByCategory = useMemo(() => {
-    if (isCurrentMonth || !archivedSummary) return [];
+  const selectedExpenseByCategory = useMemo(() => {
+    if (isCurrentMonth || !selectedMonthSummary) return [];
     const usedColors: string[] = [];
-    const data = (archivedSummary.expenseByCategory ?? [])
+    const data = (selectedMonthSummary.expenseByCategory ?? [])
       .map((entry) => {
         const category = allCategories.find((cat) => cat.id === entry.id_category);
         const key = category ? `categories.${category.category}` : "transactionCard.noCategory";
@@ -104,7 +147,7 @@ const Transactions: React.FC = () => {
       .sort((a, b) => b.amount - a.amount);
 
     return data;
-  }, [isCurrentMonth, archivedSummary, allCategories, getColorForCategory, t]);
+  }, [isCurrentMonth, selectedMonthSummary, allCategories, getColorForCategory, t]);
 
   return (
     <div className="min-h-screen bg-background text-primary p-6 pb-8 transition-colors duration-300">
@@ -166,9 +209,9 @@ const Transactions: React.FC = () => {
             <h3 className="mb-4 font-semibold">
               {t("transactions.categorySummaryTitle")}
             </h3>
-            {archivedExpenseByCategory.length > 0 ? (
+            {selectedExpenseByCategory.length > 0 ? (
               <div className="grid grid-cols-2 gap-3">
-                {archivedExpenseByCategory.map((item) => (
+                {selectedExpenseByCategory.map((item) => (
                   <div key={item.id_category} className="flex items-center gap-2">
                     <div
                       className="w-3 h-3 rounded-full"
