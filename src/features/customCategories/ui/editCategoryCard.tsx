@@ -155,6 +155,7 @@ const EditCategoryCard: React.FC<EditCategoryCardProps> = ({
                                 {defaultIcons.map((iconItem) => {
                                     return (
                                         <Button
+                                            key={iconItem.iconUrl}
                                             type="button"
                                             variant={formData.iconUrl === iconItem.iconUrl ? "primary" : "ghost"}
                                             size="sm"

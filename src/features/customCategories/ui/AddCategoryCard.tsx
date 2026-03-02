@@ -131,6 +131,7 @@ const AddCategoryCard: React.FC<ModalProps> = ({ isOpen, onClose, title }) => {
                                 {defaultIcons.map((iconItem) => {
                                     return (
                                         <Button
+                                            key={iconItem.iconUrl}
                                             type="button"
                                             variant={newCategory.iconUrl === iconItem.iconUrl ? "primary" : "ghost"}
                                             size="sm"
