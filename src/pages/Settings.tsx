@@ -7,12 +7,16 @@ import CurrencyExchange from "../features/currency/ui/CurrencyExchange";
 import { useThemeContext } from "../app/provides/ThemeProvides";
 import { useBudgetStore } from "../entities/budget/budget.store";
 import { useTransactionsStore } from "../entities/transactions/transactions.store";
+import { useAuthStore } from "../store/authStore";
 import { useTranslate } from "../features/swapLanguages/useTranslate";
 import LanguageSwitcher from "../features/swapLanguages/ui/LanguageSwitcher";
 import ProfileCard from "../entities/user/ui/profileCard";
 
 const Settings = () => {
   const { isDark, toggle } = useThemeContext();
+  const logOut = () => {
+    useAuthStore.getState().logout();
+  }
   const resetBudgetData = () => {
     useBudgetStore.getState().resetBudgetData();
   }
@@ -23,8 +27,8 @@ const Settings = () => {
   return (
     <div className="min-h-screen bg-background p-6 pb-12 text-primary transition-colors duration-300">
       {/* Settings Sections */}
-      <ProfileCard />
       <div className="space-y-8">
+        <ProfileCard />
         {/* General Settings */}
         <section>
           <h4 className="px-2 mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">{t("SettingGroups.settingsPage")}</h4>
@@ -72,7 +76,11 @@ const Settings = () => {
               <span>{t("settingsBTN.RemoveTransactions")}</span>
             </button>
             {/*LogOut */}
-            
+            <button className="w-full flex items-center justify-center gap-2 p-5 bg-destructive/10 text-destructive rounded-3xl font-bold hover:bg-destructive/20 transition-all active:scale-[0.98]"
+              onClick={logOut}>
+              <LogOut className="w-5 h-5" />
+              <span>{t("settingsBTN.Logout")}</span>
+            </button>
           </div>
         </section>
         <div className="text-center text-xs text-muted-foreground opacity-50 pb-4">

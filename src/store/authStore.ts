@@ -55,9 +55,20 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   logout: () => {
+    // Clear auth tokens
     sessionStorage.removeItem('token');
     localStorage.removeItem('token');
     localStorage.removeItem('remember');
+
+    // Clear all persisted store data
+    // localStorage.removeItem('budget-storage');
+    // localStorage.removeItem('transactions-storage');
+    // localStorage.removeItem('categories-storage');
+    // localStorage.removeItem('currency-storage');
+
+    // Clear backend session cookie (fire-and-forget)
+    fetch(`${API}/auth/logout`, { method: 'POST', credentials: 'include' }).catch(() => {});
+
     set({ user: null, token: null });
   },
 
