@@ -1,11 +1,13 @@
 import { useState } from "react"
 import { SignUpFormModal } from "../../../features/addUser/ui/signUpForm"
+import { LogInFormModal } from "../../../features/addUser/ui/logInForm"
 import { useAuthStore } from "../../../store/authStore"
 import { User } from "lucide-react"
 import { UpdateFormModal } from "../../../features/addUser/ui/updateForm.tsx"
 
 const ProfileCard = () => {
     const [isSignUpOpen, setIsSignUpOpen] = useState(false)
+    const [isLogInOpen, setIsLogInOpen] = useState(false)
     const [isUpdateOpen, setIsUpdateOpen] = useState(false)
     const user = useAuthStore((s) => s.user)
 
@@ -14,9 +16,17 @@ const ProfileCard = () => {
             {user == null ? <div className="flex flex-col gap-2">
                 <h2 className="text-xl">Профиль</h2>
                 <p>Вы еще не зарегистрированы, пора начать</p>
-                <button className="w-full py-3 bg-white/90 hover:bg-white/80 rounded-2xl text-blue-600 font-medium transition-all active:scale-95"
-                    onClick={() => setIsSignUpOpen(true)}>
-                    Регистация
+                <button
+                    className="w-full py-3 bg-white/90 hover:bg-white/80 rounded-2xl text-blue-600 font-medium transition-all active:scale-95"
+                    onClick={() => setIsSignUpOpen(true)}
+                >
+                    Регистрация
+                </button>
+                <button
+                    className="w-full py-3 bg-white/90 hover:bg-white/80 rounded-2xl text-blue-600 font-medium transition-all active:scale-95"
+                    onClick={() => setIsLogInOpen(true)}
+                >
+                    Авторизация
                 </button>
             </div> :
                 <div>
@@ -38,6 +48,10 @@ const ProfileCard = () => {
             <SignUpFormModal
                 isOpen={isSignUpOpen}
                 onClose={() => setIsSignUpOpen(false)}
+            />
+            <LogInFormModal
+                isOpen={isLogInOpen}
+                onClose={() => setIsLogInOpen(false)}
             />
             <UpdateFormModal
                 isOpen={isUpdateOpen}

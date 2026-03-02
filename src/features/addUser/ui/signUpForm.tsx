@@ -3,6 +3,7 @@ import { Modal } from '../../../shared/ui/Modal';
 import { Button } from '../../../shared/ui/Button';
 import { Eye, EyeOff } from 'lucide-react';
 import { useAuthStore } from '../../../store/authStore';
+import { runLocalStorageMigration } from '../../../shared/lib/migration';
 
 interface SignUpFormModalProps {
   isOpen: boolean;
@@ -112,7 +113,6 @@ export const SignUpFormModal = ({ isOpen, onClose }: SignUpFormModalProps) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (!validateForm()) {
       return;
     }
@@ -120,7 +120,8 @@ export const SignUpFormModal = ({ isOpen, onClose }: SignUpFormModalProps) => {
     setIsLoading(true);
     try {
       await registerAuth(formData.email, formData.password, formData.fullName);
-
+      await runLocalStorageMigration({ clearLocalStorage: true });
+      console.log('Migration completed');
       // Reset form
       setFormData({
         email: '',
