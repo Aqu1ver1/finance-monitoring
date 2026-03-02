@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create, type StateCreator } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { TransactionType } from '../../shared/lib/transactionType';
 
@@ -25,8 +25,8 @@ interface TransactionsStore {
   monthlySummaries: MonthlySummary[];
   lastArchiveAt: string | null;
   addTransaction: (transaction: Omit<Transaction, 'id'>) => void;
+  setTransactions: (transactions: Transaction[]) => void;
   removeTransaction: (id: number) => void;
-  getTransactions: () => Transaction[];
   removeAllTransactions: () => void;
   archivePastMonths: (today: Date) => void;
 }
@@ -46,17 +46,17 @@ const formatArchiveKey = (date: Date): string => {
 
 export const useTransactionsStore = create<TransactionsStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       transactions: [],
       monthlySummaries: [],
       lastArchiveAt: null,
       
       addTransaction: (transaction: Omit<Transaction, 'id'>) => {
-        set((state) => {
+        set((state: TransactionsStore) => {
           const newTransaction: Transaction = {
             ...transaction,
             id: state.transactions.length > 0 
-              ? Math.max(...state.transactions.map(t => t.id)) + 1 
+              ? Math.max(...state.transactions.map((t: Transaction) => t.id)) + 1 
               : 1,
           };
           return {
@@ -64,10 +64,18 @@ export const useTransactionsStore = create<TransactionsStore>()(
           };
         });
       },
+
+      setTransactions: (transactions: Transaction[]) => {
+        set(() => ({
+          transactions,
+          monthlySummaries: [],
+          lastArchiveAt: null,
+        }));
+      },
       
       removeTransaction: (id: number) => {
-        set((state) => ({
-          transactions: state.transactions.filter(t => t.id !== id),
+        set((state: TransactionsStore) => ({
+          transactions: state.transactions.filter((t: Transaction) => t.id !== id),
         }));
       },
       removeAllTransactions: () => {
@@ -75,69 +83,69 @@ export const useTransactionsStore = create<TransactionsStore>()(
           transactions: [],
         }));
       },
-      
-      getTransactions: () => get().transactions,
 
       archivePastMonths: (today: Date) => {
-        const archiveKey = formatArchiveKey(today);
-        if (get().lastArchiveAt === archiveKey) return;
+        set((state: TransactionsStore) => {
+          const archiveKey = formatArchiveKey(today);
+          if (state.lastArchiveAt === archiveKey) return state;
 
-        const currentMonthKey = formatMonthKey(today);
-        const summaryMap = new Map<string, MonthlySummary>();
-        const expenseByCategoryMap = new Map<string, Map<number, number>>();
+          const currentMonthKey = formatMonthKey(today);
+          const summaryMap = new Map<string, MonthlySummary>();
+          const expenseByCategoryMap = new Map<string, Map<number, number>>();
 
-        const remainingTransactions = get().transactions.filter((tx) => {
-          const txDate = new Date(tx.date);
-          const txMonthKey = formatMonthKey(txDate);
-          if (txMonthKey === currentMonthKey) return true;
+          const remainingTransactions = state.transactions.filter((tx: Transaction) => {
+            const txDate = new Date(tx.date);
+            const txMonthKey = formatMonthKey(txDate);
+            if (txMonthKey === currentMonthKey) return true;
 
-          const prev = summaryMap.get(txMonthKey) ?? {
-            monthKey: txMonthKey,
-            income: 0,
-            expense: 0,
-            net: 0,
-            count: 0,
-            expenseByCategory: []
+            const prev = summaryMap.get(txMonthKey) ?? {
+              monthKey: txMonthKey,
+              income: 0,
+              expense: 0,
+              net: 0,
+              count: 0,
+              expenseByCategory: []
+            };
+
+            if (tx.type > 0) {
+              prev.income += tx.amount * tx.type;
+            } else if (tx.type < 0) {
+              const expenseAmount = Math.abs(tx.amount * tx.type);
+              prev.expense += expenseAmount;
+              const categoryMap = expenseByCategoryMap.get(txMonthKey) ?? new Map<number, number>();
+              categoryMap.set(tx.id_category, (categoryMap.get(tx.id_category) ?? 0) + expenseAmount);
+              expenseByCategoryMap.set(txMonthKey, categoryMap);
+            }
+            prev.net = prev.income - prev.expense;
+            prev.count += 1;
+
+            summaryMap.set(txMonthKey, prev);
+            return false;
+          });
+
+          summaryMap.forEach((summary, monthKey) => {
+            const categoryMap = expenseByCategoryMap.get(monthKey);
+            summary.expenseByCategory = categoryMap
+              ? Array.from(categoryMap.entries()).map(([id_category, amount]) => ({ id_category, amount }))
+              : [];
+          });
+
+          const summaryByKey = new Map(
+            state.monthlySummaries.map((summary: MonthlySummary) => [summary.monthKey, summary])
+          );
+
+          summaryMap.forEach((summary, key) => {
+            summaryByKey.set(key, summary);
+          });
+
+          const mergedSummaries = Array.from(summaryByKey.values());
+
+          return {
+            transactions: remainingTransactions,
+            monthlySummaries: mergedSummaries,
+            lastArchiveAt: archiveKey
           };
-
-          if (tx.type > 0) {
-            prev.income += tx.amount * tx.type;
-          } else if (tx.type < 0) {
-            const expenseAmount = Math.abs(tx.amount * tx.type);
-            prev.expense += expenseAmount;
-            const categoryMap = expenseByCategoryMap.get(txMonthKey) ?? new Map<number, number>();
-            categoryMap.set(tx.id_category, (categoryMap.get(tx.id_category) ?? 0) + expenseAmount);
-            expenseByCategoryMap.set(txMonthKey, categoryMap);
-          }
-          prev.net = prev.income - prev.expense;
-          prev.count += 1;
-
-          summaryMap.set(txMonthKey, prev);
-          return false;
         });
-
-        summaryMap.forEach((summary, monthKey) => {
-          const categoryMap = expenseByCategoryMap.get(monthKey);
-          summary.expenseByCategory = categoryMap
-            ? Array.from(categoryMap.entries()).map(([id_category, amount]) => ({ id_category, amount }))
-            : [];
-        });
-
-        const summaryByKey = new Map(
-          get().monthlySummaries.map((summary) => [summary.monthKey, summary])
-        );
-
-        summaryMap.forEach((summary, key) => {
-          summaryByKey.set(key, summary);
-        });
-
-        const mergedSummaries = Array.from(summaryByKey.values());
-
-        set(() => ({
-          transactions: remainingTransactions,
-          monthlySummaries: mergedSummaries,
-          lastArchiveAt: archiveKey
-        }));
       },
 
     }),
@@ -145,5 +153,5 @@ export const useTransactionsStore = create<TransactionsStore>()(
       name: 'transactions-storage',
       version: 1,
     }
-  )
+  ) as unknown as StateCreator<TransactionsStore>
 );

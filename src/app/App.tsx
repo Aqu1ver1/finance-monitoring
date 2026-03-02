@@ -3,6 +3,7 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { ThemeProvider } from './provides/ThemeProvides'
 import { useTransactionsStore } from '../entities/transactions/transactions.store'
 import { useAuthStore } from '../store/authStore'
+import { useTransactionsFromApi } from '../shared/api/hooks'
 
 const Dashboard = lazy(() => import('../pages/Dashboard'))
 const Budget = lazy(() => import('../pages/Budget'))
@@ -19,7 +20,10 @@ function App() {
   const [activeScreen, setActiveScreen] = useState<Screen>("dashboard");
   const contentRef = useRef<HTMLDivElement>(null);
   const archivePastMonths = useTransactionsStore((state) => state.archivePastMonths);
+  const setTransactions = useTransactionsStore((state) => state.setTransactions);
+  const token = useAuthStore((state) => state.token);
   const { rehydrate, isLoading } = useAuthStore();
+  const { data: transactionsFromApi } = useTransactionsFromApi();
 
   useEffect(() => {
     // Скролл наверх при смене экрана
@@ -52,6 +56,13 @@ function App() {
   useEffect(() => {
     rehydrate();
   }, [rehydrate]);
+
+  useEffect(() => {
+    if (!token || !transactionsFromApi) return;
+
+    setTransactions(transactionsFromApi);
+    archivePastMonths(new Date());
+  }, [token, transactionsFromApi, setTransactions, archivePastMonths]);
 
   if (isLoading) {
     return (
